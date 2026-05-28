@@ -1,4 +1,4 @@
-import "./global.css";
+import "./globals.css";
 
 export const metadata = {
   title: "PS20 Tournament Schedule Tracker",

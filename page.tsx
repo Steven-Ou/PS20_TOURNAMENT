@@ -1,313 +1,272 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 
-interface TeamConfig {
-  name: string;
-  colorClass: string;
-  borderClass: string;
-  players: string[];
-}
+// --- LOGO SVG GENERATORS MATCHING tournament.jpg ---
+const UnionLogo = () => (
+  <svg className="w-14 h-14" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 50C20 30 35 20 50 20C65 20 80 35 80 50C80 70 60 85 50 85C40 85 20 70 20 50Z" fill="#1b3a24" stroke="#4ade80" strokeWidth="3"/>
+    <path d="M30 45C35 35 45 35 50 40C55 45 65 40 70 45C65 55 55 60 50 55C45 50 35 55 30 45Z" fill="#a7f3d0"/>
+    <path d="M45 75C35 70 25 55 35 45C38 52 48 58 55 52C60 62 55 72 45 75Z" fill="#2dd4bf"/>
+    <circle cx="60" cy="40" r="4" fill="#000"/>
+  </svg>
+);
+
+const BowneLogo = () => (
+  <svg className="w-14 h-14" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M35 15L50 35L65 15" stroke="#ef4444" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M42 15L50 32L58 15" stroke="#3b82f6" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="50" cy="55" r="26" fill="url(#goldGradient)" stroke="#f59e0b" strokeWidth="3"/>
+    <circle cx="50" cy="55" r="20" fill="none" stroke="#fff" strokeWidth="1" strokeDasharray="4 2"/>
+    <text x="50" y="64" fontSize="26" fontWeight="bold" fill="#b45309" textAnchor="middle">1</text>
+    <defs>
+      <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#fbbf24" />
+        <stop offset="50%" stopColor="#f59e0b" />
+        <stop offset="100%" stopColor="#d97706" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
+const SanfordLogo = () => (
+  <svg className="w-14 h-14" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="40" fill="#ea580c" stroke="#000" strokeWidth="3"/>
+    <path d="M14 50H86" stroke="#000" strokeWidth="3"/>
+    <path d="M50 14V86" stroke="#000" strokeWidth="3"/>
+    <path d="M22 22C32 32 32 68 22 78" stroke="#000" strokeWidth="2.5"/>
+    <path d="M78 22C68 32 68 68 78 78" stroke="#000" strokeWidth="2.5"/>
+  </svg>
+);
+
+const BarclaysLogo = () => (
+  <svg className="w-14 h-14" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 20C40 20 50 10 50 10C50 10 60 20 80 20C80 50 70 75 50 90C30 75 20 50 20 20Z" fill="#1d4ed8" stroke="#60a5fa" strokeWidth="4" strokeLinejoin="round"/>
+    <path d="M28 26C42 26 50 18 50 18C50 18 58 26 72 26" stroke="#93c5fd" strokeWidth="2"/>
+  </svg>
+);
 
 export default function TournamentDashboard() {
-  const [isEditing, setIsEditing] = useState(false);
-  const [dateText, setDateText] = useState("WEDNESDAY 5/27/2026");
-  const [upcomingText, setUpcomingText] = useState("WEEK 2 SCHEDULE: TBA\n(To Be Announced)");
+  // Configurable Application State
+  const [title, setTitle] = useState("PS20 MIKE LEGEND TOURNAMENT");
+  const [subTitle, setSubTitle] = useState("BASKETBALL SCHEDULE");
+  const [dateHeader, setDateHeader] = useState("TODAY'S RESULTS - WEDNESDAY MAY 27TH 2026");
   
-  // Clean container for local media photo uploads
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Exact live game scores matching your Wednesday results
   const [scores, setScores] = useState({
-    sanfordsGame: 31,
-    bownesGame: 30,
-    unionsGame: 36,
-    barclaysGame: 34,
+    unionsToday: 46,
+    bownesToday: 18,
+    sanfordsToday: 31,
+    barclaysToday: 24,
+    sanfordsMatch: 31,
+    bownesMatch: 30,
+    unionsMatch: 36,
+    barclaysMatch: 34,
   });
 
-  // Single source of truth for the 4 active teams
-  const [teams, setTeams] = useState<Record<string, TeamConfig>>({
-    sanfords: {
-      name: "THE SANFORDS",
-      colorClass: "bg-orange-950/40 border-orange-900/60 text-orange-400",
-      borderClass: "border-orange-600 bg-orange-800",
-      players: ["Steven", "William_Yan", "绿豆糕", "09^", "WhilarYan", "易陌讳", "Ryan", "Beau", "Leo", "Mwxot"],
-    },
-    bownes: {
-      name: "THE BOWNES",
-      colorClass: "bg-stone-900/40 border-stone-800/60 text-stone-400",
-      borderClass: "border-stone-700 bg-stone-900",
-      players: ["SHBW", "LiNg", "Gao Xiang", "Eric", "Owen", "Benc", "Lee", "炜", "Ye 哥", "芳昆"],
-    },
-    unions: {
-      name: "THE UNIONS",
-      colorClass: "bg-emerald-950/40 border-emerald-900/60 text-emerald-400",
-      borderClass: "border-emerald-700 bg-emerald-900",
-      players: ["KMY", "小鱼", "Dudu", "Hong Tao", "慢慢来", "猴王", "MING", "好好睡觉"],
-    },
-    barclays: {
-      name: "THE BARCLAYS",
-      colorClass: "bg-slate-900/40 border-slate-800/60 text-blue-400",
-      borderClass: "border-slate-700 bg-slate-900",
-      players: ["kys r", "YJH ~", "胡内", "篮板王", "穗", "Syw", "Sean", "Taotao", "高手", "James c"],
-    },
+  const [rosters, setRosters] = useState({
+    unions: ["KMY", "小鱼", "Dudu", "Hong Tao", "慢慢来", "猴王", "MING", "好好睡觉"],
+    bownes: ["SHBW", "LiNg", "Gao Xiang", "Eric", "Owen", "Benc", "Lee", "烤", "Ye 哥", "芥琵"],
+    sanfords: ["Steven", "William_Yan", "绿豆赚", "09^", "Whilar·Yan", "易阿炜", "Ryan", "Beau", "Leo", "Mwxot"],
+    barclays: ["kys r", "YJH —", "胡内", "篮板王", "稳", "Syw", "Sean", "Taotao", "高手", "James c"],
   });
 
-  const handlePlayerChange = (teamKey: string, index: number, value: string) => {
-    setTeams(prev => {
-      const updated = [...prev[teamKey].players];
-      updated[index] = value;
-      return { ...prev, [teamKey]: { ...prev[teamKey], players: updated } };
+  const [upcomingText, setUpcomingText] = useState("WEEK 2 SCHEDULE: TBA\n(To Be Announced)");
+
+  // Handle value editing
+  const handleScoreChange = (key: keyof typeof scores, val: string) => {
+    const parsed = parseInt(val) || 0;
+    setScores(prev => ({ ...prev, [key]: parsed }));
+  };
+
+  const handleRosterChange = (team: keyof typeof rosters, index: number, val: string) => {
+    setRosters(prev => {
+      const updated = [...prev[team]];
+      updated[index] = val;
+      return { ...prev, [team]: updated };
     });
   };
 
-  const handleTeamNameChange = (teamKey: string, value: string) => {
-    setTeams(prev => ({
-      ...prev,
-      [teamKey]: { ...prev[teamKey], name: value.toUpperCase() }
-    }));
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setUploadedImage(reader.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-[#0b1019] text-white font-sans p-6 flex flex-col items-center">
+    <div className="min-h-screen bg-[#070b12] text-white p-6 font-sans antialiased selective-none">
       
-      {/* Dynamic Ribbon Control Header */}
-      <div className="w-full max-w-7xl mb-4 flex justify-between items-center px-2">
-        <div className="flex items-center space-x-3">
-          <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Board Modifiers:</span>
-          {isEditing && (
-            <button 
-              onClick={() => fileInputRef.current?.click()}
-              className="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-1.5 rounded font-medium border border-slate-700 transition"
-            >
-              🖼️ Upload Court Photo
-            </button>
-          )}
-          <input type="file" ref={fileInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" />
+      {/* HEADER SECTION */}
+      <header className="text-center mb-8 border-b border-gray-800 pb-4 relative">
+        <input 
+          className="bg-transparent text-center font-extrabold text-4xl tracking-wider w-full uppercase border-none focus:ring-1 focus:ring-orange-500 text-slate-100 outline-none"
+          value={title} 
+          onChange={(e) => setTitle(e.target.value)} 
+        />
+        <div className="flex justify-center items-center gap-2 mt-2">
+          <span className="text-orange-500 text-xl">★</span>
+          <input 
+            className="bg-transparent text-center font-bold text-xl tracking-widest uppercase border-none focus:ring-1 focus:ring-orange-500 text-orange-500 w-1/2 outline-none"
+            value={subTitle} 
+            onChange={(e) => setSubTitle(e.target.value)} 
+          />
+          <span className="text-orange-500 text-xl">★</span>
         </div>
-        <button 
-          onClick={() => setIsEditing(!isEditing)} 
-          className={`px-6 py-2 rounded font-bold tracking-wide shadow transition ${isEditing ? 'bg-green-600 hover:bg-green-500' : 'bg-blue-600 hover:bg-blue-500'}`}
-        >
-          {isEditing ? "💾 Save Layout Modifications" : "⚙️ Open Board Editor"}
-        </button>
-      </div>
+      </header>
 
-      {/* MAIN SCREEN GRAPHIC PANEL BACKGROUND CONTAINER */}
-      <div className="w-full max-w-7xl bg-[#0e151f] border border-slate-800 rounded-lg p-6 shadow-2xl">
+      {/* CORE TWO-COLUMN MAIN GRID (Sidebar Left Removed) */}
+      <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
         
-        {/* Main Tournament Identity Line */}
-        <div className="text-center mb-6 pb-4 border-b border-slate-800/60">
-          <h1 className="text-4xl font-black tracking-wider text-white">PS20 MIKE LEGEND TOURNAMENT</h1>
-          <div className="flex justify-center items-center space-x-3 mt-1.5">
-            <span className="text-orange-500 font-bold tracking-widest text-sm">★ BASKETBALL SCHEDULE ★</span>
-            <span className="text-slate-600">•</span>
-            {isEditing ? (
-              <input 
-                type="text" 
-                value={dateText} 
-                onChange={(e) => setDateText(e.target.value)} 
-                className="bg-slate-800 text-white font-bold px-2 py-0.5 rounded border border-slate-600 text-xs text-center w-48"
-              />
-            ) : (
-              <span className="text-slate-300 font-mono font-bold text-sm tracking-wide">{dateText}</span>
-            )}
-          </div>
-        </div>
-
-        {/* Outer Grid: 8 Columns for Games & Media Center | 4 Columns for Rosters Matrix */}
-        <div className="grid grid-cols-12 gap-6">
+        {/* LEFT & CENTER COMBINED MATCH STUFF (Movable/Adjustable Layout Box) */}
+        <section className="lg:col-span-2 flex flex-col gap-6">
           
-          {/* MIDDLE COLUMN FIELD AREA */}
-          <div className="col-span-8 flex flex-col space-y-4">
+          {/* TODAY'S TOP ROW SUMMARY HERO */}
+          <div className="bg-[#0d1527] border border-slate-800 rounded-xl p-4 shadow-xl">
+            <input 
+              className="bg-transparent text-xs font-semibold text-center tracking-widest text-slate-400 uppercase w-full mb-4 border-none outline-none focus:bg-slate-900"
+              value={dateHeader}
+              onChange={(e) => setDateHeader(e.target.value)}
+            />
             
-            {/* Top Matchups Grid: Scores completely removed and pairs correctly ordered */}
-            <div className="bg-[#0b1019] border border-slate-800/80 rounded-lg p-4">
-              <div className="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-3 text-center">
-                WEEK 1 SEMIFINALS — MATCHUP CARDS
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                {/* Match 1: Sanfords vs Bownes */}
-                <div className="flex items-center justify-between bg-[#0e151f] p-4 rounded border border-slate-800">
-                  <div className="w-5/12 text-center">
-                    {isEditing ? (
-                      <input type="text" value={teams.sanfords.name} onChange={(e) => handleTeamNameChange('sanfords', e.target.value)} className="bg-slate-800 text-center text-xs font-bold p-1 rounded w-full"/>
-                    ) : (
-                      <div className="text-sm font-black text-orange-400 tracking-wide truncate">{teams.sanfords.name}</div>
-                    )}
-                  </div>
-                  <div className="text-xs font-black text-slate-500 bg-[#0b1019] border border-slate-800 px-3 py-1 rounded-full">VS</div>
-                  <div className="w-5/12 text-center">
-                    {isEditing ? (
-                      <input type="text" value={teams.bownes.name} onChange={(e) => handleTeamNameChange('bownes', e.target.value)} className="bg-slate-800 text-center text-xs font-bold p-1 rounded w-full"/>
-                    ) : (
-                      <div className="text-sm font-black text-stone-400 tracking-wide truncate">{teams.bownes.name}</div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Match 2: Unions vs Barclays */}
-                <div className="flex items-center justify-between bg-[#0e151f] p-4 rounded border border-slate-800">
-                  <div className="w-5/12 text-center">
-                    {isEditing ? (
-                      <input type="text" value={teams.unions.name} onChange={(e) => handleTeamNameChange('unions', e.target.value)} className="bg-slate-800 text-center text-xs font-bold p-1 rounded w-full"/>
-                    ) : (
-                      <div className="text-sm font-black text-emerald-400 tracking-wide truncate">{teams.unions.name}</div>
-                    )}
-                  </div>
-                  <div className="text-xs font-black text-slate-500 bg-[#0b1019] border border-slate-800 px-3 py-1 rounded-full">VS</div>
-                  <div className="w-5/12 text-center">
-                    {isEditing ? (
-                      <input type="text" value={teams.barclays.name} onChange={(e) => handleTeamNameChange('barclays', e.target.value)} className="bg-slate-800 text-center text-xs font-bold p-1 rounded w-full"/>
-                    ) : (
-                      <div className="text-sm font-black text-blue-400 tracking-wide truncate">{teams.barclays.name}</div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Middle Live Detailed Scoring Displays */}
-            <div className="bg-[#0b1019] border border-slate-800 rounded-lg p-4 space-y-3">
-              <div className="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-1 text-center">
-                Live Detailed Scoreboard Panel
+            <div className="grid grid-cols-4 gap-2 text-center items-center">
+              {/* Unions Top Card */}
+              <div className="bg-[#11251d] p-3 rounded-lg border border-emerald-900/50 flex flex-col items-center">
+                <span className="text-xs font-bold tracking-wider text-emerald-400 mb-2">THE UNIONS</span>
+                <UnionLogo />
+                <input type="number" className="bg-transparent font-black text-3xl w-full text-center mt-2 border-none outline-none" value={scores.unionsToday} onChange={(e) => handleScoreChange('unionsToday', e.target.value)} />
               </div>
 
-              {/* Game Score Row 1 */}
-              <div className={`flex items-center justify-between border p-3.5 rounded-lg shadow-inner ${teams.sanfords.colorClass}`}>
-                <span className="font-extrabold text-sm tracking-wide w-1/3">{teams.sanfords.name}</span>
-                {isEditing ? (
-                  <input type="number" value={scores.sanfordsGame} onChange={(e) => setScores({...scores, sanfordsGame: parseInt(e.target.value) || 0})} className="bg-slate-800 w-16 text-center rounded font-bold p-1 text-sm text-white"/>
-                ) : (
-                  <span className="text-2xl font-black font-mono">{scores.sanfordsGame}</span>
-                )}
-                <span className="text-[9px] font-extrabold bg-slate-900 border border-slate-800 px-3 py-0.5 rounded-full text-slate-400">FINAL</span>
-                {isEditing ? (
-                  <input type="number" value={scores.bownesGame} onChange={(e) => setScores({...scores, bownesGame: parseInt(e.target.value) || 0})} className="bg-slate-800 w-16 text-center rounded font-bold p-1 text-sm text-white"/>
-                ) : (
-                  <span className="text-2xl font-black font-mono text-stone-400">{scores.bownesGame}</span>
-                )}
-                <span className="font-extrabold text-sm tracking-wide w-1/3 text-right">{teams.bownes.name}</span>
+              {/* Bownes Top Card */}
+              <div className="bg-[#1f1a17] p-3 rounded-lg border border-amber-900/40 flex flex-col items-center">
+                <span className="text-xs font-bold tracking-wider text-amber-500 mb-2">THE BOWNES</span>
+                <BowneLogo />
+                <input type="number" className="bg-transparent font-black text-3xl w-full text-center mt-2 border-none outline-none" value={scores.bownesToday} onChange={(e) => handleScoreChange('bownesToday', e.target.value)} />
               </div>
 
-              {/* Game Score Row 2 */}
-              <div className={`flex items-center justify-between border p-3.5 rounded-lg shadow-inner ${teams.unions.colorClass}`}>
-                <span className="font-extrabold text-sm tracking-wide w-1/3">{teams.unions.name}</span>
-                {isEditing ? (
-                  <input type="number" value={scores.unionsGame} onChange={(e) => setScores({...scores, unionsGame: parseInt(e.target.value) || 0})} className="bg-slate-800 w-16 text-center rounded font-bold p-1 text-sm text-white"/>
-                ) : (
-                  <span className="text-2xl font-black font-mono">{scores.unionsGame}</span>
-                )}
-                <span className="text-[9px] font-extrabold bg-slate-900 border border-slate-800 px-3 py-0.5 rounded-full text-slate-400">FINAL</span>
-                {isEditing ? (
-                  <input type="number" value={scores.barclaysGame} onChange={(e) => setScores({...scores, barclaysGame: parseInt(e.target.value) || 0})} className="bg-slate-800 w-16 text-center rounded font-bold p-1 text-sm text-white"/>
-                ) : (
-                  <span className="text-2xl font-black font-mono text-blue-400">{scores.barclaysGame}</span>
-                )}
-                <span className="font-extrabold text-sm tracking-wide w-1/3 text-right">{teams.barclays.name}</span>
+              {/* Sanfords Top Card */}
+              <div className="bg-[#2a1b14] p-3 rounded-lg border border-orange-900/40 flex flex-col items-center">
+                <span className="text-xs font-bold tracking-wider text-orange-500 mb-2">THE SANFORDS</span>
+                <SanfordLogo />
+                <input type="number" className="bg-transparent font-black text-3xl w-full text-center mt-2 border-none outline-none" value={scores.sanfordsToday} onChange={(e) => handleScoreChange('sanfordsToday', e.target.value)} />
               </div>
-            </div>
 
-            {/* Custom Picture & Highlight Display Container */}
-            <div className="bg-[#0b1019] border border-slate-800 rounded-lg p-4 flex flex-col items-center justify-center min-h-[200px] max-h-[260px] relative overflow-hidden">
-              {uploadedImage ? (
-                <>
-                  <img src={uploadedImage} alt="Court Highlight" className="w-full h-full object-contain rounded" />
-                  {isEditing && (
-                    <button 
-                      onClick={() => setUploadedImage(null)}
-                      className="absolute top-2 right-2 bg-red-600 hover:bg-red-500 text-white font-bold p-1 px-2.5 text-xs rounded shadow"
-                    >
-                      Wipe Media
-                    </button>
-                  )}
-                </>
-              ) : (
-                <div className="text-center p-4 flex flex-col items-center space-y-1.5">
-                  <div className="text-3xl opacity-40">🖼️</div>
-                  <div className="text-xs font-bold text-slate-400 tracking-wide">Court Picture / Highlight Zone</div>
-                  <div className="text-[10px] text-slate-600 max-w-xs">
-                    {isEditing ? "Click 'Upload Court Photo' on the top row to attach your image file here." : "No game media attached."}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Bottom Timeline Schedule Info Panel */}
-            <div className="bg-[#0b1019] border border-slate-800 rounded-lg p-4 text-center">
-              <div className="text-[9px] font-bold text-slate-500 tracking-widest uppercase mb-1">Upcoming Timeline Box</div>
-              {isEditing ? (
-                <textarea 
-                  value={upcomingText} 
-                  onChange={(e) => setUpcomingText(e.target.value)}
-                  rows={2}
-                  className="bg-slate-800 text-center text-white w-full max-w-lg p-2 rounded border border-slate-600 font-mono text-xs"
-                />
-              ) : (
-                <div className="text-lg font-black tracking-wide text-slate-200 whitespace-pre-line leading-tight">
-                  {upcomingText}
-                </div>
-              )}
-            </div>
-
-          </div>
-
-          {/* RIGHT SIDE PANEL: ALL 4 TEAMS ROSTERS LINKED SIMULTANEOUSLY */}
-          <div className="col-span-4 bg-[#0b1019] border border-slate-800 rounded-lg p-4 flex flex-col">
-            <div className="text-center text-xs font-bold text-slate-400 tracking-wider border-b border-slate-800/60 pb-3 mb-3 uppercase">
-              Tournament Team Lineups
-            </div>
-            
-            {/* Grid display to render all 4 team arrays side by side cleanly */}
-            <div className="grid grid-cols-2 gap-3 flex-1">
-              {Object.entries(teams).map(([teamKey, team]) => (
-                <div key={teamKey} className="flex flex-col space-y-1.5 bg-[#0e151f]/60 border border-slate-800/60 p-2 rounded shadow-sm">
-                  <div className={`text-[9px] font-black py-1 rounded text-center tracking-wider border ${team.borderClass} text-white truncate`}>
-                    {team.name.replace("THE ", "")}
-                  </div>
-                  
-                  <div className="space-y-0.5 flex-1 overflow-y-auto max-h-[165px] pr-0.5 scrollbar-thin">
-                    {team.players.map((player, idx) => (
-                      <div key={idx} className="flex items-center text-[11px] text-slate-400 font-mono">
-                        <span className="w-3.5 text-slate-600 text-[9px] text-right pr-1 font-sans">{idx + 1}</span>
-                        {isEditing ? (
-                          <input 
-                            type="text" 
-                            value={player} 
-                            onChange={(e) => handlePlayerChange(teamKey, idx, e.target.value)}
-                            className="bg-slate-800 text-white text-[10px] px-1 py-0.5 rounded w-full border border-slate-700 font-sans shadow-inner"
-                          />
-                        ) : (
-                          <span className="truncate pl-0.5 text-slate-300 tracking-tight">{player}</span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
+              {/* Barclays Top Card */}
+              <div className="bg-[#121b2d] p-3 rounded-lg border border-blue-900/50 flex flex-col items-center">
+                <span className="text-xs font-bold tracking-wider text-blue-400 mb-2">THE BARCLAYS</span>
+                <BarclaysLogo />
+                <input type="number" className="bg-transparent font-black text-3xl w-full text-center mt-2 border-none outline-none" value={scores.barclaysToday} onChange={(e) => handleScoreChange('barclaysToday', e.target.value)} />
+              </div>
             </div>
           </div>
 
-        </div>
+          {/* DETAILED MATCHUPS BREAKDOWN BOXES */}
+          <div className="flex flex-col gap-4">
+            
+            {/* Match 1 Card Box */}
+            <div className="bg-gradient-to-r from-[#3c1e0e] to-[#1e1715] border border-orange-900/40 rounded-xl p-4 flex items-center justify-between shadow-md">
+              <div className="flex items-center gap-4 w-5/12">
+                <SanfordLogo />
+                <span className="font-bold tracking-wide text-orange-400">THE SANFORDS</span>
+              </div>
+              <div className="flex items-center justify-center gap-4 w-2/12">
+                <input type="number" className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-orange-400" value={scores.sanfordsMatch} onChange={(e) => handleScoreChange('sanfordsMatch', e.target.value)}/>
+                <span className="text-xs font-bold bg-black/40 px-2 py-1 rounded-md border border-gray-800">VS</span>
+                <input type="number" className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-amber-500" value={scores.bownesMatch} onChange={(e) => handleScoreChange('bownesMatch', e.target.value)}/>
+              </div>
+              <div className="flex items-center justify-end gap-4 w-5/12">
+                <span className="font-bold tracking-wide text-amber-500">THE BOWNES</span>
+                <BowneLogo />
+              </div>
+            </div>
 
-        {/* Board Bottom Footer */}
-        <div className="mt-5 pt-3 border-t border-slate-800/60 flex justify-center items-center space-x-6 text-[9px] font-bold text-slate-500 tracking-widest">
-          <span>COMPETE.</span>
-          <span>RESPECT.</span>
-          <span className="text-orange-500/80">LEGENDARY.</span>
-        </div>
-      </div>
+            {/* Match 2 Card Box */}
+            <div className="bg-gradient-to-r from-[#11291f] to-[#10192a] border border-emerald-900/40 rounded-xl p-4 flex items-center justify-between shadow-md">
+              <div className="flex items-center gap-4 w-5/12">
+                <UnionLogo />
+                <span className="font-bold tracking-wide text-emerald-400">THE UNIONS</span>
+              </div>
+              <div className="flex items-center justify-center gap-4 w-2/12">
+                <input type="number" className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-emerald-400" value={scores.unionsMatch} onChange={(e) => handleScoreChange('unionsMatch', e.target.value)}/>
+                <span className="text-xs font-bold bg-black/40 px-2 py-1 rounded-md border border-gray-800">VS</span>
+                <input type="number" className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-blue-400" value={scores.barclaysMatch} onChange={(e) => handleScoreChange('barclaysMatch', e.target.value)}/>
+              </div>
+              <div className="flex items-center justify-end gap-4 w-5/12">
+                <span className="font-bold tracking-wide text-blue-400">THE BARCLAYS</span>
+                <BarclaysLogo />
+              </div>
+            </div>
+          </div>
+
+          {/* UPCOMING BANNER TIMELINE CONTAINER */}
+          <div className="bg-[#090e1a] border border-gray-900 rounded-xl p-6 text-center shadow-inner flex flex-col justify-center items-center min-h-[140px]">
+            <span className="text-gray-500 text-[10px] uppercase font-bold tracking-widest mb-2">UPCOMING TIMELINE CONTAINER</span>
+            <textarea 
+              className="bg-transparent font-black text-2xl text-slate-200 w-full text-center resize-none border-none outline-none h-16 leading-relaxed"
+              value={upcomingText}
+              onChange={(e) => setUpcomingText(e.target.value)}
+            />
+          </div>
+        </section>
+
+        {/* RIGHT COLUMN: TEAMS & ROSTERS (Styled Exactly like tournament.jpg Layout Splitting Roster Panels) */}
+        <section className="bg-[#0f192b] border border-slate-800 rounded-xl p-4 shadow-2xl flex flex-col">
+          <h3 className="text-center font-bold tracking-widest text-sm text-slate-400 uppercase border-b border-gray-800 pb-3 mb-4">TEAMS & ROSTERS</h3>
+          
+          <div className="grid grid-cols-2 gap-x-4 gap-y-6 overflow-y-auto flex-1 pr-1 max-h-[500px]">
+            
+            {/* The Unions Side */}
+            <div>
+              <div className="bg-[#11251d] text-emerald-400 font-bold text-xs p-2 rounded mb-2 border border-emerald-900/50 text-center tracking-wider">THE UNIONS</div>
+              <ul className="space-y-1.5 text-xs text-slate-300">
+                {rosters.unions.map((player, idx) => (
+                  <li key={idx} className="flex items-center gap-1">
+                    <span className="text-slate-500 w-4">{idx + 1}.</span>
+                    <input className="bg-transparent border-none p-0 focus:bg-slate-900 w-full outline-none" value={player} onChange={(e) => handleRosterChange('unions', idx, e.target.value)} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* The Bownes Side */}
+            <div>
+              <div className="bg-[#1f1a17] text-amber-500 font-bold text-xs p-2 rounded mb-2 border border-amber-900/40 text-center tracking-wider">THE BOWNES</div>
+              <ul className="space-y-1.5 text-xs text-slate-300">
+                {rosters.bownes.map((player, idx) => (
+                  <li key={idx} className="flex items-center gap-1">
+                    <span className="text-slate-500 w-4">{idx + 1}.</span>
+                    <input className="bg-transparent border-none p-0 focus:bg-slate-900 w-full outline-none" value={player} onChange={(e) => handleRosterChange('bownes', idx, e.target.value)} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* The Sanfords Side */}
+            <div>
+              <div className="bg-[#2a1b14] text-orange-500 font-bold text-xs p-2 rounded mb-2 border border-orange-900/40 text-center tracking-wider">THE SANFORDS</div>
+              <ul className="space-y-1.5 text-xs text-slate-300">
+                {rosters.sanfords.map((player, idx) => (
+                  <li key={idx} className="flex items-center gap-1">
+                    <span className="text-slate-500 w-4">{idx + 1}.</span>
+                    <input className="bg-transparent border-none p-0 focus:bg-slate-900 w-full outline-none" value={player} onChange={(e) => handleRosterChange('sanfords', idx, e.target.value)} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* The Barclays Side */}
+            <div>
+              <div className="bg-[#121b2d] text-blue-400 font-bold text-xs p-2 rounded mb-2 border border-blue-900/50 text-center tracking-wider">THE BARCLAYS</div>
+              <ul className="space-y-1.5 text-xs text-slate-300">
+                {rosters.barclays.map((player, idx) => (
+                  <li key={idx} className="flex items-center gap-1">
+                    <span className="text-slate-500 w-4">{idx + 1}.</span>
+                    <input className="bg-transparent border-none p-0 focus:bg-slate-900 w-full outline-none" value={player} onChange={(e) => handleRosterChange('barclays', idx, e.target.value)} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+          </div>
+        </section>
+      </main>
+
+      {/* FOOTER */}
+      <footer className="text-center mt-12 text-slate-600 text-[10px] tracking-widest font-semibold uppercase">
+        COMPETE . RESPECT . LEGENDARY
+      </footer>
     </div>
   );
 }

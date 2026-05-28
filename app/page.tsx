@@ -50,7 +50,6 @@ const BarclaysLogo = () => (
   </svg>
 );
 
-// Helper component to render the correct logo based on selection string
 const TeamLogoRenderer = ({ teamKey }: { teamKey: string }) => {
   switch (teamKey) {
     case "unions": return <UnionLogo />;
@@ -62,16 +61,18 @@ const TeamLogoRenderer = ({ teamKey }: { teamKey: string }) => {
 };
 
 export default function Home() {
+  // Administrative Permission Level Access Control
+  const [isAdmin, setIsAdmin] = useState<boolean>(true);
+
   const [tournamentTitle, setTournamentTitle] = useState("PS20 MIKE LEGEND TOURNAMENT");
   const [subHeader, setSubHeader] = useState("BASKETBALL SCHEDULE");
   const [resultsDay, setResultsDay] = useState("TODAY'S RESULTS - THURSDAY MAY 28TH");
 
-  // Leaderboard / Top total values
-  const [topScores, setTopScores] = useState({ unions: 46, bownes: 18, sanfords: 31, barclays: 24 });
-
-  // Customizable Match Schedule Setup
-  const [match1, setMatch1] = useState({ teamA: "sanfords", teamB: "unions", scoreA: 0, scoreB: 0 });
-  const [match2, setMatch2] = useState({ teamA: "bownes", teamB: "barclays", scoreA: 0, scoreB: 0 });
+  const [topScores, setTopScores] = useState({ unions: 0, bownes: 0, sanfords: 0, barclays: 0 });
+  
+  // Matches configured with scores and fouls matching request
+  const [match1, setMatch1] = useState({ teamA: "sanfords", teamB: "unions", scoreA: 0, scoreB: 0, foulsA: 0, foulsB: 0 });
+  const [match2, setMatch2] = useState({ teamA: "bownes", teamB: "barclays", scoreA: 0, scoreB: 0, foulsA: 0, foulsB: 0 });
 
   const [timelineText, setTimelineText] = useState("WEEK 2 SCHEDULE: TBA (To Be Announced)");
 
@@ -82,13 +83,12 @@ export default function Home() {
     barclays: ["kys r", "YJH —", "胡内", "篮板王", "稳", "Syw", "Sean", "Taotao", "高手", "James c"],
   });
 
-  // Team configuration style presets for clean borders
   const getTeamColorClass = (teamKey: string) => {
     switch (teamKey) {
-      case "unions": return "text-emerald-400 focus:text-emerald-300";
-      case "bownes": return "text-amber-500 focus:text-amber-400";
-      case "sanfords": return "text-orange-500 focus:text-orange-400";
-      case "barclays": return "text-blue-400 focus:text-blue-300";
+      case "unions": return "text-emerald-400";
+      case "bownes": return "text-amber-500";
+      case "sanfords": return "text-orange-500";
+      case "barclays": return "text-blue-400";
       default: return "text-white";
     }
   };
@@ -96,99 +96,124 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#070b13] text-white p-6 font-sans antialiased">
       
+      {/* ADMINISTRATIVE STATUS CONSOLE OVERLAY */}
+      <div className="max-w-7xl mx-auto mb-6 flex justify-end items-center gap-3 bg-[#111827] p-3 rounded-xl border border-slate-800">
+        <span className="text-xs font-semibold tracking-wider text-slate-400">AUTHORIZATION LEVEL:</span>
+        <select 
+          value={isAdmin ? "admin" : "user"} 
+          onChange={(e) => setIsAdmin(e.target.value === "admin")}
+          className="bg-[#1f2937] text-xs text-orange-400 font-bold px-3 py-1.5 rounded border border-slate-700 outline-none cursor-pointer"
+        >
+          <option value="admin">HIGHER ADMINISTRATIVE LEVEL (ADMIN)</option>
+          <option value="user">SPECTATOR LEVEL (USER - READ ONLY)</option>
+        </select>
+      </div>
+
       {/* GLOBAL HEADER */}
       <header className="text-center mb-8 border-b border-slate-800 pb-5">
         <input
           type="text"
           value={tournamentTitle}
+          disabled={!isAdmin}
           onChange={(e) => setTournamentTitle(e.target.value)}
-          className="bg-transparent font-black text-4xl text-center tracking-wider w-full uppercase outline-none focus:text-orange-500 border-none"
+          className="bg-transparent font-black text-4xl text-center tracking-wider w-full uppercase outline-none border-none disabled:cursor-not-allowed"
         />
         <div className="flex justify-center items-center gap-2 mt-2 font-bold text-orange-500 tracking-widest text-sm">
           <span>★</span>
           <input
             type="text"
             value={subHeader}
+            disabled={!isAdmin}
             onChange={(e) => setSubHeader(e.target.value)}
-            className="bg-transparent font-bold text-center tracking-widest uppercase outline-none text-orange-500 border-none w-64 text-xs"
+            className="bg-transparent font-bold text-center tracking-widest uppercase outline-none text-orange-500 border-none w-64 text-xs disabled:cursor-not-allowed"
           />
           <span>★</span>
         </div>
       </header>
 
-      {/* TWO-COLUMN GRID */}
+      {/* TWO-COLUMN MAIN CONTAINER */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto items-start">
         
-        {/* MATCH CONTAINER CARDS */}
+        {/* MATCH STUFF CARDS ROW BOXES */}
         <main className="lg:col-span-2 flex flex-col gap-6">
           
-          {/* TOP RESULTS OVERVIEW PANEL */}
+          {/* HERO PREVIEW DASHBOARD */}
           <div className="bg-[#111827] border border-slate-800 rounded-2xl p-5 shadow-2xl">
             <input
               type="text"
               value={resultsDay}
+              disabled={!isAdmin}
               onChange={(e) => setResultsDay(e.target.value)}
-              className="bg-transparent text-xs font-bold text-center tracking-widest text-slate-400 uppercase w-full mb-5 border-none outline-none focus:text-white"
+              className="bg-transparent text-xs font-bold text-center tracking-widest text-slate-400 uppercase w-full mb-5 border-none outline-none disabled:cursor-not-allowed"
             />
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {/* UNIONS PANEL */}
               <div className="bg-[#0c1f17] p-4 rounded-xl border border-emerald-950 flex flex-col items-center">
                 <span className="text-[11px] font-black tracking-widest text-emerald-400 mb-3">THE UNIONS</span>
                 <UnionLogo />
                 <input
                   type="number"
                   value={topScores.unions}
+                  disabled={!isAdmin}
                   onChange={(e) => setTopScores({ ...topScores, unions: parseInt(e.target.value) || 0 })}
-                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-emerald-300"
+                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-emerald-300 disabled:cursor-not-allowed"
                 />
               </div>
 
+              {/* BOWNES PANEL */}
               <div className="bg-[#1c1613] p-4 rounded-xl border border-amber-950 flex flex-col items-center">
                 <span className="text-[11px] font-black tracking-widest text-amber-500 mb-3">THE BOWNES</span>
                 <BowneLogo />
                 <input
                   type="number"
                   value={topScores.bownes}
+                  disabled={!isAdmin}
                   onChange={(e) => setTopScores({ ...topScores, bownes: parseInt(e.target.value) || 0 })}
-                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-amber-400"
+                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-amber-400 disabled:cursor-not-allowed"
                 />
               </div>
 
+              {/* SANFORDS PANEL */}
               <div className="bg-[#241712] p-4 rounded-xl border border-orange-950 flex flex-col items-center">
                 <span className="text-[11px] font-black tracking-widest text-orange-500 mb-3">THE SANFORDS</span>
                 <SanfordLogo />
                 <input
                   type="number"
                   value={topScores.sanfords}
+                  disabled={!isAdmin}
                   onChange={(e) => setTopScores({ ...topScores, sanfords: parseInt(e.target.value) || 0 })}
-                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-orange-400"
+                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-orange-400 disabled:cursor-not-allowed"
                 />
               </div>
 
+              {/* BARCLAYS PANEL */}
               <div className="bg-[#0f1626] p-4 rounded-xl border border-blue-950 flex flex-col items-center">
                 <span className="text-[11px] font-black tracking-widest text-blue-400 mb-3">THE BARCLAYS</span>
                 <BarclaysLogo />
                 <input
                   type="number"
                   value={topScores.barclays}
+                  disabled={!isAdmin}
                   onChange={(e) => setTopScores({ ...topScores, barclays: parseInt(e.target.value) || 0 })}
-                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-blue-300"
+                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-blue-300 disabled:cursor-not-allowed"
                 />
               </div>
             </div>
           </div>
 
-          {/* DYNAMIC MUTABLE MATCHUPS LIST (Completely Switchable Names/Logos) */}
+          {/* DYNAMIC MATCHUPS PANELS (Includes FOULS and Admin Controls) */}
           <div className="flex flex-col gap-4">
             
-            {/* Match Box 1 */}
-            <div className="bg-gradient-to-r from-[#181e2a] to-[#141110] border border-slate-800 rounded-xl p-4 flex items-center justify-between shadow-md">
+            {/* MATCH BOX 1 */}
+            <div className="bg-gradient-to-r from-[#1c120c] to-[#0a0f1d] border border-slate-800 rounded-xl p-4 flex items-center justify-between shadow-md">
               <div className="flex items-center gap-4 w-5/12">
                 <TeamLogoRenderer teamKey={match1.teamA} />
                 <select 
                   value={match1.teamA} 
+                  disabled={!isAdmin}
                   onChange={(e) => setMatch1({ ...match1, teamA: e.target.value })}
-                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none cursor-pointer uppercase ${getTeamColorClass(match1.teamA)}`}
+                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase ${getTeamColorClass(match1.teamA)} disabled:cursor-not-allowed`}
                 >
                   <option value="sanfords" className="bg-[#070b13] text-orange-500">THE SANFORDS</option>
                   <option value="unions" className="bg-[#070b13] text-emerald-400">THE UNIONS</option>
@@ -197,27 +222,45 @@ export default function Home() {
                 </select>
               </div>
 
-              <div className="flex items-center justify-center gap-3 w-2/12">
-                <input 
-                  type="number" 
-                  value={match1.scoreA} 
-                  onChange={(e) => setMatch1({ ...match1, scoreA: parseInt(e.target.value) || 0 })}
-                  className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match1.teamA)}`}
-                />
-                <span className="text-[10px] font-black tracking-tighter bg-black/50 px-2 py-1 rounded border border-slate-800">VS</span>
-                <input 
-                  type="number" 
-                  value={match1.scoreB} 
-                  onChange={(e) => setMatch1({ ...match1, scoreB: parseInt(e.target.value) || 0 })}
-                  className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match1.teamB)}`}
-                />
+              {/* CENTER CARD CONFIGURATION WITH FOULS DISPLAY */}
+              <div className="flex items-center justify-center gap-4 w-3/12">
+                <div className="flex flex-col items-center">
+                  <input 
+                    type="number" 
+                    value={match1.scoreA} 
+                    disabled={!isAdmin}
+                    onChange={(e) => setMatch1({ ...match1, scoreA: parseInt(e.target.value) || 0 })}
+                    className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match1.teamA)} disabled:cursor-not-allowed`}
+                  />
+                  <div className="flex items-center text-[10px] text-red-500 gap-0.5">
+                    <span>F:</span>
+                    <input type="number" disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0" value={match1.foulsA} onChange={(e) => setMatch1({...match1, foulsA: parseInt(e.target.value) || 0})}/>
+                  </div>
+                </div>
+
+                <span className="text-[10px] font-black tracking-tighter bg-black/50 px-2 py-1 rounded border border-slate-800 h-6 flex items-center">VS</span>
+
+                <div className="flex flex-col items-center">
+                  <input 
+                    type="number" 
+                    value={match1.scoreB} 
+                    disabled={!isAdmin}
+                    onChange={(e) => setMatch1({ ...match1, scoreB: parseInt(e.target.value) || 0 })}
+                    className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match1.teamB)} disabled:cursor-not-allowed`}
+                  />
+                  <div className="flex items-center text-[10px] text-red-500 gap-0.5">
+                    <span>F:</span>
+                    <input type="number" disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0" value={match1.foulsB} onChange={(e) => setMatch1({...match1, foulsB: parseInt(e.target.value) || 0})}/>
+                  </div>
+                </div>
               </div>
 
               <div className="flex items-center justify-end gap-4 w-5/12">
                 <select 
                   value={match1.teamB} 
+                  disabled={!isAdmin}
                   onChange={(e) => setMatch1({ ...match1, teamB: e.target.value })}
-                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none cursor-pointer uppercase text-right ${getTeamColorClass(match1.teamB)}`}
+                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase text-right ${getTeamColorClass(match1.teamB)} disabled:cursor-not-allowed`}
                 >
                   <option value="unions" className="bg-[#070b13] text-emerald-400">THE UNIONS</option>
                   <option value="sanfords" className="bg-[#070b13] text-orange-500">THE SANFORDS</option>
@@ -228,14 +271,15 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Match Box 2 */}
-            <div className="bg-gradient-to-r from-[#181e2a] to-[#141110] border border-slate-800 rounded-xl p-4 flex items-center justify-between shadow-md">
+            {/* MATCH BOX 2 */}
+            <div className="bg-gradient-to-r from-[#171311] to-[#0a0f1d] border border-slate-800 rounded-xl p-4 flex items-center justify-between shadow-md">
               <div className="flex items-center gap-4 w-5/12">
                 <TeamLogoRenderer teamKey={match2.teamA} />
                 <select 
                   value={match2.teamA} 
+                  disabled={!isAdmin}
                   onChange={(e) => setMatch2({ ...match2, teamA: e.target.value })}
-                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none cursor-pointer uppercase ${getTeamColorClass(match2.teamA)}`}
+                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase ${getTeamColorClass(match2.teamA)} disabled:cursor-not-allowed`}
                 >
                   <option value="bownes" className="bg-[#070b13] text-amber-500">THE BOWNES</option>
                   <option value="barclays" className="bg-[#070b13] text-blue-400">THE BARCLAYS</option>
@@ -244,27 +288,44 @@ export default function Home() {
                 </select>
               </div>
 
-              <div className="flex items-center justify-center gap-3 w-2/12">
-                <input 
-                  type="number" 
-                  value={match2.scoreA} 
-                  onChange={(e) => setMatch2({ ...match2, scoreA: parseInt(e.target.value) || 0 })}
-                  className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match2.teamA)}`}
-                />
-                <span className="text-[10px] font-black tracking-tighter bg-black/50 px-2 py-1 rounded border border-slate-800">VS</span>
-                <input 
-                  type="number" 
-                  value={match2.scoreB} 
-                  onChange={(e) => setMatch2({ ...match2, scoreB: parseInt(e.target.value) || 0 })}
-                  className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match2.teamB)}`}
-                />
+              <div className="flex items-center justify-center gap-4 w-3/12">
+                <div className="flex flex-col items-center">
+                  <input 
+                    type="number" 
+                    value={match2.scoreA} 
+                    disabled={!isAdmin}
+                    onChange={(e) => setMatch2({ ...match2, scoreA: parseInt(e.target.value) || 0 })}
+                    className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match2.teamA)} disabled:cursor-not-allowed`}
+                  />
+                  <div className="flex items-center text-[10px] text-red-500 gap-0.5">
+                    <span>F:</span>
+                    <input type="number" disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0" value={match2.foulsA} onChange={(e) => setMatch2({...match2, foulsA: parseInt(e.target.value) || 0})}/>
+                  </div>
+                </div>
+
+                <span className="text-[10px] font-black tracking-tighter bg-black/50 px-2 py-1 rounded border border-slate-800 h-6 flex items-center">VS</span>
+
+                <div className="flex flex-col items-center">
+                  <input 
+                    type="number" 
+                    value={match2.scoreB} 
+                    disabled={!isAdmin}
+                    onChange={(e) => setMatch2({ ...match2, scoreB: parseInt(e.target.value) || 0 })}
+                    className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match2.teamB)} disabled:cursor-not-allowed`}
+                  />
+                  <div className="flex items-center text-[10px] text-red-500 gap-0.5">
+                    <span>F:</span>
+                    <input type="number" disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0" value={match2.foulsB} onChange={(e) => setMatch2({...match2, foulsB: parseInt(e.target.value) || 0})}/>
+                  </div>
+                </div>
               </div>
 
               <div className="flex items-center justify-end gap-4 w-5/12">
                 <select 
                   value={match2.teamB} 
+                  disabled={!isAdmin}
                   onChange={(e) => setMatch2({ ...match2, teamB: e.target.value })}
-                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none cursor-pointer uppercase text-right ${getTeamColorClass(match2.teamB)}`}
+                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase text-right ${getTeamColorClass(match2.teamB)} disabled:cursor-not-allowed`}
                 >
                   <option value="barclays" className="bg-[#070b13] text-blue-400">THE BARCLAYS</option>
                   <option value="bownes" className="bg-[#070b13] text-amber-500">THE BOWNES</option>
@@ -277,19 +338,20 @@ export default function Home() {
 
           </div>
 
-          {/* BOTTOM TIME METADATA TIMELINE BANNER */}
+          {/* TIMELINE BANNER */}
           <div className="bg-[#0c1222] border border-slate-900 rounded-xl p-5 text-center shadow-inner flex flex-col justify-center items-center">
             <span className="text-slate-500 text-[10px] uppercase font-black tracking-widest mb-2">TIMELINE METADATA BANNER</span>
             <input 
               type="text"
               value={timelineText}
+              disabled={!isAdmin}
               onChange={(e) => setTimelineText(e.target.value)}
-              className="bg-transparent font-black text-xl text-slate-200 w-full text-center border-none outline-none uppercase tracking-wide"
+              className="bg-transparent font-black text-xl text-slate-200 w-full text-center border-none outline-none uppercase tracking-wide disabled:cursor-not-allowed"
             />
           </div>
         </main>
 
-        {/* ROSTERS COLUMN PANELS */}
+        {/* ROSTERS COLUMN PANELS (Controlled dynamically by Access Authorization toggles) */}
         <aside className="bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-2xl lg:col-span-1">
           <h3 className="text-center font-black tracking-widest text-xs text-slate-400 uppercase border-b border-slate-800 pb-3 mb-5">
             TEAMS & ROSTERS
@@ -297,7 +359,7 @@ export default function Home() {
           
           <div className="grid grid-cols-2 gap-x-4 gap-y-6">
             
-            {/* UNIONS BLOCK */}
+            {/* UNIONS */}
             <div className="space-y-3">
               <div className="bg-[#0c1f17] text-emerald-400 font-black text-[10px] p-2 rounded border border-emerald-900/40 text-center tracking-widest uppercase">
                 THE UNIONS
@@ -309,19 +371,20 @@ export default function Home() {
                     <input 
                       type="text"
                       value={player} 
+                      disabled={!isAdmin}
                       onChange={(e) => {
                         const copy = [...rosters.unions];
                         copy[idx] = e.target.value;
                         setRosters({ ...rosters, unions: copy });
                       }} 
-                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white"
+                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white disabled:text-slate-400 disabled:cursor-default"
                     />
                   </li>
                 ))}
               </ol>
             </div>
 
-            {/* BOWNES BLOCK */}
+            {/* BOWNES */}
             <div className="space-y-3">
               <div className="bg-[#1c1613] text-amber-500 font-black text-[10px] p-2 rounded border border-amber-900/40 text-center tracking-widest uppercase">
                 THE BOWNES
@@ -333,19 +396,20 @@ export default function Home() {
                     <input 
                       type="text"
                       value={player} 
+                      disabled={!isAdmin}
                       onChange={(e) => {
                         const copy = [...rosters.bownes];
                         copy[idx] = e.target.value;
                         setRosters({ ...rosters, bownes: copy });
                       }} 
-                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white"
+                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white disabled:text-slate-400 disabled:cursor-default"
                     />
                   </li>
                 ))}
               </ol>
             </div>
 
-            {/* SANFORDS BLOCK */}
+            {/* SANFORDS */}
             <div className="space-y-3">
               <div className="bg-[#241712] text-orange-500 font-black text-[10px] p-2 rounded border border-orange-900/40 text-center tracking-widest uppercase">
                 THE SANFORDS
@@ -357,19 +421,20 @@ export default function Home() {
                     <input 
                       type="text"
                       value={player} 
+                      disabled={!isAdmin}
                       onChange={(e) => {
                         const copy = [...rosters.sanfords];
                         copy[idx] = e.target.value;
                         setRosters({ ...rosters, sanfords: copy });
                       }} 
-                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white"
+                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white disabled:text-slate-400 disabled:cursor-default"
                     />
                   </li>
                 ))}
               </ol>
             </div>
 
-            {/* BARCLAYS BLOCK */}
+            {/* BARCLAYS */}
             <div className="space-y-3">
               <div className="bg-[#0f1626] text-blue-400 font-black text-[10px] p-2 rounded border border-blue-900/40 text-center tracking-widest uppercase">
                 THE BARCLAYS
@@ -381,12 +446,13 @@ export default function Home() {
                     <input 
                       type="text"
                       value={player} 
+                      disabled={!isAdmin}
                       onChange={(e) => {
                         const copy = [...rosters.barclays];
                         copy[idx] = e.target.value;
                         setRosters({ ...rosters, barclays: copy });
                       }} 
-                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white"
+                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white disabled:text-slate-400 disabled:cursor-default"
                     />
                   </li>
                 ))}

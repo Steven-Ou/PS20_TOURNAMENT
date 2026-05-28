@@ -50,7 +50,6 @@
 Clone the repository and install the setup packages inside your local terminal environment:
 
 Bash
-
 cd ps20_tournament
 npm install
 
@@ -58,13 +57,10 @@ npm install
 Fire up your live hot-reloading local compiler server:
 
 Bash
-
 npm run dev
-
 Once it compiles successfully, navigate to http://localhost:3000 in your preferred web browser to view the live app.
 
 📝 Dashboard User Guide
-
 Flip the upper authorization console select drop-down to HIGHER ADMINISTRATIVE LEVEL (ADMIN).
 
 Click on the select dropdown inside any live match card block to fluidly swap out who is playing. The vector logo badge updates instantly.

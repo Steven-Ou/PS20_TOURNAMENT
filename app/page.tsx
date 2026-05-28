@@ -61,6 +61,7 @@ const TeamLogoRenderer = ({ teamKey }: { teamKey: string }) => {
 };
 
 export default function Home() {
+  // Administrative Permission Level Access Control
   const [isAdmin, setIsAdmin] = useState<boolean>(true);
 
   const [tournamentTitle, setTournamentTitle] = useState("PS20 MIKE LEGEND TOURNAMENT");
@@ -356,7 +357,7 @@ export default function Home() {
           </div>
         </main>
 
-        {/* ROSTERS COLUMN PANELS */}
+        {/* ROSTERS COLUMN PANELS (Modified to respect Authorization Levels) */}
         <aside className="bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-2xl lg:col-span-1">
           <h3 className="text-center font-black tracking-widest text-xs text-slate-400 uppercase border-b border-slate-800 pb-3 mb-5">
             TEAMS & ROSTERS
@@ -371,7 +372,7 @@ export default function Home() {
               </div>
               <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
                 {rosters.unions.map((player, idx) => (
-                  <li key={idx} className="flex items-center gap-1 bg-slate-900/40 px-1.5 py-0.5 rounded border border-transparent">
+                  <li key={idx} className={`flex items-center gap-1 px-1.5 py-0.5 rounded border border-transparent ${isAdmin ? 'bg-slate-900/40' : 'bg-transparent'}`}>
                     <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
                     <input 
                       type="text"
@@ -382,7 +383,7 @@ export default function Home() {
                         copy[idx] = e.target.value;
                         setRosters({ ...rosters, unions: copy });
                       }} 
-                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white disabled:text-slate-400 disabled:cursor-default"
+                      className={`bg-transparent border-none p-0 w-full outline-none focus:text-white ${!isAdmin ? 'text-slate-200 font-normal cursor-default pointer-events-none' : ''}`}
                     />
                   </li>
                 ))}
@@ -396,7 +397,7 @@ export default function Home() {
               </div>
               <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
                 {rosters.bownes.map((player, idx) => (
-                  <li key={idx} className="flex items-center gap-1 bg-slate-900/40 px-1.5 py-0.5 rounded border border-transparent">
+                  <li key={idx} className={`flex items-center gap-1 px-1.5 py-0.5 rounded border border-transparent ${isAdmin ? 'bg-slate-900/40' : 'bg-transparent'}`}>
                     <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
                     <input 
                       type="text"
@@ -407,7 +408,7 @@ export default function Home() {
                         copy[idx] = e.target.value;
                         setRosters({ ...rosters, bownes: copy });
                       }} 
-                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white disabled:text-slate-400 disabled:cursor-default"
+                      className={`bg-transparent border-none p-0 w-full outline-none focus:text-white ${!isAdmin ? 'text-slate-200 font-normal cursor-default pointer-events-none' : ''}`}
                     />
                   </li>
                 ))}
@@ -421,7 +422,7 @@ export default function Home() {
               </div>
               <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
                 {rosters.sanfords.map((player, idx) => (
-                  <li key={idx} className="flex items-center gap-1 bg-slate-900/40 px-1.5 py-0.5 rounded border border-transparent">
+                  <li key={idx} className={`flex items-center gap-1 px-1.5 py-0.5 rounded border border-transparent ${isAdmin ? 'bg-slate-900/40' : 'bg-transparent'}`}>
                     <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
                     <input 
                       type="text"
@@ -432,7 +433,7 @@ export default function Home() {
                         copy[idx] = e.target.value;
                         setRosters({ ...rosters, sanfords: copy });
                       }} 
-                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white disabled:text-slate-400 disabled:cursor-default"
+                      className={`bg-transparent border-none p-0 w-full outline-none focus:text-white ${!isAdmin ? 'text-slate-200 font-normal cursor-default pointer-events-none' : ''}`}
                     />
                   </li>
                 ))}
@@ -446,7 +447,7 @@ export default function Home() {
               </div>
               <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
                 {rosters.barclays.map((player, idx) => (
-                  <li key={idx} className="flex items-center gap-1 bg-slate-900/40 px-1.5 py-0.5 rounded border border-transparent">
+                  <li key={idx} className={`flex items-center gap-1 px-1.5 py-0.5 rounded border border-transparent ${isAdmin ? 'bg-slate-900/40' : 'bg-transparent'}`}>
                     <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
                     <input 
                       type="text"
@@ -457,7 +458,7 @@ export default function Home() {
                         copy[idx] = e.target.value;
                         setRosters({ ...rosters, barclays: copy });
                       }} 
-                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white disabled:text-slate-400 disabled:cursor-default"
+                      className={`bg-transparent border-none p-0 w-full outline-none focus:text-white ${!isAdmin ? 'text-slate-200 font-normal cursor-default pointer-events-none' : ''}`}
                     />
                   </li>
                 ))}

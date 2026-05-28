@@ -14,11 +14,11 @@ export default function TournamentDashboard() {
   const [dateText, setDateText] = useState("WEDNESDAY 5/27/2026");
   const [upcomingText, setUpcomingText] = useState("WEEK 2 SCHEDULE: TBA\n(To Be Announced)");
   
-  // Media asset container upload state
+  // Clean container for local media photo uploads
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Middle panel scoreboard scores
+  // Exact live game scores matching your Wednesday results
   const [scores, setScores] = useState({
     sanfordsGame: 31,
     bownesGame: 30,
@@ -26,7 +26,7 @@ export default function TournamentDashboard() {
     barclaysGame: 34,
   });
 
-  // Single truth configuration for all 4 team names and player lists
+  // Single source of truth for the 4 active teams
   const [teams, setTeams] = useState<Record<string, TeamConfig>>({
     sanfords: {
       name: "THE SANFORDS",
@@ -69,14 +69,11 @@ export default function TournamentDashboard() {
     }));
   };
 
-  // Handle local picture uploads
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setUploadedImage(reader.result as string);
-      };
+      reader.onloadend = () => setUploadedImage(reader.result as string);
       reader.readAsDataURL(file);
     }
   };
@@ -84,10 +81,10 @@ export default function TournamentDashboard() {
   return (
     <div className="min-h-screen bg-[#0b1019] text-white font-sans p-6 flex flex-col items-center">
       
-      {/* Settings Panel Ribbon Menu */}
+      {/* Dynamic Ribbon Control Header */}
       <div className="w-full max-w-7xl mb-4 flex justify-between items-center px-2">
         <div className="flex items-center space-x-3">
-          <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Live Controls:</span>
+          <span className="text-xs font-bold uppercase tracking-widest text-slate-500">Board Modifiers:</span>
           {isEditing && (
             <button 
               onClick={() => fileInputRef.current?.click()}
@@ -102,17 +99,15 @@ export default function TournamentDashboard() {
           onClick={() => setIsEditing(!isEditing)} 
           className={`px-6 py-2 rounded font-bold tracking-wide shadow transition ${isEditing ? 'bg-green-600 hover:bg-green-500' : 'bg-blue-600 hover:bg-blue-500'}`}
         >
-          {isEditing ? "💾 Save Layout Configuration" : "⚙️ Open Interactive Editor"}
+          {isEditing ? "💾 Save Layout Modifications" : "⚙️ Open Board Editor"}
         </button>
       </div>
 
-      {/* =========================================================================
-          MAIN MANAGEMENT DASHBOARD TEMPLATE (Left Sidebar Removed completely)
-         ========================================================================= */}
+      {/* MAIN SCREEN GRAPHIC PANEL BACKGROUND CONTAINER */}
       <div className="w-full max-w-7xl bg-[#0e151f] border border-slate-800 rounded-lg p-6 shadow-2xl">
         
-        {/* Title Header Banner Block */}
-        <div className="text-center mb-8 border-b border-slate-800/60 pb-5">
+        {/* Main Tournament Identity Line */}
+        <div className="text-center mb-6 pb-4 border-b border-slate-800/60">
           <h1 className="text-4xl font-black tracking-wider text-white">PS20 MIKE LEGEND TOURNAMENT</h1>
           <div className="flex justify-center items-center space-x-3 mt-1.5">
             <span className="text-orange-500 font-bold tracking-widest text-sm">★ BASKETBALL SCHEDULE ★</span>
@@ -130,21 +125,21 @@ export default function TournamentDashboard() {
           </div>
         </div>
 
-        {/* Outer Split Matrix Grid: 8 Columns Center Panels, 4 Columns All Rosters */}
+        {/* Outer Grid: 8 Columns for Games & Media Center | 4 Columns for Rosters Matrix */}
         <div className="grid grid-cols-12 gap-6">
           
-          {/* LEFT/CENTER FIELD: MATCHUPS, SCORES, AND MEDIA RUN UPLOADER */}
-          <div className="col-span-8 flex flex-col space-y-5">
+          {/* MIDDLE COLUMN FIELD AREA */}
+          <div className="col-span-8 flex flex-col space-y-4">
             
-            {/* Top Matchups Container Grid: Scores Removed, Fully Reordered */}
+            {/* Top Matchups Grid: Scores completely removed and pairs correctly ordered */}
             <div className="bg-[#0b1019] border border-slate-800/80 rounded-lg p-4">
               <div className="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-3 text-center">
-                Tournament Brackets & Pairs
+                WEEK 1 SEMIFINALS — MATCHUP CARDS
               </div>
               
               <div className="grid grid-cols-2 gap-4">
-                {/* Pair 1: Sanfords vs Bownes */}
-                <div className="flex items-center justify-between bg-[#0e151f] p-4 rounded border border-slate-800 relative">
+                {/* Match 1: Sanfords vs Bownes */}
+                <div className="flex items-center justify-between bg-[#0e151f] p-4 rounded border border-slate-800">
                   <div className="w-5/12 text-center">
                     {isEditing ? (
                       <input type="text" value={teams.sanfords.name} onChange={(e) => handleTeamNameChange('sanfords', e.target.value)} className="bg-slate-800 text-center text-xs font-bold p-1 rounded w-full"/>
@@ -152,7 +147,7 @@ export default function TournamentDashboard() {
                       <div className="text-sm font-black text-orange-400 tracking-wide truncate">{teams.sanfords.name}</div>
                     )}
                   </div>
-                  <div className="text-xs font-black text-slate-500 bg-[#0b1019] border border-slate-800 px-2.5 py-1 rounded-full z-10">VS</div>
+                  <div className="text-xs font-black text-slate-500 bg-[#0b1019] border border-slate-800 px-3 py-1 rounded-full">VS</div>
                   <div className="w-5/12 text-center">
                     {isEditing ? (
                       <input type="text" value={teams.bownes.name} onChange={(e) => handleTeamNameChange('bownes', e.target.value)} className="bg-slate-800 text-center text-xs font-bold p-1 rounded w-full"/>
@@ -162,8 +157,8 @@ export default function TournamentDashboard() {
                   </div>
                 </div>
 
-                {/* Pair 2: Unions vs Barclays */}
-                <div className="flex items-center justify-between bg-[#0e151f] p-4 rounded border border-slate-800 relative">
+                {/* Match 2: Unions vs Barclays */}
+                <div className="flex items-center justify-between bg-[#0e151f] p-4 rounded border border-slate-800">
                   <div className="w-5/12 text-center">
                     {isEditing ? (
                       <input type="text" value={teams.unions.name} onChange={(e) => handleTeamNameChange('unions', e.target.value)} className="bg-slate-800 text-center text-xs font-bold p-1 rounded w-full"/>
@@ -171,7 +166,7 @@ export default function TournamentDashboard() {
                       <div className="text-sm font-black text-emerald-400 tracking-wide truncate">{teams.unions.name}</div>
                     )}
                   </div>
-                  <div className="text-xs font-black text-slate-500 bg-[#0b1019] border border-slate-800 px-2.5 py-1 rounded-full z-10">VS</div>
+                  <div className="text-xs font-black text-slate-500 bg-[#0b1019] border border-slate-800 px-3 py-1 rounded-full">VS</div>
                   <div className="w-5/12 text-center">
                     {isEditing ? (
                       <input type="text" value={teams.barclays.name} onChange={(e) => handleTeamNameChange('barclays', e.target.value)} className="bg-slate-800 text-center text-xs font-bold p-1 rounded w-full"/>
@@ -183,13 +178,13 @@ export default function TournamentDashboard() {
               </div>
             </div>
 
-            {/* Middle Section: Live Detailed Interactive Scoreboards */}
+            {/* Middle Live Detailed Scoring Displays */}
             <div className="bg-[#0b1019] border border-slate-800 rounded-lg p-4 space-y-3">
               <div className="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-1 text-center">
-                Live Score Results Panel
+                Live Detailed Scoreboard Panel
               </div>
 
-              {/* Score Display Row 1 */}
+              {/* Game Score Row 1 */}
               <div className={`flex items-center justify-between border p-3.5 rounded-lg shadow-inner ${teams.sanfords.colorClass}`}>
                 <span className="font-extrabold text-sm tracking-wide w-1/3">{teams.sanfords.name}</span>
                 {isEditing ? (
@@ -206,7 +201,7 @@ export default function TournamentDashboard() {
                 <span className="font-extrabold text-sm tracking-wide w-1/3 text-right">{teams.bownes.name}</span>
               </div>
 
-              {/* Score Display Row 2 */}
+              {/* Game Score Row 2 */}
               <div className={`flex items-center justify-between border p-3.5 rounded-lg shadow-inner ${teams.unions.colorClass}`}>
                 <span className="font-extrabold text-sm tracking-wide w-1/3">{teams.unions.name}</span>
                 {isEditing ? (
@@ -224,34 +219,34 @@ export default function TournamentDashboard() {
               </div>
             </div>
 
-            {/* Picture Upload Container Box Area */}
-            <div className="bg-[#0b1019] border border-slate-800 rounded-lg p-4 flex flex-col items-center justify-center min-h-[220px] relative overflow-hidden group">
+            {/* Custom Picture & Highlight Display Container */}
+            <div className="bg-[#0b1019] border border-slate-800 rounded-lg p-4 flex flex-col items-center justify-center min-h-[200px] max-h-[260px] relative overflow-hidden">
               {uploadedImage ? (
                 <>
-                  <img src={uploadedImage} alt="Court Highlights" className="w-full h-full object-cover max-h-[300px] rounded" />
+                  <img src={uploadedImage} alt="Court Highlight" className="w-full h-full object-contain rounded" />
                   {isEditing && (
                     <button 
                       onClick={() => setUploadedImage(null)}
                       className="absolute top-2 right-2 bg-red-600 hover:bg-red-500 text-white font-bold p-1 px-2.5 text-xs rounded shadow"
                     >
-                      Remove Media
+                      Wipe Media
                     </button>
                   )}
                 </>
               ) : (
-                <div className="text-center p-6 flex flex-col items-center space-y-2">
-                  <div className="text-3xl text-slate-600">🖼️</div>
-                  <div className="text-xs font-bold text-slate-400 tracking-wide">Court Picture Display Container</div>
+                <div className="text-center p-4 flex flex-col items-center space-y-1.5">
+                  <div className="text-3xl opacity-40">🖼️</div>
+                  <div className="text-xs font-bold text-slate-400 tracking-wide">Court Picture / Highlight Zone</div>
                   <div className="text-[10px] text-slate-600 max-w-xs">
-                    {isEditing ? "Click 'Upload Court Photo' on the top panel ribbon to add a match picture highlight here." : "No game media file has been attached yet."}
+                    {isEditing ? "Click 'Upload Court Photo' on the top row to attach your image file here." : "No game media attached."}
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Upcoming/TBA Schedule Box Panel Component */}
+            {/* Bottom Timeline Schedule Info Panel */}
             <div className="bg-[#0b1019] border border-slate-800 rounded-lg p-4 text-center">
-              <div className="text-[9px] font-bold text-slate-500 tracking-widest uppercase mb-1">Timeline Target Info</div>
+              <div className="text-[9px] font-bold text-slate-500 tracking-widest uppercase mb-1">Upcoming Timeline Box</div>
               {isEditing ? (
                 <textarea 
                   value={upcomingText} 
@@ -260,7 +255,7 @@ export default function TournamentDashboard() {
                   className="bg-slate-800 text-center text-white w-full max-w-lg p-2 rounded border border-slate-600 font-mono text-xs"
                 />
               ) : (
-                <div className="text-lg font-black tracking-wide text-slate-200 whitespace-pre-line leading-snug">
+                <div className="text-lg font-black tracking-wide text-slate-200 whitespace-pre-line leading-tight">
                   {upcomingText}
                 </div>
               )}
@@ -268,21 +263,21 @@ export default function TournamentDashboard() {
 
           </div>
 
-          {/* RIGHT PANEL: FULL 4-TEAM SIMULTANEOUS ROSTERS MATRIX VIEW */}
+          {/* RIGHT SIDE PANEL: ALL 4 TEAMS ROSTERS LINKED SIMULTANEOUSLY */}
           <div className="col-span-4 bg-[#0b1019] border border-slate-800 rounded-lg p-4 flex flex-col">
             <div className="text-center text-xs font-bold text-slate-400 tracking-wider border-b border-slate-800/60 pb-3 mb-3 uppercase">
-              Tournament Team Rosters
+              Tournament Team Lineups
             </div>
             
-            {/* 4-Team Layout Map without scrolling clutter */}
-            <div className="grid grid-cols-2 gap-4 flex-1">
+            {/* Grid display to render all 4 team arrays side by side cleanly */}
+            <div className="grid grid-cols-2 gap-3 flex-1">
               {Object.entries(teams).map(([teamKey, team]) => (
-                <div key={teamKey} className="flex flex-col space-y-1 bg-[#0e151f]/60 border border-slate-800/60 p-2 rounded shadow-sm">
+                <div key={teamKey} className="flex flex-col space-y-1.5 bg-[#0e151f]/60 border border-slate-800/60 p-2 rounded shadow-sm">
                   <div className={`text-[9px] font-black py-1 rounded text-center tracking-wider border ${team.borderClass} text-white truncate`}>
                     {team.name.replace("THE ", "")}
                   </div>
                   
-                  <div className="space-y-0.5 flex-1 overflow-y-auto max-h-[160px] pr-0.5 scrollbar-thin">
+                  <div className="space-y-0.5 flex-1 overflow-y-auto max-h-[165px] pr-0.5 scrollbar-thin">
                     {team.players.map((player, idx) => (
                       <div key={idx} className="flex items-center text-[11px] text-slate-400 font-mono">
                         <span className="w-3.5 text-slate-600 text-[9px] text-right pr-1 font-sans">{idx + 1}</span>
@@ -291,7 +286,7 @@ export default function TournamentDashboard() {
                             type="text" 
                             value={player} 
                             onChange={(e) => handlePlayerChange(teamKey, idx, e.target.value)}
-                            className="bg-slate-800 text-white text-[10px] px-1 py-0.5 rounded w-full border border-slate-700 font-sans"
+                            className="bg-slate-800 text-white text-[10px] px-1 py-0.5 rounded w-full border border-slate-700 font-sans shadow-inner"
                           />
                         ) : (
                           <span className="truncate pl-0.5 text-slate-300 tracking-tight">{player}</span>
@@ -306,8 +301,8 @@ export default function TournamentDashboard() {
 
         </div>
 
-        {/* Board Bottom Branding Tagline Footer */}
-        <div className="mt-6 pt-4 border-t border-slate-800/60 flex justify-center items-center space-x-6 text-[9px] font-bold text-slate-500 tracking-widest">
+        {/* Board Bottom Footer */}
+        <div className="mt-5 pt-3 border-t border-slate-800/60 flex justify-center items-center space-x-6 text-[9px] font-bold text-slate-500 tracking-widest">
           <span>COMPETE.</span>
           <span>RESPECT.</span>
           <span className="text-orange-500/80">LEGENDARY.</span>

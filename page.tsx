@@ -1,28 +1,35 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-// --- LOGO SVG GENERATORS MATCHING tournament.jpg ---
+// ==========================================
+// 1. BRAND NEW DETAILED TEAM SVG LOGOS
+// ==========================================
+
 const UnionLogo = () => (
-  <svg className="w-14 h-14" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20 50C20 30 35 20 50 20C65 20 80 35 80 50C80 70 60 85 50 85C40 85 20 70 20 50Z" fill="#1b3a24" stroke="#4ade80" strokeWidth="3"/>
-    <path d="M30 45C35 35 45 35 50 40C55 45 65 40 70 45C65 55 55 60 50 55C45 50 35 55 30 45Z" fill="#a7f3d0"/>
-    <path d="M45 75C35 70 25 55 35 45C38 52 48 58 55 52C60 62 55 72 45 75Z" fill="#2dd4bf"/>
-    <circle cx="60" cy="40" r="4" fill="#000"/>
+  <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="45" fill="#14532d" stroke="#4ade80" strokeWidth="3"/>
+    {/* Stylized Fish Body */}
+    <path d="M25 50C35 35 65 35 75 50C65 65 35 65 25 50Z" fill="#a7f3d0"/>
+    <path d="M72 50L85 40V60L72 50Z" fill="#4ade80"/>
+    <circle cx="40" cy="46" r="3" fill="#14532d"/>
+    {/* Waves */}
+    <path d="M30 70Q50 65 70 70" stroke="#22c55e" strokeWidth="2" strokeLinecap="round"/>
   </svg>
 );
 
 const BowneLogo = () => (
-  <svg className="w-14 h-14" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M35 15L50 35L65 15" stroke="#ef4444" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M42 15L50 32L58 15" stroke="#3b82f6" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round"/>
-    <circle cx="50" cy="55" r="26" fill="url(#goldGradient)" stroke="#f59e0b" strokeWidth="3"/>
-    <circle cx="50" cy="55" r="20" fill="none" stroke="#fff" strokeWidth="1" strokeDasharray="4 2"/>
-    <text x="50" y="64" fontSize="26" fontWeight="bold" fill="#b45309" textAnchor="middle">1</text>
+  <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Ribbon */}
+    <path d="M35 20L50 45L65 20" stroke="#ef4444" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M42 20L50 42L58 20" stroke="#3b82f6" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round"/>
+    {/* Gold Medal Circle */}
+    <circle cx="50" cy="60" r="24" fill="url(#gold)" stroke="#fbbf24" strokeWidth="3"/>
+    <circle cx="50" cy="60" r="18" fill="none" stroke="#fff" strokeWidth="1.5" strokeDasharray="4 3"/>
+    <text x="50" y="69" fontSize="24" fontWeight="black" fill="#78350f" textAnchor="middle">1</text>
     <defs>
-      <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stopColor="#fbbf24" />
-        <stop offset="50%" stopColor="#f59e0b" />
+      <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#fef08a" />
         <stop offset="100%" stopColor="#d97706" />
       </linearGradient>
     </defs>
@@ -30,39 +37,49 @@ const BowneLogo = () => (
 );
 
 const SanfordLogo = () => (
-  <svg className="w-14 h-14" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="50" cy="50" r="40" fill="#ea580c" stroke="#000" strokeWidth="3"/>
-    <path d="M14 50H86" stroke="#000" strokeWidth="3"/>
-    <path d="M50 14V86" stroke="#000" strokeWidth="3"/>
-    <path d="M22 22C32 32 32 68 22 78" stroke="#000" strokeWidth="2.5"/>
-    <path d="M78 22C68 32 68 68 78 78" stroke="#000" strokeWidth="2.5"/>
+  <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="42" fill="#ea580c" stroke="#fff" strokeWidth="2"/>
+    {/* Basketball Ribs */}
+    <path d="M8 50H92" stroke="#000" strokeWidth="3"/>
+    <path d="M50 8V92" stroke="#000" strokeWidth="3"/>
+    <path d="M20 20C35 32 35 68 20 80" stroke="#000" strokeWidth="3" strokeLinecap="round"/>
+    <path d="M80 20C65 32 65 68 80 80" stroke="#000" strokeWidth="3" strokeLinecap="round"/>
   </svg>
 );
 
 const BarclaysLogo = () => (
-  <svg className="w-14 h-14" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20 20C40 20 50 10 50 10C50 10 60 20 80 20C80 50 70 75 50 90C30 75 20 50 20 20Z" fill="#1d4ed8" stroke="#60a5fa" strokeWidth="4" strokeLinejoin="round"/>
-    <path d="M28 26C42 26 50 18 50 18C50 18 58 26 72 26" stroke="#93c5fd" strokeWidth="2"/>
+  <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    {/* Shield Profile */}
+    <path d="M20 20C45 20 50 10 50 10C50 10 55 20 80 20C80 55 68 78 50 90C32 78 20 55 20 20Z" fill="#1d4ed8" stroke="#60a5fa" strokeWidth="4" strokeLinejoin="round"/>
+    <path d="M30 28C45 28 50 22 50 22C50 22 55 28 70 28C70 50 60 68 50 78C40 68 30 50 30 28Z" fill="#2563eb"/>
+    {/* Inner decorative star */}
+    <polygon points="50,38 53,45 61,45 55,50 57,58 50,53 43,58 45,50 39,45 47,45" fill="#93c5fd"/>
   </svg>
 );
 
-export default function TournamentDashboard() {
-  // Configurable Application State
-  const [title, setTitle] = useState("PS20 MIKE LEGEND TOURNAMENT");
-  const [subTitle, setSubTitle] = useState("BASKETBALL SCHEDULE");
-  const [dateHeader, setDateHeader] = useState("TODAY'S RESULTS - WEDNESDAY MAY 27TH 2026");
-  
-  const [scores, setScores] = useState({
-    unionsToday: 46,
-    bownesToday: 18,
-    sanfordsToday: 31,
-    barclaysToday: 24,
-    sanfordsMatch: 31,
-    bownesMatch: 30,
-    unionsMatch: 36,
-    barclaysMatch: 34,
+export default function Home() {
+  // ==========================================
+  // 2. CONFIGURABLE DYNAMIC STATES
+  // ==========================================
+  const [tournamentTitle, setTournamentTitle] = useState("PS20 MIKE LEGEND TOURNAMENT");
+  const [subHeader, setSubHeader] = useState("BASKETBALL SCHEDULE");
+  const [resultsDay, setResultsDay] = useState("TODAY'S RESULTS - WEDNESDAY MAY 27TH");
+
+  // Editable Leaderboard / Top Totals
+  const [topScores, setTopScores] = useState({ unions: 46, bownes: 18, sanfords: 31, barclays: 24 });
+
+  // Editable Game Day Scores
+  const [gameScores, setGameScores] = useState({
+    sanfordsGame: 31,
+    bownesGame: 30,
+    unionsGame: 36,
+    barclaysGame: 34,
   });
 
+  // Timeline Schedule Banner
+  const [timelineText, setTimelineText] = useState("WEEK 2 SCHEDULE: TBA (To Be Announced)");
+
+  // Roster arrays matching names in tournament.jpg
   const [rosters, setRosters] = useState({
     unions: ["KMY", "小鱼", "Dudu", "Hong Tao", "慢慢来", "猴王", "MING", "好好睡觉"],
     bownes: ["SHBW", "LiNg", "Gao Xiang", "Eric", "Owen", "Benc", "Lee", "烤", "Ye 哥", "芥琵"],
@@ -70,202 +87,279 @@ export default function TournamentDashboard() {
     barclays: ["kys r", "YJH —", "胡内", "篮板王", "稳", "Syw", "Sean", "Taotao", "高手", "James c"],
   });
 
-  const [upcomingText, setUpcomingText] = useState("WEEK 2 SCHEDULE: TBA\n(To Be Announced)");
-
-  // Handle value editing
-  const handleScoreChange = (key: keyof typeof scores, val: string) => {
-    const parsed = parseInt(val) || 0;
-    setScores(prev => ({ ...prev, [key]: parsed }));
+  // State handlers for fast mutations
+  const updateTopScore = (team: keyof typeof topScores, val: string) => {
+    setTopScores(prev => ({ ...prev, [team]: parseInt(val) || 0 }));
   };
 
-  const handleRosterChange = (team: keyof typeof rosters, index: number, val: string) => {
+  const updateGameScore = (gameKey: keyof typeof gameScores, val: string) => {
+    setGameScores(prev => ({ ...prev, [gameKey]: parseInt(val) || 0 }));
+  };
+
+  const updatePlayerName = (team: keyof typeof rosters, idx: number, name: string) => {
     setRosters(prev => {
-      const updated = [...prev[team]];
-      updated[index] = val;
-      return { ...prev, [team]: updated };
+      const copy = [...prev[team]];
+      copy[idx] = name;
+      return { ...prev, [team]: copy };
     });
   };
 
   return (
-    <div className="min-h-screen bg-[#070b12] text-white p-6 font-sans antialiased selective-none">
+    <div className="min-h-screen bg-[#0a0f1d] text-white p-6 font-sans antialiased selection:bg-orange-500/30">
       
-      {/* HEADER SECTION */}
-      <header className="text-center mb-8 border-b border-gray-800 pb-4 relative">
-        <input 
-          className="bg-transparent text-center font-extrabold text-4xl tracking-wider w-full uppercase border-none focus:ring-1 focus:ring-orange-500 text-slate-100 outline-none"
-          value={title} 
-          onChange={(e) => setTitle(e.target.value)} 
+      {/* GLOBAL HEADER AREA */}
+      <header className="text-center mb-8 border-b border-slate-800/60 pb-5">
+        <input
+          type="text"
+          value={tournamentTitle}
+          onChange={(e) => setTournamentTitle(e.target.value)}
+          className="bg-transparent font-black text-4xl text-center tracking-wider w-full uppercase outline-none focus:text-orange-500 border-none transition-colors"
         />
-        <div className="flex justify-center items-center gap-2 mt-2">
-          <span className="text-orange-500 text-xl">★</span>
-          <input 
-            className="bg-transparent text-center font-bold text-xl tracking-widest uppercase border-none focus:ring-1 focus:ring-orange-500 text-orange-500 w-1/2 outline-none"
-            value={subTitle} 
-            onChange={(e) => setSubTitle(e.target.value)} 
+        <div className="flex justify-center items-center gap-2 mt-2 font-bold text-orange-500 tracking-widest text-sm">
+          <span>★</span>
+          <input
+            type="text"
+            value={subHeader}
+            onChange={(e) => setSubHeader(e.target.value)}
+            className="bg-transparent font-bold text-center tracking-widest uppercase outline-none text-orange-500 border-none w-64 text-xs"
           />
-          <span className="text-orange-500 text-xl">★</span>
+          <span>★</span>
         </div>
       </header>
 
-      {/* CORE TWO-COLUMN MAIN GRID (Sidebar Left Removed) */}
-      <main className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+      {/* NEW 2-COLUMN LAYOUT (Left Sidebar has been completely removed) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto items-start">
         
-        {/* LEFT & CENTER COMBINED MATCH STUFF (Movable/Adjustable Layout Box) */}
-        <section className="lg:col-span-2 flex flex-col gap-6">
+        {/* LEFT/CENTER INTERACTIVE CONTAINER (Web Match Stuff Cards) */}
+        <main className="lg:col-span-2 flex flex-col gap-6">
           
-          {/* TODAY'S TOP ROW SUMMARY HERO */}
-          <div className="bg-[#0d1527] border border-slate-800 rounded-xl p-4 shadow-xl">
-            <input 
-              className="bg-transparent text-xs font-semibold text-center tracking-widest text-slate-400 uppercase w-full mb-4 border-none outline-none focus:bg-slate-900"
-              value={dateHeader}
-              onChange={(e) => setDateHeader(e.target.value)}
+          {/* TOP RESULTS DASHBOARD HERO PANEL */}
+          <div className="bg-[#111827] border border-slate-800/80 rounded-2xl p-5 shadow-2xl">
+            <input
+              type="text"
+              value={resultsDay}
+              onChange={(e) => setResultsDay(e.target.value)}
+              className="bg-transparent text-xs font-bold text-center tracking-widest text-slate-400 uppercase w-full mb-5 border-none outline-none focus:text-white"
             />
             
-            <div className="grid grid-cols-4 gap-2 text-center items-center">
-              {/* Unions Top Card */}
-              <div className="bg-[#11251d] p-3 rounded-lg border border-emerald-900/50 flex flex-col items-center">
-                <span className="text-xs font-bold tracking-wider text-emerald-400 mb-2">THE UNIONS</span>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {/* THE UNIONS */}
+              <div className="bg-[#0c1f17] p-4 rounded-xl border border-emerald-950/60 flex flex-col items-center group">
+                <span className="text-[11px] font-black tracking-widest text-emerald-400 mb-3">THE UNIONS</span>
                 <UnionLogo />
-                <input type="number" className="bg-transparent font-black text-3xl w-full text-center mt-2 border-none outline-none" value={scores.unionsToday} onChange={(e) => handleScoreChange('unionsToday', e.target.value)} />
+                <input
+                  type="number"
+                  value={topScores.unions}
+                  onChange={(e) => updateTopScore('unions', e.target.value)}
+                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-emerald-300"
+                />
               </div>
 
-              {/* Bownes Top Card */}
-              <div className="bg-[#1f1a17] p-3 rounded-lg border border-amber-900/40 flex flex-col items-center">
-                <span className="text-xs font-bold tracking-wider text-amber-500 mb-2">THE BOWNES</span>
+              {/* THE BOWNES */}
+              <div className="bg-[#1c1613] p-4 rounded-xl border border-amber-950/60 flex flex-col items-center group">
+                <span className="text-[11px] font-black tracking-widest text-amber-500 mb-3">THE BOWNES</span>
                 <BowneLogo />
-                <input type="number" className="bg-transparent font-black text-3xl w-full text-center mt-2 border-none outline-none" value={scores.bownesToday} onChange={(e) => handleScoreChange('bownesToday', e.target.value)} />
+                <input
+                  type="number"
+                  value={topScores.bownes}
+                  onChange={(e) => updateTopScore('bownes', e.target.value)}
+                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-amber-400"
+                />
               </div>
 
-              {/* Sanfords Top Card */}
-              <div className="bg-[#2a1b14] p-3 rounded-lg border border-orange-900/40 flex flex-col items-center">
-                <span className="text-xs font-bold tracking-wider text-orange-500 mb-2">THE SANFORDS</span>
+              {/* THE SANFORDS */}
+              <div className="bg-[#241712] p-4 rounded-xl border border-orange-950/60 flex flex-col items-center group">
+                <span className="text-[11px] font-black tracking-widest text-orange-500 mb-3">THE SANFORDS</span>
                 <SanfordLogo />
-                <input type="number" className="bg-transparent font-black text-3xl w-full text-center mt-2 border-none outline-none" value={scores.sanfordsToday} onChange={(e) => handleScoreChange('sanfordsToday', e.target.value)} />
+                <input
+                  type="number"
+                  value={topScores.sanfords}
+                  onChange={(e) => updateTopScore('sanfords', e.target.value)}
+                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-orange-400"
+                />
               </div>
 
-              {/* Barclays Top Card */}
-              <div className="bg-[#121b2d] p-3 rounded-lg border border-blue-900/50 flex flex-col items-center">
-                <span className="text-xs font-bold tracking-wider text-blue-400 mb-2">THE BARCLAYS</span>
+              {/* THE BARCLAYS */}
+              <div className="bg-[#0f1626] p-4 rounded-xl border border-blue-950/60 flex flex-col items-center group">
+                <span className="text-[11px] font-black tracking-widest text-blue-400 mb-3">THE BARCLAYS</span>
                 <BarclaysLogo />
-                <input type="number" className="bg-transparent font-black text-3xl w-full text-center mt-2 border-none outline-none" value={scores.barclaysToday} onChange={(e) => handleScoreChange('barclaysToday', e.target.value)} />
+                <input
+                  type="number"
+                  value={topScores.barclays}
+                  onChange={(e) => updateTopScore('barclays', e.target.value)}
+                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-blue-300"
+                />
               </div>
             </div>
           </div>
 
-          {/* DETAILED MATCHUPS BREAKDOWN BOXES */}
+          {/* DETAILED MATCHUPS LIST VIEW */}
           <div className="flex flex-col gap-4">
             
-            {/* Match 1 Card Box */}
-            <div className="bg-gradient-to-r from-[#3c1e0e] to-[#1e1715] border border-orange-900/40 rounded-xl p-4 flex items-center justify-between shadow-md">
+            {/* Match Card 1 */}
+            <div className="bg-gradient-to-r from-[#2a160e] to-[#141110] border border-orange-950/70 rounded-xl p-4 flex items-center justify-between shadow-md hover:border-orange-500/20 transition-all">
               <div className="flex items-center gap-4 w-5/12">
                 <SanfordLogo />
-                <span className="font-bold tracking-wide text-orange-400">THE SANFORDS</span>
+                <span className="font-extrabold tracking-wider text-sm text-orange-400">THE SANFORDS</span>
               </div>
-              <div className="flex items-center justify-center gap-4 w-2/12">
-                <input type="number" className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-orange-400" value={scores.sanfordsMatch} onChange={(e) => handleScoreChange('sanfordsMatch', e.target.value)}/>
-                <span className="text-xs font-bold bg-black/40 px-2 py-1 rounded-md border border-gray-800">VS</span>
-                <input type="number" className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-amber-500" value={scores.bownesMatch} onChange={(e) => handleScoreChange('bownesMatch', e.target.value)}/>
+              <div className="flex items-center justify-center gap-3 w-2/12">
+                <input 
+                  type="number" 
+                  value={gameScores.sanfordsGame} 
+                  onChange={(e) => updateGameScore('sanfordsGame', e.target.value)}
+                  className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-orange-400"
+                />
+                <span className="text-[10px] font-black tracking-tighter bg-black/50 px-2 py-1 rounded border border-slate-800">VS</span>
+                <input 
+                  type="number" 
+                  value={gameScores.bownesGame} 
+                  onChange={(e) => updateGameScore('bownesGame', e.target.value)}
+                  className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-amber-500"
+                />
               </div>
               <div className="flex items-center justify-end gap-4 w-5/12">
-                <span className="font-bold tracking-wide text-amber-500">THE BOWNES</span>
+                <span className="font-extrabold tracking-wider text-sm text-amber-500">THE BOWNES</span>
                 <BowneLogo />
               </div>
             </div>
 
-            {/* Match 2 Card Box */}
-            <div className="bg-gradient-to-r from-[#11291f] to-[#10192a] border border-emerald-900/40 rounded-xl p-4 flex items-center justify-between shadow-md">
+            {/* Match Card 2 */}
+            <div className="bg-gradient-to-r from-[#0b1f16] to-[#0d1624] border border-emerald-950/70 rounded-xl p-4 flex items-center justify-between shadow-md hover:border-emerald-500/20 transition-all">
               <div className="flex items-center gap-4 w-5/12">
                 <UnionLogo />
-                <span className="font-bold tracking-wide text-emerald-400">THE UNIONS</span>
+                <span className="font-extrabold tracking-wider text-sm text-emerald-400">THE UNIONS</span>
               </div>
-              <div className="flex items-center justify-center gap-4 w-2/12">
-                <input type="number" className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-emerald-400" value={scores.unionsMatch} onChange={(e) => handleScoreChange('unionsMatch', e.target.value)}/>
-                <span className="text-xs font-bold bg-black/40 px-2 py-1 rounded-md border border-gray-800">VS</span>
-                <input type="number" className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-blue-400" value={scores.barclaysMatch} onChange={(e) => handleScoreChange('barclaysMatch', e.target.value)}/>
+              <div className="flex items-center justify-center gap-3 w-2/12">
+                <input 
+                  type="number" 
+                  value={gameScores.unionsGame} 
+                  onChange={(e) => updateGameScore('unionsGame', e.target.value)}
+                  className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-emerald-400"
+                />
+                <span className="text-[10px] font-black tracking-tighter bg-black/50 px-2 py-1 rounded border border-slate-800">VS</span>
+                <input 
+                  type="number" 
+                  value={gameScores.barclaysGame} 
+                  onChange={(e) => updateGameScore('barclaysGame', e.target.value)}
+                  className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-blue-400"
+                />
               </div>
               <div className="flex items-center justify-end gap-4 w-5/12">
-                <span className="font-bold tracking-wide text-blue-400">THE BARCLAYS</span>
+                <span className="font-extrabold tracking-wider text-sm text-blue-400">THE BARCLAYS</span>
                 <BarclaysLogo />
               </div>
             </div>
           </div>
 
-          {/* UPCOMING BANNER TIMELINE CONTAINER */}
-          <div className="bg-[#090e1a] border border-gray-900 rounded-xl p-6 text-center shadow-inner flex flex-col justify-center items-center min-h-[140px]">
-            <span className="text-gray-500 text-[10px] uppercase font-bold tracking-widest mb-2">UPCOMING TIMELINE CONTAINER</span>
-            <textarea 
-              className="bg-transparent font-black text-2xl text-slate-200 w-full text-center resize-none border-none outline-none h-16 leading-relaxed"
-              value={upcomingText}
-              onChange={(e) => setUpcomingText(e.target.value)}
+          {/* TIMELINE TIMETABLE CONTAINER SLAG */}
+          <div className="bg-[#0c1222] border border-slate-900 rounded-xl p-5 text-center shadow-inner flex flex-col justify-center items-center">
+            <span className="text-slate-500 text-[10px] uppercase font-black tracking-widest mb-2">TIMELINE METADATA BANNER</span>
+            <input 
+              type="text"
+              value={timelineText}
+              onChange={(e) => setTimelineText(e.target.value)}
+              className="bg-transparent font-black text-xl text-slate-200 w-full text-center border-none outline-none uppercase tracking-wide"
             />
           </div>
-        </section>
+        </main>
 
-        {/* RIGHT COLUMN: TEAMS & ROSTERS (Styled Exactly like tournament.jpg Layout Splitting Roster Panels) */}
-        <section className="bg-[#0f192b] border border-slate-800 rounded-xl p-4 shadow-2xl flex flex-col">
-          <h3 className="text-center font-bold tracking-widest text-sm text-slate-400 uppercase border-b border-gray-800 pb-3 mb-4">TEAMS & ROSTERS</h3>
+        {/* RIGHT COLUMN: RE-DESIGNED TEAMS & ROSTERS SECTION (2-Column Grid Layout) */}
+        <aside className="bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-2xl">
+          <h3 className="text-center font-black tracking-widest text-xs text-slate-400 uppercase border-b border-slate-800/80 pb-3 mb-5">
+            TEAMS & ROSTERS
+          </h3>
           
-          <div className="grid grid-cols-2 gap-x-4 gap-y-6 overflow-y-auto flex-1 pr-1 max-h-[500px]">
+          {/* Split grid layout looking exactly like the tournament image roster blocks */}
+          <div className="grid grid-cols-2 gap-x-4 gap-y-6">
             
-            {/* The Unions Side */}
-            <div>
-              <div className="bg-[#11251d] text-emerald-400 font-bold text-xs p-2 rounded mb-2 border border-emerald-900/50 text-center tracking-wider">THE UNIONS</div>
-              <ul className="space-y-1.5 text-xs text-slate-300">
+            {/* The Unions Side Block */}
+            <div className="space-y-3">
+              <div className="bg-[#0c1f17] text-emerald-400 font-black text-[10px] p-2 rounded border border-emerald-900/40 text-center tracking-widest uppercase">
+                THE UNIONS
+              </div>
+              <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
                 {rosters.unions.map((player, idx) => (
-                  <li key={idx} className="flex items-center gap-1">
-                    <span className="text-slate-500 w-4">{idx + 1}.</span>
-                    <input className="bg-transparent border-none p-0 focus:bg-slate-900 w-full outline-none" value={player} onChange={(e) => handleRosterChange('unions', idx, e.target.value)} />
+                  <li key={idx} className="flex items-center gap-1 bg-slate-900/40 px-1.5 py-0.5 rounded border border-transparent hover:border-slate-800">
+                    <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
+                    <input 
+                      type="text"
+                      value={player} 
+                      onChange={(e) => updatePlayerName('unions', idx, e.target.value)} 
+                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white"
+                    />
                   </li>
                 ))}
-              </ul>
+              </ol>
             </div>
 
-            {/* The Bownes Side */}
-            <div>
-              <div className="bg-[#1f1a17] text-amber-500 font-bold text-xs p-2 rounded mb-2 border border-amber-900/40 text-center tracking-wider">THE BOWNES</div>
-              <ul className="space-y-1.5 text-xs text-slate-300">
+            {/* The Bownes Side Block */}
+            <div className="space-y-3">
+              <div className="bg-[#1c1613] text-amber-500 font-black text-[10px] p-2 rounded border border-amber-900/40 text-center tracking-widest uppercase">
+                THE BOWNES
+              </div>
+              <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
                 {rosters.bownes.map((player, idx) => (
-                  <li key={idx} className="flex items-center gap-1">
-                    <span className="text-slate-500 w-4">{idx + 1}.</span>
-                    <input className="bg-transparent border-none p-0 focus:bg-slate-900 w-full outline-none" value={player} onChange={(e) => handleRosterChange('bownes', idx, e.target.value)} />
+                  <li key={idx} className="flex items-center gap-1 bg-slate-900/40 px-1.5 py-0.5 rounded border border-transparent hover:border-slate-800">
+                    <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
+                    <input 
+                      type="text"
+                      value={player} 
+                      onChange={(e) => updatePlayerName('bownes', idx, e.target.value)} 
+                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white"
+                    />
                   </li>
                 ))}
-              </ul>
+              </ol>
             </div>
 
-            {/* The Sanfords Side */}
-            <div>
-              <div className="bg-[#2a1b14] text-orange-500 font-bold text-xs p-2 rounded mb-2 border border-orange-900/40 text-center tracking-wider">THE SANFORDS</div>
-              <ul className="space-y-1.5 text-xs text-slate-300">
+            {/* The Sanfords Side Block */}
+            <div className="space-y-3">
+              <div className="bg-[#241712] text-orange-500 font-black text-[10px] p-2 rounded border border-orange-900/40 text-center tracking-widest uppercase">
+                THE SANFORDS
+              </div>
+              <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
                 {rosters.sanfords.map((player, idx) => (
-                  <li key={idx} className="flex items-center gap-1">
-                    <span className="text-slate-500 w-4">{idx + 1}.</span>
-                    <input className="bg-transparent border-none p-0 focus:bg-slate-900 w-full outline-none" value={player} onChange={(e) => handleRosterChange('sanfords', idx, e.target.value)} />
+                  <li key={idx} className="flex items-center gap-1 bg-slate-900/40 px-1.5 py-0.5 rounded border border-transparent hover:border-slate-800">
+                    <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
+                    <input 
+                      type="text"
+                      value={player} 
+                      onChange={(e) => updatePlayerName('sanfords', idx, e.target.value)} 
+                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white"
+                    />
                   </li>
                 ))}
-              </ul>
+              </ol>
             </div>
 
-            {/* The Barclays Side */}
-            <div>
-              <div className="bg-[#121b2d] text-blue-400 font-bold text-xs p-2 rounded mb-2 border border-blue-900/50 text-center tracking-wider">THE BARCLAYS</div>
-              <ul className="space-y-1.5 text-xs text-slate-300">
+            {/* The Barclays Side Block */}
+            <div className="space-y-3">
+              <div className="bg-[#0f1626] text-blue-400 font-black text-[10px] p-2 rounded border border-blue-900/40 text-center tracking-widest uppercase">
+                THE BARCLAYS
+              </div>
+              <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
                 {rosters.barclays.map((player, idx) => (
-                  <li key={idx} className="flex items-center gap-1">
-                    <span className="text-slate-500 w-4">{idx + 1}.</span>
-                    <input className="bg-transparent border-none p-0 focus:bg-slate-900 w-full outline-none" value={player} onChange={(e) => handleRosterChange('barclays', idx, e.target.value)} />
+                  <li key={idx} className="flex items-center gap-1 bg-slate-900/40 px-1.5 py-0.5 rounded border border-transparent hover:border-slate-800">
+                    <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
+                    <input 
+                      type="text"
+                      value={player} 
+                      onChange={(e) => updatePlayerName('barclays', idx, e.target.value)} 
+                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white"
+                    />
                   </li>
                 ))}
-              </ul>
+              </ol>
             </div>
 
           </div>
-        </section>
-      </main>
+        </aside>
 
-      {/* FOOTER */}
-      <footer className="text-center mt-12 text-slate-600 text-[10px] tracking-widest font-semibold uppercase">
-        COMPETE . RESPECT . LEGENDARY
+      </div>
+
+      {/* FOOTER METADATA */}
+      <footer className="text-center mt-12 text-slate-600 text-[10px] tracking-widest font-bold uppercase">
+        COMPETE · RESPECT · LEGENDARY
       </footer>
     </div>
   );

@@ -1,282 +1,336 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-// Define clean types for our dashboard state structure
-interface TeamRoster {
-  name: string;
-  color: string;
-  textColor: string;
-  players: string[];
-}
+// ==========================================
+// 1. BRAND NEW DETAILED TEAM SVG LOGOS
+// ==========================================
 
-export default function TournamentDashboard() {
-  // 1. Core State Management for everything on the board
-  const [isEditing, setIsEditing] = useState(false);
-  const [dateText, setDateText] = useState("WEDNESDAY 5/27/2026");
-  const [upcomingText, setUpcomingText] = useState("WEEK 2 SCHEDULE: TBA\n(To Be Announced)");
+const UnionLogo = () => (
+  <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="45" fill="#14532d" stroke="#4ade80" strokeWidth="3"/>
+    <path d="M25 50C35 35 65 35 75 50C65 65 35 65 25 50Z" fill="#a7f3d0"/>
+    <path d="M72 50L85 40V60L72 50Z" fill="#4ade80"/>
+    <circle cx="40" cy="46" r="3" fill="#14532d"/>
+    <path d="M30 70Q50 65 70 70" stroke="#22c55e" strokeWidth="2" strokeLinecap="round"/>
+  </svg>
+);
 
-  // Live Matchup Scores state
-  const [scores, setScores] = useState({
-    unionsTop: 46,
-    bownesTop: 18,
-    sanfordsTop: 31,
-    barclaysTop: 24,
-    sanfordsMid: 31,
-    bownesMid: 30,
-    unionsMid: 36,
-    barclaysMid: 34,
+const BowneLogo = () => (
+  <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M35 20L50 45L65 20" stroke="#ef4444" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M42 20L50 42L58 20" stroke="#3b82f6" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round"/>
+    <circle cx="50" cy="60" r="24" fill="url(#goldMedal)" stroke="#fbbf24" strokeWidth="3"/>
+    <circle cx="50" cy="60" r="18" fill="none" stroke="#fff" strokeWidth="1.5" strokeDasharray="4 3"/>
+    <text x="50" y="69" fontSize="24" fontWeight="black" fill="#78350f" textAnchor="middle">1</text>
+    <defs>
+      <linearGradient id="goldMedal" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#fef08a" />
+        <stop offset="100%" stopColor="#d97706" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
+const SanfordLogo = () => (
+  <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="42" fill="#ea580c" stroke="#fff" strokeWidth="2"/>
+    <path d="M8 50H92" stroke="#000" strokeWidth="3"/>
+    <path d="M50 8V92" stroke="#000" strokeWidth="3"/>
+    <path d="M20 20C35 32 35 68 20 80" stroke="#000" strokeWidth="3" strokeLinecap="round"/>
+    <path d="M80 20C65 32 65 68 80 80" stroke="#000" strokeWidth="3" strokeLinecap="round"/>
+  </svg>
+);
+
+const BarclaysLogo = () => (
+  <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 20C45 20 50 10 50 10C50 10 55 20 80 20C80 55 68 78 50 90C32 78 20 55 20 20Z" fill="#1d4ed8" stroke="#60a5fa" strokeWidth="4" strokeLinejoin="round"/>
+    <path d="M30 28C45 28 50 22 50 22C50 22 55 28 70 28C70 50 60 68 50 78C40 68 30 50 30 28Z" fill="#2563eb"/>
+    <polygon points="50,38 53,45 61,45 55,50 57,58 50,53 43,58 45,50 39,45 47,45" fill="#93c5fd"/>
+  </svg>
+);
+
+export default function Home() {
+  const [tournamentTitle, setTournamentTitle] = useState("PS20 MIKE LEGEND TOURNAMENT");
+  const [subHeader, setSubHeader] = useState("BASKETBALL SCHEDULE");
+  const [resultsDay, setResultsDay] = useState("TODAY'S RESULTS - WEDNESDAY MAY 27TH");
+
+  const [topScores, setTopScores] = useState({ unions: 46, bownes: 18, sanfords: 31, barclays: 24 });
+  const [gameScores, setGameScores] = useState({
+    sanfordsGame: 31,
+    bownesGame: 30,
+    unionsGame: 36,
+    barclaysGame: 34,
   });
 
-  // Team Rosters state
-  const [teams, setTeams] = useState<Record<string, TeamRoster>>({
-    unions: {
-      name: "THE UNIONS",
-      color: "bg-emerald-900 border-emerald-700",
-      textColor: "text-emerald-400",
-      players: ["KMY", "小鱼", "Dudu", "Hong Tao", "慢慢来", "猴王", "MING", "好好睡觉"],
-    },
-    bownes: {
-      name: "THE BOWNES",
-      color: "bg-stone-900 border-stone-700",
-      textColor: "text-stone-300",
-      players: ["SHBW", "LiNg", "Gao Xiang", "Eric", "Owen", "Benc", "Lee", "炜", "Ye 哥", "芳昆"],
-    },
-    sanfords: {
-      name: "THE SANFORDS",
-      color: "bg-orange-800 border-orange-600",
-      textColor: "text-orange-400",
-      players: ["Steven", "William_Yan", "绿豆糕", "09^", "WhilarYan", "易陌讳", "Ryan", "Beau", "Leo", "Mwxot"],
-    },
-    barclays: {
-      name: "THE BARCLAYS",
-      color: "bg-slate-900 border-slate-700",
-      textColor: "text-blue-400",
-      players: ["kys r", "YJH ~", "胡内", "篮板王", "穗", "Syw", "Sean", "Taotao", "高手", "James c"],
-    },
-  });
+  const [timelineText, setTimelineText] = useState("WEEK 2 SCHEDULE: TBA (To Be Announced)");
 
-  // Helper functions to handle dynamic string updates
-  const handlePlayerChange = (teamKey: string, index: number, value: string) => {
-    setTeams(prev => {
-      const updatedPlayers = [...prev[teamKey].players];
-      updatedPlayers[index] = value;
-      return {
-        ...prev,
-        [teamKey]: { ...prev[teamKey], players: updatedPlayers }
-      };
-    });
-  };
+  const [rosters, setRosters] = useState({
+    unions: ["KMY", "小鱼", "Dudu", "Hong Tao", "慢慢来", "猴王", "MING", "好好睡觉"],
+    bownes: ["SHBW", "LiNg", "Gao Xiang", "Eric", "Owen", "Benc", "Lee", "烤", "Ye 哥", "芥琵"],
+    sanfords: ["Steven", "William_Yan", "绿豆赚", "09^", "Whilar·Yan", "易阿炜", "Ryan", "Beau", "Leo", "Mwxot"],
+    barclays: ["kys r", "YJH —", "胡内", "篮板王", "稳", "Syw", "Sean", "Taotao", "高手", "James c"],
+  });
 
   return (
-    <div className="min-h-screen bg-[#0b1019] text-white font-sans p-6 flex flex-col items-center">
+    <div className="min-h-screen bg-[#070b13] text-white p-6 font-sans antialiased">
       
-      {/* Control Panel Header Toggle */}
-      <div className="w-full max-w-6xl mb-4 flex justify-end">
-        <button 
-          onClick={() => setIsEditing(!isEditing)} 
-          className={`px-6 py-2 rounded font-bold tracking-wide transition ${isEditing ? 'bg-green-600 hover:bg-green-500' : 'bg-blue-600 hover:bg-blue-500'}`}
-        >
-          {isEditing ? "💾 Save Layout Modifications" : "⚙️ Open Board Editor"}
-        </button>
-      </div>
+      {/* GLOBAL HEADER */}
+      <header className="text-center mb-8 border-b border-slate-800 pb-5">
+        <input
+          type="text"
+          value={tournamentTitle}
+          onChange={(e) => setTournamentTitle(e.target.value)}
+          className="bg-transparent font-black text-4xl text-center tracking-wider w-full uppercase outline-none focus:text-orange-500 border-none"
+        />
+        <div className="flex justify-center items-center gap-2 mt-2 font-bold text-orange-500 tracking-widest text-sm">
+          <span>★</span>
+          <input
+            type="text"
+            value={subHeader}
+            onChange={(e) => setSubHeader(e.target.value)}
+            className="bg-transparent font-bold text-center tracking-widest uppercase outline-none text-orange-500 border-none w-64 text-xs"
+          />
+          <span>★</span>
+        </div>
+      </header>
 
-      {/* =========================================================================
-          MAIN SCHEDULE DASHBOARD BOARD CONTAINER
-         ========================================================================= */}
-      <div className="w-full max-w-6xl bg-[#0e151f] border border-slate-800 rounded-lg p-6 shadow-2xl relative">
+      {/* TWO-COLUMN GRID */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto items-start">
         
-        {/* Main Header Row */}
-        <div className="text-center mb-6">
-          <h1 className="text-4xl font-extrabold tracking-wider text-white">PS20 MIKE LEGEND TOURNAMENT</h1>
-          <h2 className="text-xl font-bold tracking-widest text-orange-500 mt-1">★ BASKETBALL SCHEDULE ★</h2>
-        </div>
-
-        <div className="grid grid-cols-12 gap-4">
+        {/* MATCH STUFF CARDS ROW BOXES (2/3 width) */}
+        <main className="lg:col-span-2 flex flex-col gap-6">
           
-          {/* LEFT PANEL: DATE & MINI HISTORY TRACKER */}
-          <div className="col-span-2 bg-[#0b1019] border border-slate-800 p-3 rounded flex flex-col justify-between text-center text-xs">
-            <div>
-              <div className="text-slate-400 font-bold tracking-wider">DATE</div>
-              <div className="text-orange-500 font-bold mt-2">TODAY</div>
-              {isEditing ? (
+          {/* HERO PREVIEW DASHBOARD */}
+          <div className="bg-[#111827] border border-slate-800 rounded-2xl p-5 shadow-2xl">
+            <input
+              type="text"
+              value={resultsDay}
+              onChange={(e) => setResultsDay(e.target.value)}
+              className="bg-transparent text-xs font-bold text-center tracking-widest text-slate-400 uppercase w-full mb-5 border-none outline-none focus:text-white"
+            />
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-[#0c1f17] p-4 rounded-xl border border-emerald-950 flex flex-col items-center">
+                <span className="text-[11px] font-black tracking-widest text-emerald-400 mb-3">THE UNIONS</span>
+                <UnionLogo />
+                <input
+                  type="number"
+                  value={topScores.unions}
+                  onChange={(e) => setTopScores({ ...topScores, unions: parseInt(e.target.value) || 0 })}
+                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-emerald-300"
+                />
+              </div>
+
+              <div className="bg-[#1c1613] p-4 rounded-xl border border-amber-950 flex flex-col items-center">
+                <span className="text-[11px] font-black tracking-widest text-amber-500 mb-3">THE BOWNES</span>
+                <BowneLogo />
+                <input
+                  type="number"
+                  value={topScores.bownes}
+                  onChange={(e) => setTopScores({ ...topScores, bownes: parseInt(e.target.value) || 0 })}
+                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-amber-400"
+                />
+              </div>
+
+              <div className="bg-[#241712] p-4 rounded-xl border border-orange-950 flex flex-col items-center">
+                <span className="text-[11px] font-black tracking-widest text-orange-500 mb-3">THE SANFORDS</span>
+                <SanfordLogo />
+                <input
+                  type="number"
+                  value={topScores.sanfords}
+                  onChange={(e) => setTopScores({ ...topScores, sanfords: parseInt(e.target.value) || 0 })}
+                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-orange-400"
+                />
+              </div>
+
+              <div className="bg-[#0f1626] p-4 rounded-xl border border-blue-950 flex flex-col items-center">
+                <span className="text-[11px] font-black tracking-widest text-blue-400 mb-3">THE BARCLAYS</span>
+                <BarclaysLogo />
+                <input
+                  type="number"
+                  value={topScores.barclays}
+                  onChange={(e) => setTopScores({ ...topScores, barclays: parseInt(e.target.value) || 0 })}
+                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-blue-300"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* DYNAMIC MATCHUPS PANELS */}
+          <div className="flex flex-col gap-4">
+            <div className="bg-gradient-to-r from-[#2a160e] to-[#141110] border border-orange-950 rounded-xl p-4 flex items-center justify-between shadow-md">
+              <div className="flex items-center gap-4 w-5/12">
+                <SanfordLogo />
+                <span className="font-extrabold tracking-wider text-sm text-orange-400">THE SANFORDS</span>
+              </div>
+              <div className="flex items-center justify-center gap-3 w-2/12">
                 <input 
-                  type="text" 
-                  value={dateText} 
-                  onChange={(e) => setDateText(e.target.value)} 
-                  className="bg-slate-800 text-center text-white w-full font-bold mt-1 p-1 rounded border border-slate-600"
+                  type="number" 
+                  value={gameScores.sanfordsGame} 
+                  onChange={(e) => setGameScores({ ...gameScores, sanfordsGame: parseInt(e.target.value) || 0 })}
+                  className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-orange-400"
                 />
-              ) : (
-                <div className="font-bold text-sm leading-tight text-slate-200 mt-1">{dateText}</div>
-              )}
-            </div>
-
-            <div className="border-t border-b border-slate-800 my-4 py-3 space-y-3">
-              <div className="text-slate-500 font-bold tracking-wider">TODAY'S RESULTS</div>
-              <div className="text-orange-600 font-bold text-[10px]">THE SANFORDS <span className="text-white">31</span> vs <span className="text-white">30</span></div>
-              <div className="text-emerald-500 font-bold text-[10px]">THE BOWNES <span className="text-white">36</span> vs <span className="text-white">34</span></div>
-            </div>
-
-            <div>
-              <div className="text-orange-500 font-bold tracking-wider">UPCOMING</div>
-              <div className="text-slate-300 font-bold mt-1">WEEK 2</div>
-              <div className="text-slate-500 mt-1">MONDAY - FRIDAY</div>
-            </div>
-          </div>
-
-          {/* CENTER PANEL: MATCHUPS AND RESULTS LAYOUTS */}
-          <div className="col-span-7 flex flex-col space-y-4">
-            
-            {/* Top Row: Clean Today's Results Matchup Render Component */}
-            <div className="bg-[#0b1019] border border-slate-800 rounded p-4">
-              <div className="text-center text-xs font-bold text-slate-400 tracking-wider mb-3">
-                TODAY'S RESULTS - {dateText}
-              </div>
-              
-              {/* Dynamic 2-Grid Separation (Matchup 1 vs Matchup 2) */}
-              <div className="grid grid-cols-2 gap-6">
-                
-                {/* Matchup Group 1 */}
-                <div className="grid grid-cols-2 gap-2 bg-[#0e151f] p-2 rounded border border-slate-800 relative">
-                  <div className={`p-3 rounded text-center border ${teams.unions.color}`}>
-                    <div className="text-xs font-bold text-white mb-1">UNIONS</div>
-                    {isEditing ? (
-                      <input type="number" value={scores.unionsTop} onChange={(e) => setScores({...scores, unionsTop: parseInt(e.target.value) || 0})} className="bg-slate-800 w-full text-center rounded text-xl font-bold"/>
-                    ) : (
-                      <span className="text-3xl font-extrabold tracking-tight text-emerald-400">{scores.unionsTop}</span>
-                    )}
-                  </div>
-                  <div className={`p-3 rounded text-center border ${teams.bownes.color}`}>
-                    <div className="text-xs font-bold text-white mb-1">BOWNES</div>
-                    {isEditing ? (
-                      <input type="number" value={scores.bownesTop} onChange={(e) => setScores({...scores, bownesTop: parseInt(e.target.value) || 0})} className="bg-slate-800 w-full text-center rounded text-xl font-bold"/>
-                    ) : (
-                      <span className="text-3xl font-extrabold tracking-tight text-stone-400">{scores.bownesTop}</span>
-                    )}
-                  </div>
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#0b1019] border border-slate-800 px-2 py-0.5 rounded text-xs font-bold text-slate-400">VS</div>
-                </div>
-
-                {/* Matchup Group 2 */}
-                <div className="grid grid-cols-2 gap-2 bg-[#0e151f] p-2 rounded border border-slate-800 relative">
-                  <div className={`p-3 rounded text-center border ${teams.sanfords.color}`}>
-                    <div className="text-xs font-bold text-white mb-1">SANFORDS</div>
-                    {isEditing ? (
-                      <input type="number" value={scores.sanfordsTop} onChange={(e) => setScores({...scores, sanfordsTop: parseInt(e.target.value) || 0})} className="bg-slate-800 w-full text-center rounded text-xl font-bold"/>
-                    ) : (
-                      <span className="text-3xl font-extrabold tracking-tight text-orange-400">{scores.sanfordsTop}</span>
-                    )}
-                  </div>
-                  <div className={`p-3 rounded text-center border ${teams.barclays.color}`}>
-                    <div className="text-xs font-bold text-white mb-1">BARCLAYS</div>
-                    {isEditing ? (
-                      <input type="number" value={scores.barclaysTop} onChange={(e) => setScores({...scores, barclaysTop: parseInt(e.target.value) || 0})} className="bg-slate-800 w-full text-center rounded text-xl font-bold"/>
-                    ) : (
-                      <span className="text-3xl font-extrabold tracking-tight text-blue-400">{scores.barclaysTop}</span>
-                    )}
-                  </div>
-                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#0b1019] border border-slate-800 px-2 py-0.5 rounded text-xs font-bold text-slate-400">VS</div>
-                </div>
-
-              </div>
-            </div>
-
-            {/* Middle Row: Detailed Full Scoring Panels */}
-            <div className="bg-[#0b1019] border border-slate-800 rounded p-4 space-y-3">
-              <div className="flex items-center justify-between bg-orange-950/40 border border-orange-900/60 p-3 rounded">
-                <span className="font-bold text-orange-400 tracking-wide">THE SANFORDS</span>
-                {isEditing ? (
-                  <input type="number" value={scores.sanfordsMid} onChange={(e) => setScores({...scores, sanfordsMid: parseInt(e.target.value) || 0})} className="bg-slate-800 w-20 text-center rounded font-bold p-1"/>
-                ) : (
-                  <span className="text-2xl font-black text-orange-400">{scores.sanfordsMid}</span>
-                )}
-                <span className="text-xs font-extrabold bg-slate-800 px-3 py-1 rounded-full text-slate-400">VS</span>
-                {isEditing ? (
-                  <input type="number" value={scores.bownesMid} onChange={(e) => setScores({...scores, bownesMid: parseInt(e.target.value) || 0})} className="bg-slate-800 w-20 text-center rounded font-bold p-1"/>
-                ) : (
-                  <span className="text-2xl font-black text-stone-400">{scores.bownesMid}</span>
-                )}
-                <span className="font-bold text-stone-400 tracking-wide">THE BOWNES</span>
-              </div>
-
-              <div className="flex items-center justify-between bg-emerald-950/40 border border-emerald-900/60 p-3 rounded">
-                <span className="font-bold text-emerald-400 tracking-wide">THE UNIONS</span>
-                {isEditing ? (
-                  <input type="number" value={scores.unionsMid} onChange={(e) => setScores({...scores, unionsMid: parseInt(e.target.value) || 0})} className="bg-slate-800 w-20 text-center rounded font-bold p-1"/>
-                ) : (
-                  <span className="text-2xl font-black text-emerald-400">{scores.unionsMid}</span>
-                )}
-                <span className="text-xs font-extrabold bg-slate-800 px-3 py-1 rounded-full text-slate-400">VS</span>
-                {isEditing ? (
-                  <input type="number" value={scores.barclaysMid} onChange={(e) => setScores({...scores, barclaysMid: parseInt(e.target.value) || 0})} className="bg-slate-800 w-20 text-center rounded font-bold p-1"/>
-                ) : (
-                  <span className="text-2xl font-black text-blue-400">{scores.barclaysMid}</span>
-                )}
-                <span className="font-bold text-blue-400 tracking-wide">THE BARCLAYS</span>
-              </div>
-            </div>
-
-            {/* Bottom Row: Dynamic Schedule Box Panel */}
-            <div className="bg-[#0b1019] border border-slate-800 rounded p-6 flex flex-col items-center justify-center min-h-[140px] text-center">
-              <div className="text-[10px] font-bold text-slate-500 tracking-widest uppercase mb-2">UPCOMING TIMELINE CONTAINER</div>
-              {isEditing ? (
-                <textarea 
-                  value={upcomingText} 
-                  onChange={(e) => setUpcomingText(e.target.value)}
-                  rows={2}
-                  className="bg-slate-800 text-center text-white w-full max-w-md p-2 rounded border border-slate-600 font-mono text-sm"
+                <span className="text-[10px] font-black tracking-tighter bg-black/50 px-2 py-1 rounded border border-slate-800">VS</span>
+                <input 
+                  type="number" 
+                  value={gameScores.bownesGame} 
+                  onChange={(e) => setGameScores({ ...gameScores, bownesGame: parseInt(e.target.value) || 0 })}
+                  className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-amber-500"
                 />
-              ) : (
-                <div className="text-2xl font-black tracking-wide text-slate-200 whitespace-pre-line">
-                  {upcomingText}
-                </div>
-              )}
+              </div>
+              <div className="flex items-center justify-end gap-4 w-5/12">
+                <span className="font-extrabold tracking-wider text-sm text-amber-500">THE BOWNES</span>
+                <BowneLogo />
+              </div>
             </div>
 
+            <div className="bg-gradient-to-r from-[#0b1f16] to-[#0d1624] border border-emerald-950 rounded-xl p-4 flex items-center justify-between shadow-md">
+              <div className="flex items-center gap-4 w-5/12">
+                <UnionLogo />
+                <span className="font-extrabold tracking-wider text-sm text-emerald-400">THE UNIONS</span>
+              </div>
+              <div className="flex items-center justify-center gap-3 w-2/12">
+                <input 
+                  type="number" 
+                  value={gameScores.unionsGame} 
+                  onChange={(e) => setGameScores({ ...gameScores, unionsGame: parseInt(e.target.value) || 0 })}
+                  className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-emerald-400"
+                />
+                <span className="text-[10px] font-black tracking-tighter bg-black/50 px-2 py-1 rounded border border-slate-800">VS</span>
+                <input 
+                  type="number" 
+                  value={gameScores.barclaysGame} 
+                  onChange={(e) => setGameScores({ ...gameScores, barclaysGame: parseInt(e.target.value) || 0 })}
+                  className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-blue-400"
+                />
+              </div>
+              <div className="flex items-center justify-end gap-4 w-5/12">
+                <span className="font-extrabold tracking-wider text-sm text-blue-400">THE BARCLAYS</span>
+                <BarclaysLogo />
+              </div>
+            </div>
           </div>
 
-          {/* RIGHT PANEL: LIVE TEAMS & ROSTERS MANAGER */}
-          <div className="col-span-3 bg-[#0b1019] border border-slate-800 rounded p-3 flex flex-col space-y-4">
-            <div className="text-center text-xs font-bold text-slate-400 tracking-wider border-b border-slate-800 pb-2">
-              TEAMS & ROSTERS
-            </div>
+          {/* METADATA BANNER */}
+          <div className="bg-[#0c1222] border border-slate-900 rounded-xl p-5 text-center shadow-inner flex flex-col justify-center items-center">
+            <span className="text-slate-500 text-[10px] uppercase font-black tracking-widest mb-2">TIMELINE METADATA BANNER</span>
+            <input 
+              type="text"
+              value={timelineText}
+              onChange={(e) => setTimelineText(e.target.value)}
+              className="bg-transparent font-black text-xl text-slate-200 w-full text-center border-none outline-none uppercase tracking-wide"
+            />
+          </div>
+        </main>
+
+        {/* ROSTERS COLUMN PANELS (Right Column Split Grid) */}
+        <aside className="bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-2xl lg:col-span-1">
+          <h3 className="text-center font-black tracking-widest text-xs text-slate-400 uppercase border-b border-slate-800 pb-3 mb-5">
+            TEAMS & ROSTERS
+          </h3>
+          
+          <div className="grid grid-cols-2 gap-x-4 gap-y-6">
             
-            <div className="grid grid-cols-1 gap-4 overflow-y-auto max-h-[460px] pr-1 scrollbar-thin">
-              {Object.entries(teams).map(([teamKey, team]) => (
-                <div key={teamKey} className="space-y-1">
-                  <div className={`text-[11px] font-bold px-2 py-0.5 rounded tracking-wider ${team.color} text-white`}>
-                    {team.name}
-                  </div>
-                  <div className="bg-[#0e151f] p-2 rounded border border-slate-800/80 space-y-1">
-                    {team.players.map((player, idx) => (
-                      <div key={idx} className="flex items-center text-xs text-slate-400 font-mono">
-                        <span className="w-4 text-slate-600 text-[10px]">{idx + 1}.</span>
-                        {isEditing ? (
-                          <input 
-                            type="text" 
-                            value={player} 
-                            onChange={(e) => handlePlayerChange(teamKey, idx, e.target.value)}
-                            className="bg-slate-800 text-white text-xs p-0.5 rounded w-full border border-slate-700 font-sans"
-                          />
-                        ) : (
-                          <span className="truncate pl-1 text-slate-300">{player}</span>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
+            {/* UNIONS */}
+            <div className="space-y-3">
+              <div className="bg-[#0c1f17] text-emerald-400 font-black text-[10px] p-2 rounded border border-emerald-900/40 text-center tracking-widest uppercase">
+                THE UNIONS
+              </div>
+              <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
+                {rosters.unions.map((player, idx) => (
+                  <li key={idx} className="flex items-center gap-1 bg-slate-900/40 px-1.5 py-0.5 rounded border border-transparent">
+                    <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
+                    <input 
+                      type="text"
+                      value={player} 
+                      onChange={(e) => {
+                        const copy = [...rosters.unions];
+                        copy[idx] = e.target.value;
+                        setRosters({ ...rosters, unions: copy });
+                      }} 
+                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white"
+                    />
+                  </li>
+                ))}
+              </ol>
             </div>
+
+            {/* BOWNES */}
+            <div className="space-y-3">
+              <div className="bg-[#1c1613] text-amber-500 font-black text-[10px] p-2 rounded border border-amber-900/40 text-center tracking-widest uppercase">
+                THE BOWNES
+              </div>
+              <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
+                {rosters.bownes.map((player, idx) => (
+                  <li key={idx} className="flex items-center gap-1 bg-slate-900/40 px-1.5 py-0.5 rounded border border-transparent">
+                    <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
+                    <input 
+                      type="text"
+                      value={player} 
+                      onChange={(e) => {
+                        const copy = [...rosters.bownes];
+                        copy[idx] = e.target.value;
+                        setRosters({ ...rosters, bownes: copy });
+                      }} 
+                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white"
+                    />
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            {/* SANFORDS */}
+            <div className="space-y-3">
+              <div className="bg-[#241712] text-orange-500 font-black text-[10px] p-2 rounded border border-orange-900/40 text-center tracking-widest uppercase">
+                THE SANFORDS
+              </div>
+              <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
+                {rosters.sanfords.map((player, idx) => (
+                  <li key={idx} className="flex items-center gap-1 bg-slate-900/40 px-1.5 py-0.5 rounded border border-transparent">
+                    <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
+                    <input 
+                      type="text"
+                      value={player} 
+                      onChange={(e) => {
+                        const copy = [...rosters.sanfords];
+                        copy[idx] = e.target.value;
+                        setRosters({ ...rosters, sanfords: copy });
+                      }} 
+                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white"
+                    />
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            {/* BARCLAYS */}
+            <div className="space-y-3">
+              <div className="bg-[#0f1626] text-blue-400 font-black text-[10px] p-2 rounded border border-blue-900/40 text-center tracking-widest uppercase">
+                THE BARCLAYS
+              </div>
+              <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
+                {rosters.barclays.map((player, idx) => (
+                  <li key={idx} className="flex items-center gap-1 bg-slate-900/40 px-1.5 py-0.5 rounded border border-transparent">
+                    <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
+                    <input 
+                      type="text"
+                      value={player} 
+                      onChange={(e) => {
+                        const copy = [...rosters.barclays];
+                        copy[idx] = e.target.value;
+                        setRosters({ ...rosters, barclays: copy });
+                      }} 
+                      className="bg-transparent border-none p-0 w-full outline-none focus:text-white"
+                    />
+                  </li>
+                ))}
+              </ol>
+            </div>
+
           </div>
+        </aside>
 
-        </div>
-
-        {/* Board Bottom Branding Tagline Footer */}
-        <div className="mt-6 pt-4 border-t border-slate-800/60 flex justify-center items-center space-x-6 text-[10px] font-bold text-slate-500 tracking-widest">
-          <span>COMPETE.</span>
-          <span>RESPECT.</span>
-          <span className="text-orange-500/80">LEGENDARY.</span>
-        </div>
       </div>
     </div>
   );

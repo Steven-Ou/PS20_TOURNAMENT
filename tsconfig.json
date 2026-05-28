@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node", // Or "bundler" depending on your Next.js version
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    
+    // 1. Change this from "react" to "react-jsx"
+    "jsx": "react-jsx" 
+  }
+}

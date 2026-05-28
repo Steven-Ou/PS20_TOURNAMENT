@@ -50,18 +50,28 @@ const BarclaysLogo = () => (
   </svg>
 );
 
+// Helper component to render the correct logo based on selection string
+const TeamLogoRenderer = ({ teamKey }: { teamKey: string }) => {
+  switch (teamKey) {
+    case "unions": return <UnionLogo />;
+    case "bownes": return <BowneLogo />;
+    case "sanfords": return <SanfordLogo />;
+    case "barclays": return <BarclaysLogo />;
+    default: return null;
+  }
+};
+
 export default function Home() {
   const [tournamentTitle, setTournamentTitle] = useState("PS20 MIKE LEGEND TOURNAMENT");
   const [subHeader, setSubHeader] = useState("BASKETBALL SCHEDULE");
-  const [resultsDay, setResultsDay] = useState("TODAY'S RESULTS - WEDNESDAY MAY 27TH");
+  const [resultsDay, setResultsDay] = useState("TODAY'S RESULTS - THURSDAY MAY 28TH");
 
+  // Leaderboard / Top total values
   const [topScores, setTopScores] = useState({ unions: 46, bownes: 18, sanfords: 31, barclays: 24 });
-  const [gameScores, setGameScores] = useState({
-    sanfordsGame: 31,
-    bownesGame: 30,
-    unionsGame: 36,
-    barclaysGame: 34,
-  });
+
+  // Customizable Match Schedule Setup
+  const [match1, setMatch1] = useState({ teamA: "sanfords", teamB: "unions", scoreA: 0, scoreB: 0 });
+  const [match2, setMatch2] = useState({ teamA: "bownes", teamB: "barclays", scoreA: 0, scoreB: 0 });
 
   const [timelineText, setTimelineText] = useState("WEEK 2 SCHEDULE: TBA (To Be Announced)");
 
@@ -71,6 +81,17 @@ export default function Home() {
     sanfords: ["Steven", "William_Yan", "绿豆赚", "09^", "Whilar·Yan", "易阿炜", "Ryan", "Beau", "Leo", "Mwxot"],
     barclays: ["kys r", "YJH —", "胡内", "篮板王", "稳", "Syw", "Sean", "Taotao", "高手", "James c"],
   });
+
+  // Team configuration style presets for clean borders
+  const getTeamColorClass = (teamKey: string) => {
+    switch (teamKey) {
+      case "unions": return "text-emerald-400 focus:text-emerald-300";
+      case "bownes": return "text-amber-500 focus:text-amber-400";
+      case "sanfords": return "text-orange-500 focus:text-orange-400";
+      case "barclays": return "text-blue-400 focus:text-blue-300";
+      default: return "text-white";
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#070b13] text-white p-6 font-sans antialiased">
@@ -98,10 +119,10 @@ export default function Home() {
       {/* TWO-COLUMN GRID */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto items-start">
         
-        {/* MATCH STUFF CARDS ROW BOXES (2/3 width) */}
+        {/* MATCH CONTAINER CARDS */}
         <main className="lg:col-span-2 flex flex-col gap-6">
           
-          {/* HERO PREVIEW DASHBOARD */}
+          {/* TOP RESULTS OVERVIEW PANEL */}
           <div className="bg-[#111827] border border-slate-800 rounded-2xl p-5 shadow-2xl">
             <input
               type="text"
@@ -157,62 +178,106 @@ export default function Home() {
             </div>
           </div>
 
-          {/* DYNAMIC MATCHUPS PANELS */}
+          {/* DYNAMIC MUTABLE MATCHUPS LIST (Completely Switchable Names/Logos) */}
           <div className="flex flex-col gap-4">
-            <div className="bg-gradient-to-r from-[#2a160e] to-[#141110] border border-orange-950 rounded-xl p-4 flex items-center justify-between shadow-md">
+            
+            {/* Match Box 1 */}
+            <div className="bg-gradient-to-r from-[#181e2a] to-[#141110] border border-slate-800 rounded-xl p-4 flex items-center justify-between shadow-md">
               <div className="flex items-center gap-4 w-5/12">
-                <SanfordLogo />
-                <span className="font-extrabold tracking-wider text-sm text-orange-400">THE SANFORDS</span>
+                <TeamLogoRenderer teamKey={match1.teamA} />
+                <select 
+                  value={match1.teamA} 
+                  onChange={(e) => setMatch1({ ...match1, teamA: e.target.value })}
+                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none cursor-pointer uppercase ${getTeamColorClass(match1.teamA)}`}
+                >
+                  <option value="sanfords" className="bg-[#070b13] text-orange-500">THE SANFORDS</option>
+                  <option value="unions" className="bg-[#070b13] text-emerald-400">THE UNIONS</option>
+                  <option value="bownes" className="bg-[#070b13] text-amber-500">THE BOWNES</option>
+                  <option value="barclays" className="bg-[#070b13] text-blue-400">THE BARCLAYS</option>
+                </select>
               </div>
+
               <div className="flex items-center justify-center gap-3 w-2/12">
                 <input 
                   type="number" 
-                  value={gameScores.sanfordsGame} 
-                  onChange={(e) => setGameScores({ ...gameScores, sanfordsGame: parseInt(e.target.value) || 0 })}
-                  className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-orange-400"
+                  value={match1.scoreA} 
+                  onChange={(e) => setMatch1({ ...match1, scoreA: parseInt(e.target.value) || 0 })}
+                  className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match1.teamA)}`}
                 />
                 <span className="text-[10px] font-black tracking-tighter bg-black/50 px-2 py-1 rounded border border-slate-800">VS</span>
                 <input 
                   type="number" 
-                  value={gameScores.bownesGame} 
-                  onChange={(e) => setGameScores({ ...gameScores, bownesGame: parseInt(e.target.value) || 0 })}
-                  className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-amber-500"
+                  value={match1.scoreB} 
+                  onChange={(e) => setMatch1({ ...match1, scoreB: parseInt(e.target.value) || 0 })}
+                  className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match1.teamB)}`}
                 />
               </div>
+
               <div className="flex items-center justify-end gap-4 w-5/12">
-                <span className="font-extrabold tracking-wider text-sm text-amber-500">THE BOWNES</span>
-                <BowneLogo />
+                <select 
+                  value={match1.teamB} 
+                  onChange={(e) => setMatch1({ ...match1, teamB: e.target.value })}
+                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none cursor-pointer uppercase text-right ${getTeamColorClass(match1.teamB)}`}
+                >
+                  <option value="unions" className="bg-[#070b13] text-emerald-400">THE UNIONS</option>
+                  <option value="sanfords" className="bg-[#070b13] text-orange-500">THE SANFORDS</option>
+                  <option value="bownes" className="bg-[#070b13] text-amber-500">THE BOWNES</option>
+                  <option value="barclays" className="bg-[#070b13] text-blue-400">THE BARCLAYS</option>
+                </select>
+                <TeamLogoRenderer teamKey={match1.teamB} />
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-[#0b1f16] to-[#0d1624] border border-emerald-950 rounded-xl p-4 flex items-center justify-between shadow-md">
+            {/* Match Box 2 */}
+            <div className="bg-gradient-to-r from-[#181e2a] to-[#141110] border border-slate-800 rounded-xl p-4 flex items-center justify-between shadow-md">
               <div className="flex items-center gap-4 w-5/12">
-                <UnionLogo />
-                <span className="font-extrabold tracking-wider text-sm text-emerald-400">THE UNIONS</span>
+                <TeamLogoRenderer teamKey={match2.teamA} />
+                <select 
+                  value={match2.teamA} 
+                  onChange={(e) => setMatch2({ ...match2, teamA: e.target.value })}
+                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none cursor-pointer uppercase ${getTeamColorClass(match2.teamA)}`}
+                >
+                  <option value="bownes" className="bg-[#070b13] text-amber-500">THE BOWNES</option>
+                  <option value="barclays" className="bg-[#070b13] text-blue-400">THE BARCLAYS</option>
+                  <option value="sanfords" className="bg-[#070b13] text-orange-500">THE SANFORDS</option>
+                  <option value="unions" className="bg-[#070b13] text-emerald-400">THE UNIONS</option>
+                </select>
               </div>
+
               <div className="flex items-center justify-center gap-3 w-2/12">
                 <input 
                   type="number" 
-                  value={gameScores.unionsGame} 
-                  onChange={(e) => setGameScores({ ...gameScores, unionsGame: parseInt(e.target.value) || 0 })}
-                  className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-emerald-400"
+                  value={match2.scoreA} 
+                  onChange={(e) => setMatch2({ ...match2, scoreA: parseInt(e.target.value) || 0 })}
+                  className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match2.teamA)}`}
                 />
                 <span className="text-[10px] font-black tracking-tighter bg-black/50 px-2 py-1 rounded border border-slate-800">VS</span>
                 <input 
                   type="number" 
-                  value={gameScores.barclaysGame} 
-                  onChange={(e) => setGameScores({ ...gameScores, barclaysGame: parseInt(e.target.value) || 0 })}
-                  className="bg-transparent text-3xl font-black text-center w-12 border-none outline-none text-blue-400"
+                  value={match2.scoreB} 
+                  onChange={(e) => setMatch2({ ...match2, scoreB: parseInt(e.target.value) || 0 })}
+                  className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match2.teamB)}`}
                 />
               </div>
+
               <div className="flex items-center justify-end gap-4 w-5/12">
-                <span className="font-extrabold tracking-wider text-sm text-blue-400">THE BARCLAYS</span>
-                <BarclaysLogo />
+                <select 
+                  value={match2.teamB} 
+                  onChange={(e) => setMatch2({ ...match2, teamB: e.target.value })}
+                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none cursor-pointer uppercase text-right ${getTeamColorClass(match2.teamB)}`}
+                >
+                  <option value="barclays" className="bg-[#070b13] text-blue-400">THE BARCLAYS</option>
+                  <option value="bownes" className="bg-[#070b13] text-amber-500">THE BOWNES</option>
+                  <option value="sanfords" className="bg-[#070b13] text-orange-500">THE SANFORDS</option>
+                  <option value="unions" className="bg-[#070b13] text-emerald-400">THE UNIONS</option>
+                </select>
+                <TeamLogoRenderer teamKey={match2.teamB} />
               </div>
             </div>
+
           </div>
 
-          {/* METADATA BANNER */}
+          {/* BOTTOM TIME METADATA TIMELINE BANNER */}
           <div className="bg-[#0c1222] border border-slate-900 rounded-xl p-5 text-center shadow-inner flex flex-col justify-center items-center">
             <span className="text-slate-500 text-[10px] uppercase font-black tracking-widest mb-2">TIMELINE METADATA BANNER</span>
             <input 
@@ -224,7 +289,7 @@ export default function Home() {
           </div>
         </main>
 
-        {/* ROSTERS COLUMN PANELS (Right Column Split Grid) */}
+        {/* ROSTERS COLUMN PANELS */}
         <aside className="bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-2xl lg:col-span-1">
           <h3 className="text-center font-black tracking-widest text-xs text-slate-400 uppercase border-b border-slate-800 pb-3 mb-5">
             TEAMS & ROSTERS
@@ -232,7 +297,7 @@ export default function Home() {
           
           <div className="grid grid-cols-2 gap-x-4 gap-y-6">
             
-            {/* UNIONS */}
+            {/* UNIONS BLOCK */}
             <div className="space-y-3">
               <div className="bg-[#0c1f17] text-emerald-400 font-black text-[10px] p-2 rounded border border-emerald-900/40 text-center tracking-widest uppercase">
                 THE UNIONS
@@ -256,7 +321,7 @@ export default function Home() {
               </ol>
             </div>
 
-            {/* BOWNES */}
+            {/* BOWNES BLOCK */}
             <div className="space-y-3">
               <div className="bg-[#1c1613] text-amber-500 font-black text-[10px] p-2 rounded border border-amber-900/40 text-center tracking-widest uppercase">
                 THE BOWNES
@@ -280,7 +345,7 @@ export default function Home() {
               </ol>
             </div>
 
-            {/* SANFORDS */}
+            {/* SANFORDS BLOCK */}
             <div className="space-y-3">
               <div className="bg-[#241712] text-orange-500 font-black text-[10px] p-2 rounded border border-orange-900/40 text-center tracking-widest uppercase">
                 THE SANFORDS
@@ -304,7 +369,7 @@ export default function Home() {
               </ol>
             </div>
 
-            {/* BARCLAYS */}
+            {/* BARCLAYS BLOCK */}
             <div className="space-y-3">
               <div className="bg-[#0f1626] text-blue-400 font-black text-[10px] p-2 rounded border border-blue-900/40 text-center tracking-widest uppercase">
                 THE BARCLAYS

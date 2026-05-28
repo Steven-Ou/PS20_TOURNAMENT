@@ -61,7 +61,6 @@ const TeamLogoRenderer = ({ teamKey }: { teamKey: string }) => {
 };
 
 export default function Home() {
-  // Administrative Permission Level Access Control
   const [isAdmin, setIsAdmin] = useState<boolean>(true);
 
   const [tournamentTitle, setTournamentTitle] = useState("PS20 MIKE LEGEND TOURNAMENT");
@@ -70,7 +69,6 @@ export default function Home() {
 
   const [topScores, setTopScores] = useState({ unions: 0, bownes: 0, sanfords: 0, barclays: 0 });
   
-  // Matches configured with scores and fouls matching request
   const [match1, setMatch1] = useState({ teamA: "sanfords", teamB: "unions", scoreA: 0, scoreB: 0, foulsA: 0, foulsB: 0 });
   const [match2, setMatch2] = useState({ teamA: "bownes", teamB: "barclays", scoreA: 0, scoreB: 0, foulsA: 0, foulsB: 0 });
 
@@ -78,7 +76,7 @@ export default function Home() {
 
   const [rosters, setRosters] = useState({
     unions: ["KMY", "小鱼", "Dudu", "Hong Tao", "慢慢来", "猴王", "MING", "好好睡觉"],
-    bownes: ["SHBW", "LiNg", "Gao Xiang", "Eric", "Owen", "Benc", "Lee", "烤", "Ye 哥", "芥琵"],
+    bownes: ["SHBW", "LiNg", "Gao Xiang", "Eric", "Owen", "Benc", "Lee", "炜", "Ye 哥", "芥琵"],
     sanfords: ["Steven", "William_Yan", "绿豆赚", "09^", "Whilar·Yan", "易阿炜", "Ryan", "Beau", "Leo", "Mwxot"],
     barclays: ["kys r", "YJH —", "胡内", "篮板王", "稳", "Syw", "Sean", "Taotao", "高手", "James c"],
   });
@@ -154,7 +152,8 @@ export default function Home() {
                 <UnionLogo />
                 <input
                   type="number"
-                  value={topScores.unions}
+                  value={topScores.unions === 0 ? "" : topScores.unions}
+                  placeholder="0"
                   disabled={!isAdmin}
                   onChange={(e) => setTopScores({ ...topScores, unions: parseInt(e.target.value) || 0 })}
                   className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-emerald-300 disabled:cursor-not-allowed"
@@ -167,7 +166,8 @@ export default function Home() {
                 <BowneLogo />
                 <input
                   type="number"
-                  value={topScores.bownes}
+                  value={topScores.bownes === 0 ? "" : topScores.bownes}
+                  placeholder="0"
                   disabled={!isAdmin}
                   onChange={(e) => setTopScores({ ...topScores, bownes: parseInt(e.target.value) || 0 })}
                   className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-amber-400 disabled:cursor-not-allowed"
@@ -180,7 +180,8 @@ export default function Home() {
                 <SanfordLogo />
                 <input
                   type="number"
-                  value={topScores.sanfords}
+                  value={topScores.sanfords === 0 ? "" : topScores.sanfords}
+                  placeholder="0"
                   disabled={!isAdmin}
                   onChange={(e) => setTopScores({ ...topScores, sanfords: parseInt(e.target.value) || 0 })}
                   className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-orange-400 disabled:cursor-not-allowed"
@@ -193,7 +194,8 @@ export default function Home() {
                 <BarclaysLogo />
                 <input
                   type="number"
-                  value={topScores.barclays}
+                  value={topScores.barclays === 0 ? "" : topScores.barclays}
+                  placeholder="0"
                   disabled={!isAdmin}
                   onChange={(e) => setTopScores({ ...topScores, barclays: parseInt(e.target.value) || 0 })}
                   className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-blue-300 disabled:cursor-not-allowed"
@@ -202,7 +204,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* DYNAMIC MATCHUPS PANELS (Includes FOULS and Admin Controls) */}
+          {/* DYNAMIC MATCHUPS PANELS */}
           <div className="flex flex-col gap-4">
             
             {/* MATCH BOX 1 */}
@@ -222,19 +224,19 @@ export default function Home() {
                 </select>
               </div>
 
-              {/* CENTER CARD CONFIGURATION WITH FOULS DISPLAY */}
               <div className="flex items-center justify-center gap-4 w-3/12">
                 <div className="flex flex-col items-center">
                   <input 
                     type="number" 
-                    value={match1.scoreA} 
+                    value={match1.scoreA === 0 ? "" : match1.scoreA}
+                    placeholder="0"
                     disabled={!isAdmin}
                     onChange={(e) => setMatch1({ ...match1, scoreA: parseInt(e.target.value) || 0 })}
                     className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match1.teamA)} disabled:cursor-not-allowed`}
                   />
                   <div className="flex items-center text-[10px] text-red-500 gap-0.5">
                     <span>F:</span>
-                    <input type="number" disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0" value={match1.foulsA} onChange={(e) => setMatch1({...match1, foulsA: parseInt(e.target.value) || 0})}/>
+                    <input type="number" placeholder="0" value={match1.foulsA === 0 ? "" : match1.foulsA} disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0 focus:text-white" onChange={(e) => setMatch1({...match1, foulsA: parseInt(e.target.value) || 0})}/>
                   </div>
                 </div>
 
@@ -243,14 +245,15 @@ export default function Home() {
                 <div className="flex flex-col items-center">
                   <input 
                     type="number" 
-                    value={match1.scoreB} 
+                    value={match1.scoreB === 0 ? "" : match1.scoreB}
+                    placeholder="0"
                     disabled={!isAdmin}
                     onChange={(e) => setMatch1({ ...match1, scoreB: parseInt(e.target.value) || 0 })}
                     className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match1.teamB)} disabled:cursor-not-allowed`}
                   />
                   <div className="flex items-center text-[10px] text-red-500 gap-0.5">
                     <span>F:</span>
-                    <input type="number" disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0" value={match1.foulsB} onChange={(e) => setMatch1({...match1, foulsB: parseInt(e.target.value) || 0})}/>
+                    <input type="number" placeholder="0" value={match1.foulsB === 0 ? "" : match1.foulsB} disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0 focus:text-white" onChange={(e) => setMatch1({...match1, foulsB: parseInt(e.target.value) || 0})}/>
                   </div>
                 </div>
               </div>
@@ -292,14 +295,15 @@ export default function Home() {
                 <div className="flex flex-col items-center">
                   <input 
                     type="number" 
-                    value={match2.scoreA} 
+                    value={match2.scoreA === 0 ? "" : match2.scoreA}
+                    placeholder="0"
                     disabled={!isAdmin}
                     onChange={(e) => setMatch2({ ...match2, scoreA: parseInt(e.target.value) || 0 })}
                     className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match2.teamA)} disabled:cursor-not-allowed`}
                   />
                   <div className="flex items-center text-[10px] text-red-500 gap-0.5">
                     <span>F:</span>
-                    <input type="number" disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0" value={match2.foulsA} onChange={(e) => setMatch2({...match2, foulsA: parseInt(e.target.value) || 0})}/>
+                    <input type="number" placeholder="0" value={match2.foulsA === 0 ? "" : match2.foulsA} disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0 focus:text-white" onChange={(e) => setMatch2({...match2, foulsA: parseInt(e.target.value) || 0})}/>
                   </div>
                 </div>
 
@@ -308,14 +312,15 @@ export default function Home() {
                 <div className="flex flex-col items-center">
                   <input 
                     type="number" 
-                    value={match2.scoreB} 
+                    value={match2.scoreB === 0 ? "" : match2.scoreB}
+                    placeholder="0"
                     disabled={!isAdmin}
                     onChange={(e) => setMatch2({ ...match2, scoreB: parseInt(e.target.value) || 0 })}
                     className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match2.teamB)} disabled:cursor-not-allowed`}
                   />
                   <div className="flex items-center text-[10px] text-red-500 gap-0.5">
                     <span>F:</span>
-                    <input type="number" disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0" value={match2.foulsB} onChange={(e) => setMatch2({...match2, foulsB: parseInt(e.target.value) || 0})}/>
+                    <input type="number" placeholder="0" value={match2.foulsB === 0 ? "" : match2.foulsB} disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0 focus:text-white" onChange={(e) => setMatch2({...match2, foulsB: parseInt(e.target.value) || 0})}/>
                   </div>
                 </div>
               </div>
@@ -351,7 +356,7 @@ export default function Home() {
           </div>
         </main>
 
-        {/* ROSTERS COLUMN PANELS (Controlled dynamically by Access Authorization toggles) */}
+        {/* ROSTERS COLUMN PANELS */}
         <aside className="bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-2xl lg:col-span-1">
           <h3 className="text-center font-black tracking-widest text-xs text-slate-400 uppercase border-b border-slate-800 pb-3 mb-5">
             TEAMS & ROSTERS

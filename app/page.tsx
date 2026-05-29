@@ -61,7 +61,6 @@ const TeamLogoRenderer = ({ teamKey }: { teamKey: string }) => {
 };
 
 export default function Home() {
-  // Administrative Permission Level Access Control
   const [isAdmin, setIsAdmin] = useState<boolean>(true);
 
   const [tournamentTitle, setTournamentTitle] = useState("PS20 MIKE LEGEND TOURNAMENT");
@@ -78,7 +77,7 @@ export default function Home() {
   const [rosters, setRosters] = useState({
     unions: ["KMY", "小鱼", "Dudu", "Hong Tao", "慢慢来", "腰王", "MING", "好好睡觉"],
     bownes: ["yuxuan", "LiNg", "Gao Xiang", "Eric", "Owen", "Benc", "Lee", "炜", "Ye 哥", "芥琵"],
-    sanfords: ["Steven", "William_Yan", "绿豆赚", "09^", "ishtiaq", "Ryan", "Beau", "Alex","Leo"],
+    sanfords: ["Steven", "William_Yan", "绿豆赚", "09^", "ishtiar", "Ryan", "Beau", "Alex","Leo"],
     barclays: ["kys r", "YJH —", "胡内", "篮板王", "稳", "Syw", "Sean", "Taotao", "高手", "James c"],
   });
 
@@ -205,12 +204,12 @@ export default function Home() {
             </div>
           </div>
 
-          {/* DYNAMIC MATCHUPS PANELS */}
+          {/* EXPANDED MATCHUPS PANELS (Wider scoring grids to fix layout bugs) */}
           <div className="flex flex-col gap-4">
             
             {/* MATCH BOX 1 */}
-            <div className="bg-gradient-to-r from-[#1c120c] to-[#0a0f1d] border border-slate-800 rounded-xl p-4 flex items-center justify-between shadow-md">
-              <div className="flex items-center gap-4 w-5/12">
+            <div className="bg-gradient-to-r from-[#1c120c] to-[#0a0f1d] border border-slate-800 rounded-xl p-5 flex items-center justify-between shadow-md min-h-[90px]">
+              <div className="flex items-center gap-4 w-4/12">
                 <TeamLogoRenderer teamKey={match1.teamA} />
                 <select 
                   value={match1.teamA} 
@@ -225,41 +224,42 @@ export default function Home() {
                 </select>
               </div>
 
-              <div className="flex items-center justify-center gap-4 w-3/12">
-                <div className="flex flex-col items-center">
+              {/* COMMITTED ADDITIONAL WIDTH TO SCORES FOR PROPER SPACING */}
+              <div className="flex items-center justify-center gap-6 w-4/12 px-2">
+                <div className="flex flex-col items-center justify-center">
                   <input 
                     type="number" 
                     value={match1.scoreA === 0 ? "" : match1.scoreA}
                     placeholder="0"
                     disabled={!isAdmin}
                     onChange={(e) => setMatch1({ ...match1, scoreA: parseInt(e.target.value) || 0 })}
-                    className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match1.teamA)} disabled:cursor-not-allowed`}
+                    className={`bg-transparent text-4xl font-black text-center w-16 border-none outline-none ${getTeamColorClass(match1.teamA)} disabled:cursor-not-allowed h-10`}
                   />
-                  <div className="flex items-center text-[10px] text-red-500 gap-0.5">
-                    <span>F:</span>
-                    <input type="number" placeholder="0" value={match1.foulsA === 0 ? "" : match1.foulsA} disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0 focus:text-white" onChange={(e) => setMatch1({...match1, foulsA: parseInt(e.target.value) || 0})}/>
+                  <div className="flex items-center text-[11px] text-red-500 font-bold mt-1">
+                    <span>F:&nbsp;</span>
+                    <input type="number" placeholder="0" value={match1.foulsA === 0 ? "" : match1.foulsA} disabled={!isAdmin} className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white" onChange={(e) => setMatch1({...match1, foulsA: parseInt(e.target.value) || 0})}/>
                   </div>
                 </div>
 
-                <span className="text-[10px] font-black tracking-tighter bg-black/50 px-2 py-1 rounded border border-slate-800 h-6 flex items-center">VS</span>
+                <span className="text-xs font-black tracking-widest bg-black/60 px-2.5 py-1.5 rounded-md border border-slate-800 shadow-sm self-center">VS</span>
 
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center justify-center">
                   <input 
                     type="number" 
                     value={match1.scoreB === 0 ? "" : match1.scoreB}
                     placeholder="0"
                     disabled={!isAdmin}
                     onChange={(e) => setMatch1({ ...match1, scoreB: parseInt(e.target.value) || 0 })}
-                    className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match1.teamB)} disabled:cursor-not-allowed`}
+                    className={`bg-transparent text-4xl font-black text-center w-16 border-none outline-none ${getTeamColorClass(match1.teamB)} disabled:cursor-not-allowed h-10`}
                   />
-                  <div className="flex items-center text-[10px] text-red-500 gap-0.5">
-                    <span>F:</span>
-                    <input type="number" placeholder="0" value={match1.foulsB === 0 ? "" : match1.foulsB} disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0 focus:text-white" onChange={(e) => setMatch1({...match1, foulsB: parseInt(e.target.value) || 0})}/>
+                  <div className="flex items-center text-[11px] text-red-500 font-bold mt-1">
+                    <span>F:&nbsp;</span>
+                    <input type="number" placeholder="0" value={match1.foulsB === 0 ? "" : match1.foulsB} disabled={!isAdmin} className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white" onChange={(e) => setMatch1({...match1, foulsB: parseInt(e.target.value) || 0})}/>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-4 w-5/12">
+              <div className="flex items-center justify-end gap-4 w-4/12">
                 <select 
                   value={match1.teamB} 
                   disabled={!isAdmin}
@@ -276,8 +276,8 @@ export default function Home() {
             </div>
 
             {/* MATCH BOX 2 */}
-            <div className="bg-gradient-to-r from-[#171311] to-[#0a0f1d] border border-slate-800 rounded-xl p-4 flex items-center justify-between shadow-md">
-              <div className="flex items-center gap-4 w-5/12">
+            <div className="bg-gradient-to-r from-[#171311] to-[#0a0f1d] border border-slate-800 rounded-xl p-5 flex items-center justify-between shadow-md min-h-[90px]">
+              <div className="flex items-center gap-4 w-4/12">
                 <TeamLogoRenderer teamKey={match2.teamA} />
                 <select 
                   value={match2.teamA} 
@@ -292,41 +292,42 @@ export default function Home() {
                 </select>
               </div>
 
-              <div className="flex items-center justify-center gap-4 w-3/12">
-                <div className="flex flex-col items-center">
+              {/* COMMITTED ADDITIONAL WIDTH TO SCORES FOR PROPER SPACING */}
+              <div className="flex items-center justify-center gap-6 w-4/12 px-2">
+                <div className="flex flex-col items-center justify-center">
                   <input 
                     type="number" 
                     value={match2.scoreA === 0 ? "" : match2.scoreA}
                     placeholder="0"
                     disabled={!isAdmin}
                     onChange={(e) => setMatch2({ ...match2, scoreA: parseInt(e.target.value) || 0 })}
-                    className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match2.teamA)} disabled:cursor-not-allowed`}
+                    className={`bg-transparent text-4xl font-black text-center w-16 border-none outline-none ${getTeamColorClass(match2.teamA)} disabled:cursor-not-allowed h-10`}
                   />
-                  <div className="flex items-center text-[10px] text-red-500 gap-0.5">
-                    <span>F:</span>
-                    <input type="number" placeholder="0" value={match2.foulsA === 0 ? "" : match2.foulsA} disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0 focus:text-white" onChange={(e) => setMatch2({...match2, foulsA: parseInt(e.target.value) || 0})}/>
+                  <div className="flex items-center text-[11px] text-red-500 font-bold mt-1">
+                    <span>F:&nbsp;</span>
+                    <input type="number" placeholder="0" value={match2.foulsA === 0 ? "" : match2.foulsA} disabled={!isAdmin} className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white" onChange={(e) => setMatch2({...match2, foulsA: parseInt(e.target.value) || 0})}/>
                   </div>
                 </div>
 
-                <span className="text-[10px] font-black tracking-tighter bg-black/50 px-2 py-1 rounded border border-slate-800 h-6 flex items-center">VS</span>
+                <span className="text-xs font-black tracking-widest bg-black/60 px-2.5 py-1.5 rounded-md border border-slate-800 shadow-sm self-center">VS</span>
 
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center justify-center">
                   <input 
                     type="number" 
                     value={match2.scoreB === 0 ? "" : match2.scoreB}
                     placeholder="0"
                     disabled={!isAdmin}
                     onChange={(e) => setMatch2({ ...match2, scoreB: parseInt(e.target.value) || 0 })}
-                    className={`bg-transparent text-3xl font-black text-center w-12 border-none outline-none ${getTeamColorClass(match2.teamB)} disabled:cursor-not-allowed`}
+                    className={`bg-transparent text-4xl font-black text-center w-16 border-none outline-none ${getTeamColorClass(match2.teamB)} disabled:cursor-not-allowed h-10`}
                   />
-                  <div className="flex items-center text-[10px] text-red-500 gap-0.5">
-                    <span>F:</span>
-                    <input type="number" placeholder="0" value={match2.foulsB === 0 ? "" : match2.foulsB} disabled={!isAdmin} className="bg-transparent w-6 text-center outline-none border-none p-0 focus:text-white" onChange={(e) => setMatch2({...match2, foulsB: parseInt(e.target.value) || 0})}/>
+                  <div className="flex items-center text-[11px] text-red-500 font-bold mt-1">
+                    <span>F:&nbsp;</span>
+                    <input type="number" placeholder="0" value={match2.foulsB === 0 ? "" : match2.foulsB} disabled={!isAdmin} className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white" onChange={(e) => setMatch2({...match2, foulsB: parseInt(e.target.value) || 0})}/>
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-4 w-5/12">
+              <div className="flex items-center justify-end gap-4 w-4/12">
                 <select 
                   value={match2.teamB} 
                   disabled={!isAdmin}
@@ -357,7 +358,7 @@ export default function Home() {
           </div>
         </main>
 
-        {/* ROSTERS COLUMN PANELS (Modified to respect Authorization Levels) */}
+        {/* ROSTERS COLUMN PANELS */}
         <aside className="bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-2xl lg:col-span-1">
           <h3 className="text-center font-black tracking-widest text-xs text-slate-400 uppercase border-b border-slate-800 pb-3 mb-5">
             TEAMS & ROSTERS

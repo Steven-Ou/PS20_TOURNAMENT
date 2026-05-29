@@ -50,7 +50,6 @@ const BarclaysLogo = () => (
   </svg>
 );
 
-// Dynamic SVG generator for newly added custom teams
 const DynamicCustomLogo = ({ color }: { color: string }) => (
   <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
     <polygon points="50,10 90,35 90,75 50,95 10,75 10,35" fill="#1e293b" stroke={color} strokeWidth="4" strokeLinejoin="round" />
@@ -64,6 +63,16 @@ const EmptyPlaceholderLogo = () => (
     —
   </div>
 );
+
+const TeamLogoRenderer = ({ teamKey, color }: { teamKey: string; color: string }) => {
+  switch (teamKey) {
+    case "unions": return <UnionLogo />;
+    case "bownes": return <BowneLogo />;
+    case "sanfords": return <SanfordLogo />;
+    case "barclays": return <BarclaysLogo />;
+    default: return <DynamicCustomLogo color={color} />;
+  }
+};
 
 interface TeamConfig {
   key: string;
@@ -87,14 +96,12 @@ export default function Home() {
   const [isAdmin, setIsAdmin] = useState<boolean>(true);
   const [isHydrated, setIsHydrated] = useState<boolean>(false);
 
-  // Core App Header / Label States
   const [tournamentTitle, setTournamentTitle] = useState("PS20 MIKE LEGEND TOURNAMENT");
   const [subHeader, setSubHeader] = useState("BASKETBALL SCHEDULE");
   const [resultsDay, setResultsDay] = useState("TODAY'S RESULTS - THURSDAY MAY 28TH");
   const [timelineText, setTimelineText] = useState("WEEK 2 SCHEDULE: TBA (To Be Announced)");
   const [hideEliminatedRosters, setHideEliminatedRosters] = useState<boolean>(true);
 
-  // EXPANDABLE REGISTRY OF TEAMS (Allows creating new teams natively)
   const [teamsConfig, setTeamsConfig] = useState<TeamConfig[]>([
     { key: "unions", name: "THE UNIONS", colorClass: "text-emerald-400", hexColor: "#34d399" },
     { key: "bownes", name: "THE BOWNES", colorClass: "text-amber-500", hexColor: "#f59e0b" },
@@ -102,12 +109,8 @@ export default function Home() {
     { key: "barclays", name: "THE BARCLAYS", colorClass: "text-blue-400", hexColor: "#60a5fa" }
   ]);
 
-  // Cleaned up Top-level Leaderboard stats (Bownes & Barclays removed from default configurations)
   const [topScores, setTopScores] = useState<Record<string, number>>({
-    unions: 0,
-    bownes: 0,
-    sanfords: 0,
-    barclays: 0
+    unions: 0, bownes: 0, sanfords: 0, barclays: 0
   });
 
   const [matches, setMatches] = useState<MatchData[]>([
@@ -115,7 +118,6 @@ export default function Home() {
     { id: 2, teamA: "bownes", teamB: "barclays", scoreA: 0, scoreB: 0, foulsA: 0, foulsB: 0 }
   ]);
 
-  // Maintained your exact precise player roster layout profiles cleanly
   const [rosters, setRosters] = useState<Record<string, string[]>>({
     unions: ["KMY", "小鱼", "Dudu", "Hong Tao", "慢慢来", "腰王", "MING", "好好睡觉"],
     bownes: ["yuxuan", "LiNg", "Gao Xiang", "Eric", "Owen", "Benc", "Lee", "炜", "Ye 哥", "芥琵"],
@@ -123,11 +125,9 @@ export default function Home() {
     barclays: ["kys r", "YJH —", "胡内", "篮板王", "稳", "Syw", "Sean", "Taotao", "高手", "James c"],
   });
 
-  // Dynamic input states for creating a new team inside Admin view
   const [newTeamName, setNewTeamName] = useState("");
   const [newTeamColor, setNewTeamColor] = useState("#a855f7");
 
-  // Load from local storage on ingestion parse
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedTitle = localStorage.getItem("ps20_title");
@@ -154,7 +154,6 @@ export default function Home() {
     }
   }, []);
 
-  // Sync back to local storage dynamically
   useEffect(() => {
     if (isHydrated) {
       localStorage.setItem("ps20_title", tournamentTitle);
@@ -169,42 +168,17 @@ export default function Home() {
     }
   }, [tournamentTitle, subHeader, resultsDay, topScores, matches, timelineText, hideEliminatedRosters, teamsConfig, rosters, isHydrated]);
 
-  const getTeamColorClass = (teamKey: string) => {
-    const found = teamsConfig.find(t => t.key === teamKey);
-    return found ? found.colorClass : "text-slate-500";
-  };
-
-  const getTeamName = (teamKey: string) => {
-    const found = teamsConfig.find(t => t.key === teamKey);
-    return found ? found.name : "N/A";
-  };
-
-  const handleLogoRender = (teamKey: string) => {
-    const found = teamsConfig.find(t => t.key === teamKey);
-    if (!found) return <EmptyPlaceholderLogo />;
-    if (found.isCustom) return <DynamicCustomLogo color={found.hexColor} />;
-    
-    switch (teamKey) {
-      case "unions": return <UnionLogo />;
-      case "bownes": return <BowneLogo />;
-      case "sanfords": return <SanfordLogo />;
-      case "barclays": return <BarclaysLogo />;
-      default: return <EmptyPlaceholderLogo />;
-    }
-  };
-
-  // Admin dynamic options execution
   const createNewTeamAction = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newTeamName.trim()) return;
 
     const generatedKey = newTeamName.toLowerCase().replace(/\s+/g, "_");
-    if (teamsConfig.some(t => t.key === generatedKey)) return alert("Team key already exists!");
+    if (teamsConfig.some(t => t.key === generatedKey)) return alert("Team already exists!");
 
     const newTeamObj: TeamConfig = {
       key: generatedKey,
       name: newTeamName.toUpperCase(),
-      colorClass: "text-slate-200",
+      colorClass: "",
       hexColor: newTeamColor,
       isCustom: true
     };
@@ -213,6 +187,40 @@ export default function Home() {
     setTopScores({ ...topScores, [generatedKey]: 0 });
     setRosters({ ...rosters, [generatedKey]: Array(8).fill("NEW PLAYER") });
     setNewTeamName("");
+  };
+
+  // REMOVE AN ENTIRE TEAM PROFILE FROM SYSTEM PERMANENTLY
+  const removeTeamFromSystem = (teamKey: string) => {
+    if (confirm(`Are you sure you want to completely remove ${getTeamName(teamKey)}?`)) {
+      setTeamsConfig(prev => prev.filter(t => t.key !== teamKey));
+      
+      // Clean up scoreboard registry copies
+      const scoreCopy = { ...topScores };
+      delete scoreCopy[teamKey];
+      setTopScores(scoreCopy);
+
+      // Clean up active roster tables
+      const rosterCopy = { ...rosters };
+      delete rosterCopy[teamKey];
+      setRosters(rosterCopy);
+
+      // Reset any active matchup slot using this team back to a safe placeholder state
+      setMatches(prev => prev.map(m => ({
+        ...m,
+        teamA: m.teamA === teamKey ? "none" : m.teamA,
+        teamB: m.teamB === teamKey ? "none" : m.teamB
+      })));
+    }
+  };
+
+  const getTeamColorClass = (teamKey: string) => {
+    const found = teamsConfig.find(t => t.key === teamKey);
+    return found ? found.colorClass : "text-slate-500";
+  };
+
+  const getTeamName = (teamKey: string) => {
+    const found = teamsConfig.find(t => t.key === teamKey);
+    return found ? found.name : "N/A";
   };
 
   const updateMatchField = (id: number, field: keyof MatchData, value: any) => {
@@ -240,7 +248,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#070b13] text-white p-6 font-sans antialiased">
       
-      {/* ADMINISTRATIVE STATUS CONSOLE OVERLAY WITH EXPANSION HOOKS */}
+      {/* ADMINISTRATIVE ACCESS CONSOLE OVERLAY */}
       <div className="max-w-7xl mx-auto mb-6 bg-[#111827] p-4 rounded-xl border border-slate-800 flex flex-col gap-4">
         <div className="flex flex-wrap justify-between items-center gap-3">
           <div className="flex items-center gap-2">
@@ -266,16 +274,16 @@ export default function Home() {
           </div>
         </div>
 
-        {/* EXPANSION PANEL: ADD BRAND NEW TEAMS AND ICONS LIVE */}
+        {/* ADMIN ADD TEAM FORM */}
         {isAdmin && (
-          <form onSubmit={createNewTeamAction} className="border-t border-slate-800/80 pt-3 flex flex-wrap items-center gap-4 bg-slate-900/40 p-3 rounded-lg">
+          <form onSubmit={createNewTeamAction} className="border-t border-slate-800 pt-3 flex flex-wrap items-center gap-4 bg-slate-900/40 p-3 rounded-lg">
             <span className="text-xs font-black text-slate-400 tracking-wider">🚀 LEAGUE TEAM MANAGER:</span>
             <input 
               type="text" 
               placeholder="ENTER NEW TEAM NAME..." 
               value={newTeamName}
               onChange={(e) => setNewTeamName(e.target.value)}
-              className="bg-[#070b13] border border-slate-700 rounded px-3 py-1 text-xs outline-none text-white w-52 placeholder-slate-600 font-bold"
+              className="bg-[#070b13] border border-slate-700 rounded px-3 py-1 text-xs outline-none text-white w-52 font-bold uppercase"
             />
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500 font-medium">BRAND COLOR:</span>
@@ -286,7 +294,7 @@ export default function Home() {
                 className="bg-transparent border-none outline-none w-8 h-6 cursor-pointer"
               />
             </div>
-            <button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-black px-3 py-1 rounded transition-colors shadow">
+            <button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-black px-3 py-1 rounded shadow">
               PRODUCE LIVE TEAM PROFILE
             </button>
           </form>
@@ -315,13 +323,13 @@ export default function Home() {
         </div>
       </header>
 
-      {/* TWO-COLUMN MAIN CONTAINER */}
+      {/* TWO-COLUMN LAYOUT STRUCTURE */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto items-start">
         
         {/* MATCH STUFF CARDS ROW BOXES */}
         <main className="lg:col-span-2 flex flex-col gap-6">
           
-          {/* HERO PREVIEW DASHBOARD (Bownes and Barclays text counts removed as requested) */}
+          {/* HERO PREVIEW DASHBOARD */}
           <div className="bg-[#111827] border border-slate-800 rounded-2xl p-5 shadow-2xl">
             <input
               type="text"
@@ -333,11 +341,21 @@ export default function Home() {
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {teamsConfig.map((t) => (
-                <div key={t.key} className="bg-slate-900/60 p-4 rounded-xl border border-slate-800 flex flex-col items-center">
-                  <span className={`text-[11px] font-black tracking-widest mb-3 uppercase text-center ${t.colorClass}`} style={t.isCustom ? { color: t.hexColor } : {}}>
+                <div key={t.key} className="relative bg-slate-900/60 p-4 pt-8 rounded-xl border border-slate-800 flex flex-col items-center group">
+                  {/* ADMIN REMOVE TEAM ACTION BUTTON */}
+                  {isAdmin && (
+                    <button
+                      type="button"
+                      onClick={() => removeTeamFromSystem(t.key)}
+                      className="absolute top-1.5 right-1.5 text-[9px] text-slate-500 hover:text-red-400 font-extrabold px-1 py-0.5 rounded bg-slate-950/80 border border-slate-800 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      ❌ DELETE
+                    </button>
+                  )}
+                  <span className={`text-[11px] font-black tracking-widest mb-3 uppercase text-center`} style={{ color: t.hexColor }}>
                     {t.name}
                   </span>
-                  {handleLogoRender(t.key)}
+                  {handleLogoRender(t.key, t.hexColor)}
                   <input
                     type="number"
                     value={topScores[t.key] === 0 ? "" : topScores[t.key]}
@@ -351,14 +369,14 @@ export default function Home() {
             </div>
           </div>
 
-          {/* DYNAMIC SPACING EXPANDED MATCHUPS PANELS */}
+          {/* DYNAMIC SCORING MATRICES */}
           <div className="flex flex-col gap-4">
             {matches.map((match) => (
               <div 
                 key={match.id} 
                 className="relative bg-gradient-to-r from-[#111827] to-[#0a0f1d] border border-slate-800 rounded-xl p-5 pt-8 flex items-center justify-between shadow-md min-h-[105px]"
               >
-                {/* WIPE ROW MODULE */}
+                {/* WIPE CARD MODULATOR */}
                 {isAdmin && (
                   <button
                     onClick={() => removeMatchBox(match.id)}
@@ -370,7 +388,7 @@ export default function Home() {
 
                 {/* TEAM A DROPDOWN BLOCK */}
                 <div className="flex items-center gap-4 w-4/12">
-                  {handleLogoRender(match.teamA)}
+                  {handleLogoRender(match.teamA, teamsConfig.find(t => t.key === match.teamA)?.hexColor || "#555")}
                   <select 
                     value={match.teamA} 
                     disabled={!isAdmin}
@@ -378,14 +396,14 @@ export default function Home() {
                     className="bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase disabled:cursor-not-allowed cursor-pointer"
                     style={{ color: teamsConfig.find(t => t.key === match.teamA)?.hexColor || "#94a3b8" }}
                   >
+                    <option value="none" className="bg-[#070b13] text-slate-500">N/A (HIDE TEAM)</option>
                     {teamsConfig.map(t => (
                       <option key={t.key} value={t.key} className="bg-[#070b13]" style={{ color: t.hexColor }}>{t.name}</option>
                     ))}
-                    <option value="none" className="bg-[#070b13] text-slate-500">N/A (HIDE TEAM)</option>
                   </select>
                 </div>
 
-                {/* SCORING AND FOULS CENTER DISPLAY */}
+                {/* SCORING AND FOULS CENTER MODULE */}
                 <div className="flex items-center justify-center gap-6 w-4/12 px-2">
                   <div className="flex flex-col items-center justify-center min-w-[50px]">
                     {match.teamA !== "none" ? (
@@ -457,24 +475,18 @@ export default function Home() {
                     className="bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase text-right disabled:cursor-not-allowed cursor-pointer"
                     style={{ color: teamsConfig.find(t => t.key === match.teamB)?.hexColor || "#94a3b8" }}
                   >
+                    <option value="none" className="bg-[#070b13] text-slate-500">N/A (HIDE TEAM)</option>
                     {teamsConfig.map(t => (
                       <option key={t.key} value={t.key} className="bg-[#070b13]" style={{ color: t.hexColor }}>{t.name}</option>
                     ))}
-                    <option value="none" className="bg-[#070b13] text-slate-500">N/A (HIDE TEAM)</option>
                   </select>
-                  {handleLogoRender(match.teamB)}
+                  {handleLogoRender(match.teamB, teamsConfig.find(t => t.key === match.teamB)?.hexColor || "#555")}
                 </div>
               </div>
             ))}
-
-            {matches.length === 0 && (
-              <div className="text-center py-8 bg-slate-900/20 border border-dashed border-slate-800 rounded-xl text-slate-500 text-xs font-bold">
-                NO ACTIVE MATCHES ON DISPLAY.
-              </div>
-            )}
           </div>
 
-          {/* LARGE FORMAT BROADCAST BULLETIN NOTES SECTION */}
+          {/* BULLETIN BULLETIN ANNOUNCEMENTS NOTEBOARD */}
           <div className="bg-[#0c1222] border border-slate-800 rounded-xl p-5 text-left shadow-inner flex flex-col">
             <span className="text-orange-500 text-[10px] uppercase font-black tracking-widest mb-2 flex items-center gap-1">
               <span>📢</span> OFFICIAL TOURNAMENT NOTICE BOARD
@@ -483,13 +495,13 @@ export default function Home() {
               value={timelineText}
               disabled={!isAdmin}
               onChange={(e) => setTimelineText(e.target.value)}
-              placeholder="ENTER COMPONENT CONTESTANT NOTICE NOTATIONS HERE..."
+              placeholder="ENTER BROADCAST NOTICE NOTES DETAILS HERE..."
               className="bg-slate-950/40 p-4 rounded-lg font-black text-[40px] text-slate-200 w-full min-h-[160px] border border-slate-800 outline-none uppercase tracking-wide leading-tight resize-y disabled:cursor-not-allowed disabled:bg-transparent disabled:border-none disabled:p-0"
             />
           </div>
         </main>
 
-        {/* ROSTERS COLUMN PANELS (Adapts seamlessly to freshly created custom teams) */}
+        {/* ROSTERS COLUMN PANELS */}
         <aside className="bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-2xl lg:col-span-1">
           <div className="border-b border-slate-800 pb-3 mb-5 flex flex-col gap-2">
             <h3 className="text-center font-black tracking-widest text-xs text-slate-400 uppercase">
@@ -509,7 +521,7 @@ export default function Home() {
           <div className="grid grid-cols-2 gap-x-4 gap-y-6">
             {teamsConfig.map((team) => {
               if (!isTeamActive(team.key)) return null;
-              const playerArray = rosters[team.key] || Array(8).fill("NEW PLAYER");
+              const playerArray = rosters[team.key] || Array(8).fill("");
               
               return (
                 <div key={team.key} className="space-y-3 transition-all duration-200">

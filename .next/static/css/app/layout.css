@@ -611,6 +611,9 @@ video {
 .min-w-\[50px\] {
   min-width: 50px;
 }
+.min-w-\[140px\] {
+  min-width: 140px;
+}
 .max-w-7xl {
   max-width: 80rem;
 }
@@ -1194,7 +1197,17 @@ video {
 .group:hover .group-hover\:opacity-100 {
   opacity: 1;
 }
+@media (min-width: 640px) {
+
+  .sm\:w-\[calc\(50\%-8px\)\] {
+    width: calc(50% - 8px);
+  }
+}
 @media (min-width: 768px) {
+
+  .md\:w-\[calc\(25\%-12px\)\] {
+    width: calc(25% - 12px);
+  }
 
   .md\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));

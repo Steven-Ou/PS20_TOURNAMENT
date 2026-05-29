@@ -115,10 +115,18 @@ export default function Home() {
     barclays: ["kys r", "YJH —", "胡内", "篮板王", "稳", "Syw", "Sean", "Taotao", "高手", "James c"],
   });
 
+  // HARD BACKUP REGISTRY TO RECOGNIZE HISTORICAL ICON POLICIES Instantly on Typo re-entry
+  const legacyBrandRegistry: Record<string, { name: string; hexColor: string; colorClass: string }> = {
+    unions: { name: "THE UNIONS", hexColor: "#34d399", colorClass: "text-emerald-400" },
+    bownes: { name: "THE BOWNES", hexColor: "#f59e0b", colorClass: "text-amber-500" },
+    sanfords: { name: "THE SANFORDS", hexColor: "#f97316", colorClass: "text-orange-500" },
+    barclays: { name: "THE BARCLAYS", hexColor: "#60a5fa", colorClass: "text-blue-400" }
+  };
+
   const [newTeamName, setNewTeamName] = useState("");
   const [newTeamColor, setNewTeamColor] = useState("#a855f7");
 
-  // Global renderer inside component scope to explicitly avoid reference errors
+  // Fixed scoping helper function
   const handleLogoRender = (teamKey: string, color: string) => {
     switch (teamKey) {
       case "unions": return <UnionLogo />;
@@ -177,9 +185,36 @@ export default function Home() {
     e.preventDefault();
     if (!newTeamName.trim()) return;
 
-    const generatedKey = newTeamName.toLowerCase().replace(/\s+/g, "_");
-    if (teamsConfig.some(t => t.key === generatedKey)) return alert("Team already exists!");
+    // Normalize name entries to check if we are re-adding an original team
+    let cleanKey = newTeamName.toLowerCase().replace(/\s+/g, "");
+    if (cleanKey.startsWith("the")) {
+      cleanKey = cleanKey.replace(/^the/, "");
+    }
 
+    if (teamsConfig.some(t => t.key === cleanKey)) return alert("Team already exists!");
+
+    // Check backup asset configuration register to instantly restore original icon profiles
+    if (legacyBrandRegistry[cleanKey]) {
+      const historicalBackup = legacyBrandRegistry[cleanKey];
+      const restoredTeamObj: TeamConfig = {
+        key: cleanKey,
+        name: historicalBackup.name,
+        colorClass: historicalBackup.colorClass,
+        hexColor: historicalBackup.hexColor,
+        isCustom: false
+      };
+
+      setTeamsConfig([...teamsConfig, restoredTeamObj]);
+      setTopScores({ ...topScores, [cleanKey]: topScores[cleanKey] || 0 });
+      if (!rosters[cleanKey]) {
+        setRosters({ ...rosters, [cleanKey]: Array(8).fill("") });
+      }
+      setNewTeamName("");
+      return;
+    }
+
+    // Otherwise, generate standard custom metadata profile safely
+    const generatedKey = newTeamName.toLowerCase().replace(/\s+/g, "_");
     const newTeamObj: TeamConfig = {
       key: generatedKey,
       name: newTeamName.toUpperCase(),
@@ -201,10 +236,6 @@ export default function Home() {
       const scoreCopy = { ...topScores };
       delete scoreCopy[teamKey];
       setTopScores(scoreCopy);
-
-      const rosterCopy = { ...rosters };
-      delete rosterCopy[teamKey];
-      setRosters(rosterCopy);
 
       setMatches(prev => prev.map(m => ({
         ...m,
@@ -236,10 +267,6 @@ export default function Home() {
     if (!hideEliminatedRosters) return true; 
     return matches.some(m => m.teamA === teamKey || m.teamB === teamKey);
   };
-
-  if (!isHydrated) {
-    return <div className="min-h-screen bg-[#070b13] text-slate-500 flex items-center justify-center font-mono text-xs">LOADING TOURNAMENT DATABASE...</div>;
-  }
 
   return (
     <div className="min-h-screen bg-[#070b13] text-white p-6 font-sans antialiased">
@@ -273,16 +300,19 @@ export default function Home() {
         {/* ADMIN ADD TEAM FORM */}
         {isAdmin && (
           <form onSubmit={createNewTeamAction} className="border-t border-slate-800 pt-3 flex flex-wrap items-center gap-4 bg-slate-900/40 p-3 rounded-lg">
-            <span className="text-xs font-black text-slate-400 tracking-wider">🚀 LEAGUE TEAM MANAGER:</span>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs font-black text-slate-400 tracking-wider">🚀 LEAGUE TEAM MANAGER:</span>
+              <span className="text-[10px] text-slate-500 font-medium font-sans">TIP: TYPE "UNIONS", "BOWNES", "SANFORDS", OR "BARCLAYS" TO AUTO-RESTORE ORIGINAL ICONS!</span>
+            </div>
             <input 
               type="text" 
-              placeholder="ENTER NEW TEAM NAME..." 
+              placeholder="ENTER TEAM NAME..." 
               value={newTeamName}
               onChange={(e) => setNewTeamName(e.target.value)}
               className="bg-[#070b13] border border-slate-700 rounded px-3 py-1 text-xs outline-none text-white w-52 font-bold uppercase"
             />
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-500 font-medium">BRAND COLOR:</span>
+              <span className="text-xs text-slate-500 font-medium">CUSTOM COLOR:</span>
               <input 
                 type="color" 
                 value={newTeamColor} 
@@ -325,7 +355,7 @@ export default function Home() {
         {/* MATCH STUFF CARDS ROW BOXES */}
         <main className="lg:col-span-2 flex flex-col gap-6">
           
-          {/* HERO PREVIEW DASHBOARD */}
+          {/* HERO PREVIEW DASHBOARD (FLEX-WRAP DYNAMIC REORGANIZATION LAYOUT) */}
           <div className="bg-[#111827] border border-slate-800 rounded-2xl p-5 shadow-2xl">
             <input
               type="text"
@@ -335,9 +365,9 @@ export default function Home() {
               className="bg-transparent text-xs font-bold text-center tracking-widest text-slate-400 uppercase w-full mb-5 border-none outline-none disabled:cursor-not-allowed"
             />
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="flex flex-wrap justify-center gap-4">
               {teamsConfig.map((t) => (
-                <div key={t.key} className="relative bg-slate-900/60 p-4 pt-8 rounded-xl border border-slate-800 flex flex-col items-center group">
+                <div key={t.key} className="relative bg-slate-900/60 p-4 pt-8 rounded-xl border border-slate-800 flex flex-col items-center group w-full sm:w-[calc(50%-8px)] md:w-[calc(25%-12px)] min-w-[140px] transition-all">
                   {isAdmin && (
                     <button
                       type="button"
@@ -347,7 +377,7 @@ export default function Home() {
                       ❌ DELETE
                     </button>
                   )}
-                  <span className={`text-[11px] font-black tracking-widest mb-3 uppercase text-center`} style={{ color: t.hexColor }}>
+                  <span className="text-[11px] font-black tracking-widest mb-3 uppercase text-center" style={{ color: t.hexColor }}>
                     {t.name}
                   </span>
                   {handleLogoRender(t.key, t.hexColor)}

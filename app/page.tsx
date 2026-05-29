@@ -64,16 +64,6 @@ const EmptyPlaceholderLogo = () => (
   </div>
 );
 
-const TeamLogoRenderer = ({ teamKey, color }: { teamKey: string; color: string }) => {
-  switch (teamKey) {
-    case "unions": return <UnionLogo />;
-    case "bownes": return <BowneLogo />;
-    case "sanfords": return <SanfordLogo />;
-    case "barclays": return <BarclaysLogo />;
-    default: return <DynamicCustomLogo color={color} />;
-  }
-};
-
 interface TeamConfig {
   key: string;
   name: string;
@@ -127,6 +117,21 @@ export default function Home() {
 
   const [newTeamName, setNewTeamName] = useState("");
   const [newTeamColor, setNewTeamColor] = useState("#a855f7");
+
+  // Global renderer inside component scope to explicitly avoid reference errors
+  const handleLogoRender = (teamKey: string, color: string) => {
+    switch (teamKey) {
+      case "unions": return <UnionLogo />;
+      case "bownes": return <BowneLogo />;
+      case "sanfords": return <SanfordLogo />;
+      case "barclays": return <BarclaysLogo />;
+      default: {
+        const customTeam = teamsConfig.find(t => t.key === teamKey);
+        if (customTeam) return <DynamicCustomLogo color={color} />;
+        return <EmptyPlaceholderLogo />;
+      }
+    }
+  };
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -185,37 +190,28 @@ export default function Home() {
 
     setTeamsConfig([...teamsConfig, newTeamObj]);
     setTopScores({ ...topScores, [generatedKey]: 0 });
-    setRosters({ ...rosters, [generatedKey]: Array(8).fill("NEW PLAYER") });
+    setRosters({ ...rosters, [generatedKey]: Array(8).fill("") });
     setNewTeamName("");
   };
 
-  // REMOVE AN ENTIRE TEAM PROFILE FROM SYSTEM PERMANENTLY
   const removeTeamFromSystem = (teamKey: string) => {
     if (confirm(`Are you sure you want to completely remove ${getTeamName(teamKey)}?`)) {
       setTeamsConfig(prev => prev.filter(t => t.key !== teamKey));
       
-      // Clean up scoreboard registry copies
       const scoreCopy = { ...topScores };
       delete scoreCopy[teamKey];
       setTopScores(scoreCopy);
 
-      // Clean up active roster tables
       const rosterCopy = { ...rosters };
       delete rosterCopy[teamKey];
       setRosters(rosterCopy);
 
-      // Reset any active matchup slot using this team back to a safe placeholder state
       setMatches(prev => prev.map(m => ({
         ...m,
         teamA: m.teamA === teamKey ? "none" : m.teamA,
         teamB: m.teamB === teamKey ? "none" : m.teamB
       })));
     }
-  };
-
-  const getTeamColorClass = (teamKey: string) => {
-    const found = teamsConfig.find(t => t.key === teamKey);
-    return found ? found.colorClass : "text-slate-500";
   };
 
   const getTeamName = (teamKey: string) => {
@@ -342,7 +338,6 @@ export default function Home() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {teamsConfig.map((t) => (
                 <div key={t.key} className="relative bg-slate-900/60 p-4 pt-8 rounded-xl border border-slate-800 flex flex-col items-center group">
-                  {/* ADMIN REMOVE TEAM ACTION BUTTON */}
                   {isAdmin && (
                     <button
                       type="button"
@@ -376,7 +371,6 @@ export default function Home() {
                 key={match.id} 
                 className="relative bg-gradient-to-r from-[#111827] to-[#0a0f1d] border border-slate-800 rounded-xl p-5 pt-8 flex items-center justify-between shadow-md min-h-[105px]"
               >
-                {/* WIPE CARD MODULATOR */}
                 {isAdmin && (
                   <button
                     onClick={() => removeMatchBox(match.id)}
@@ -486,7 +480,7 @@ export default function Home() {
             ))}
           </div>
 
-          {/* BULLETIN BULLETIN ANNOUNCEMENTS NOTEBOARD */}
+          {/* LARGE FORMAT BROADCAST BULLETIN NOTES SECTION */}
           <div className="bg-[#0c1222] border border-slate-800 rounded-xl p-5 text-left shadow-inner flex flex-col">
             <span className="text-orange-500 text-[10px] uppercase font-black tracking-widest mb-2 flex items-center gap-1">
               <span>📢</span> OFFICIAL TOURNAMENT NOTICE BOARD

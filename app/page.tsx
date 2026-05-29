@@ -85,7 +85,10 @@ export default function Home() {
   const [subHeader, setSubHeader] = useState("BASKETBALL SCHEDULE");
   const [resultsDay, setResultsDay] = useState("TODAY'S RESULTS - THURSDAY MAY 28TH");
   const [topScores, setTopScores] = useState({ unions: 0, bownes: 0, sanfords: 0, barclays: 0 });
-  const [timelineText, setTimelineText] = useState("WEEK 2 SCHEDULE: TBA (To Be Announced)");
+  
+  // Custom Notes / Information state replacing TBA timeline box
+  const [noteMessage, setNoteMessage] = useState("ENTER ANNOUNCEMENT HERE...");
+  const [hideEliminatedRosters, setHideEliminatedRosters] = useState<boolean>(true);
 
   const [matches, setMatches] = useState<MatchData[]>([
     { id: 1, teamA: "sanfords", teamB: "unions", scoreA: 0, scoreB: 0, foulsA: 0, foulsB: 0 },
@@ -107,7 +110,8 @@ export default function Home() {
       const savedDay = localStorage.getItem("ps20_resultsDay");
       const savedTopScores = localStorage.getItem("ps20_topScores");
       const savedMatches = localStorage.getItem("ps20_matches");
-      const savedTimeline = localStorage.getItem("ps20_timeline");
+      const savedNote = localStorage.getItem("ps20_noteMessage");
+      const savedHideToggle = localStorage.getItem("ps20_hideToggle");
       const savedRosters = localStorage.getItem("ps20_rosters");
 
       if (savedTitle) setTournamentTitle(savedTitle);
@@ -115,7 +119,8 @@ export default function Home() {
       if (savedDay) setResultsDay(savedDay);
       if (savedTopScores) setTopScores(JSON.parse(savedTopScores));
       if (savedMatches) setMatches(JSON.parse(savedMatches));
-      if (savedTimeline) setTimelineText(savedTimeline);
+      if (savedNote) setNoteMessage(savedNote);
+      if (savedHideToggle) setHideEliminatedRosters(JSON.parse(savedHideToggle));
       if (savedRosters) setRosters(JSON.parse(savedRosters));
       
       setIsHydrated(true);
@@ -130,10 +135,11 @@ export default function Home() {
       localStorage.setItem("ps20_resultsDay", resultsDay);
       localStorage.setItem("ps20_topScores", JSON.stringify(topScores));
       localStorage.setItem("ps20_matches", JSON.stringify(matches));
-      localStorage.setItem("ps20_timeline", timelineText);
+      localStorage.setItem("ps20_noteMessage", noteMessage);
+      localStorage.setItem("ps20_hideToggle", JSON.stringify(hideEliminatedRosters));
       localStorage.setItem("ps20_rosters", JSON.stringify(rosters));
     }
-  }, [tournamentTitle, subHeader, resultsDay, topScores, matches, timelineText, rosters, isHydrated]);
+  }, [tournamentTitle, subHeader, resultsDay, topScores, matches, noteMessage, hideEliminatedRosters, rosters, isHydrated]);
 
   const getTeamColorClass = (teamKey: string) => {
     switch (teamKey) {
@@ -156,6 +162,12 @@ export default function Home() {
   const addMatchBox = () => {
     const newId = matches.length > 0 ? Math.max(...matches.map(m => m.id)) + 1 : 1;
     setMatches(prev => [...prev, { id: newId, teamA: "sanfords", teamB: "unions", scoreA: 0, scoreB: 0, foulsA: 0, foulsB: 0 }]);
+  };
+
+  // Check if a specific team is currently assigned anywhere on the match dashboard list
+  const isTeamActive = (teamKey: string) => {
+    if (!hideEliminatedRosters) return true; 
+    return matches.some(m => m.teamA === teamKey || m.teamB === teamKey);
   };
 
   if (!isHydrated) {
@@ -287,14 +299,14 @@ export default function Home() {
             </div>
           </div>
 
-          {/* DYNAMIC SPACING EXPANDED MATCHUPS PANELS */}
+          {/* DYNAMIC MATCHUPS PANELS */}
           <div className="flex flex-col gap-4">
             {matches.map((match) => (
               <div 
                 key={match.id} 
                 className="relative bg-gradient-to-r from-[#111827] to-[#0a0f1d] border border-slate-800 rounded-xl p-5 pt-8 flex items-center justify-between shadow-md min-h-[105px]"
               >
-                {/* WIPE ROW MODULE (Visible during Admin state sessions) */}
+                {/* WIPE ROW MODULE */}
                 {isAdmin && (
                   <button
                     onClick={() => removeMatchBox(match.id)}
@@ -321,7 +333,7 @@ export default function Home() {
                   </select>
                 </div>
 
-                {/* SCORING AND FOULS ADJUSTABLE INTERACTIVE PANEL */}
+                {/* SCORING AND FOULS CENTER Display */}
                 <div className="flex items-center justify-center gap-6 w-4/12 px-2">
                   <div className="flex flex-col items-center justify-center min-w-[50px]">
                     {match.teamA !== "none" ? (
@@ -408,126 +420,148 @@ export default function Home() {
             )}
           </div>
 
-          {/* TIMELINE BANNER */}
-          <div className="bg-[#0c1222] border border-slate-900 rounded-xl p-5 text-center shadow-inner flex flex-col justify-center items-center">
-            <span className="text-slate-500 text-[10px] uppercase font-black tracking-widest mb-2">TIMELINE METADATA BANNER</span>
-            <input 
-              type="text"
-              value={timelineText}
+          {/* BRAND NEW EXPANDED 40PT NOTES / CONTESTANT BROADCAST PANEL */}
+          <div className="bg-[#0c1222] border border-slate-800 rounded-xl p-6 text-left shadow-2xl flex flex-col">
+            <span className="text-orange-500 text-[11px] uppercase font-black tracking-widest mb-3 flex items-center gap-1.5">
+              <span>📢</span> OFFICIAL TOURNAMENT NOTICE BOARD
+            </span>
+            <textarea 
+              value={noteMessage}
               disabled={!isAdmin}
-              onChange={(e) => setTimelineText(e.target.value)}
-              className="bg-transparent font-black text-xl text-slate-200 w-full text-center border-none outline-none uppercase tracking-wide disabled:cursor-not-allowed"
+              onChange={(e) => setNoteMessage(e.target.value)}
+              placeholder="TYPE TOURNAMENT DETAILS OR ANNOUNCEMENTS HERE..."
+              className="bg-[#080d1a]/50 p-4 border border-slate-800/80 rounded-lg text-[40px] font-black text-slate-100 w-full min-h-[220px] outline-none tracking-wide placeholder-slate-700 resize-y leading-tight font-sans disabled:cursor-not-allowed disabled:bg-transparent disabled:border-none disabled:p-0"
             />
           </div>
         </main>
 
-        {/* ROSTERS COLUMN PANELS */}
+        {/* ROSTERS COLUMN PANELS WITH INTEGRATED HIDE N/A FUNCTIONALITY */}
         <aside className="bg-[#0f172a] border border-slate-800 rounded-2xl p-5 shadow-2xl lg:col-span-1">
-          <h3 className="text-center font-black tracking-widest text-xs text-slate-400 uppercase border-b border-slate-800 pb-3 mb-5">
-            TEAMS & ROSTERS
-          </h3>
+          <div className="border-b border-slate-800 pb-3 mb-5 flex flex-col gap-2">
+            <h3 className="text-center font-black tracking-widest text-xs text-slate-400 uppercase">
+              TEAMS & ROSTERS
+            </h3>
+            {/* HIDE N/A FILTER CONTROL FOR ALL THE ACTIVE ROSTERS */}
+            <label className="flex items-center justify-center gap-2 cursor-pointer select-none mt-1">
+              <input 
+                type="checkbox" 
+                checked={hideEliminatedRosters} 
+                onChange={(e) => setHideEliminatedRosters(e.target.checked)}
+                className="rounded bg-slate-900 border-slate-700 text-orange-500 focus:ring-0 w-3.5 h-3.5"
+              />
+              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">HIDE ROSTERS FOR N/A TEAMS</span>
+            </label>
+          </div>
           
           <div className="grid grid-cols-2 gap-x-4 gap-y-6">
             
             {/* UNIONS */}
-            <div className="space-y-3">
-              <div className="bg-[#0c1f17] text-emerald-400 font-black text-[10px] p-2 rounded border border-emerald-900/40 text-center tracking-widest uppercase">
-                THE UNIONS
+            {isTeamActive("unions") && (
+              <div className="space-y-3 transition-all duration-200">
+                <div className="bg-[#0c1f17] text-emerald-400 font-black text-[10px] p-2 rounded border border-emerald-900/40 text-center tracking-widest uppercase">
+                  THE UNIONS
+                </div>
+                <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
+                  {rosters.unions.map((player, idx) => (
+                    <li key={idx} className={`flex items-center gap-1 px-1.5 py-0.5 rounded border border-transparent ${isAdmin ? 'bg-slate-900/40' : 'bg-transparent'}`}>
+                      <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
+                      <input 
+                        type="text"
+                        value={player} 
+                        disabled={!isAdmin}
+                        onChange={(e) => {
+                          const copy = [...rosters.unions];
+                          copy[idx] = e.target.value;
+                          setRosters({ ...rosters, unions: copy });
+                        }} 
+                        className={`bg-transparent border-none p-0 w-full outline-none focus:text-white ${!isAdmin ? 'text-slate-200 font-normal cursor-default pointer-events-none' : ''}`}
+                      />
+                    </li>
+                  ))}
+                </ol>
               </div>
-              <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
-                {rosters.unions.map((player, idx) => (
-                  <li key={idx} className={`flex items-center gap-1 px-1.5 py-0.5 rounded border border-transparent ${isAdmin ? 'bg-slate-900/40' : 'bg-transparent'}`}>
-                    <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
-                    <input 
-                      type="text"
-                      value={player} 
-                      disabled={!isAdmin}
-                      onChange={(e) => {
-                        const copy = [...rosters.unions];
-                        copy[idx] = e.target.value;
-                        setRosters({ ...rosters, unions: copy });
-                      }} 
-                      className={`bg-transparent border-none p-0 w-full outline-none focus:text-white ${!isAdmin ? 'text-slate-200 font-normal cursor-default pointer-events-none' : ''}`}
-                    />
-                  </li>
-                ))}
-              </ol>
-            </div>
+            )}
 
             {/* BOWNES */}
-            <div className="space-y-3">
-              <div className="bg-[#1c1613] text-amber-500 font-black text-[10px] p-2 rounded border border-amber-900/40 text-center tracking-widest uppercase">
-                THE BOWNES
+            {isTeamActive("bownes") && (
+              <div className="space-y-3 transition-all duration-200">
+                <div className="bg-[#1c1613] text-amber-500 font-black text-[10px] p-2 rounded border border-amber-900/40 text-center tracking-widest uppercase">
+                  THE BOWNES
+                </div>
+                <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
+                  {rosters.bownes.map((player, idx) => (
+                    <li key={idx} className={`flex items-center gap-1 px-1.5 py-0.5 rounded border border-transparent ${isAdmin ? 'bg-slate-900/40' : 'bg-transparent'}`}>
+                      <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
+                      <input 
+                        type="text"
+                        value={player} 
+                        disabled={!isAdmin}
+                        onChange={(e) => {
+                          const copy = [...rosters.bownes];
+                          copy[idx] = e.target.value;
+                          setRosters({ ...rosters, bownes: copy });
+                        }} 
+                        className={`bg-transparent border-none p-0 w-full outline-none focus:text-white ${!isAdmin ? 'text-slate-200 font-normal cursor-default pointer-events-none' : ''}`}
+                      />
+                    </li>
+                  ))}
+                </ol>
               </div>
-              <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
-                {rosters.bownes.map((player, idx) => (
-                  <li key={idx} className={`flex items-center gap-1 px-1.5 py-0.5 rounded border border-transparent ${isAdmin ? 'bg-slate-900/40' : 'bg-transparent'}`}>
-                    <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
-                    <input 
-                      type="text"
-                      value={player} 
-                      disabled={!isAdmin}
-                      onChange={(e) => {
-                        const copy = [...rosters.bownes];
-                        copy[idx] = e.target.value;
-                        setRosters({ ...rosters, bownes: copy });
-                      }} 
-                      className={`bg-transparent border-none p-0 w-full outline-none focus:text-white ${!isAdmin ? 'text-slate-200 font-normal cursor-default pointer-events-none' : ''}`}
-                    />
-                  </li>
-                ))}
-              </ol>
-            </div>
+            )}
 
             {/* SANFORDS */}
-            <div className="space-y-3">
-              <div className="bg-[#241712] text-orange-500 font-black text-[10px] p-2 rounded border border-orange-900/40 text-center tracking-widest uppercase">
-                THE SANFORDS
+            {isTeamActive("sanfords") && (
+              <div className="space-y-3 transition-all duration-200">
+                <div className="bg-[#241712] text-orange-500 font-black text-[10px] p-2 rounded border border-orange-900/40 text-center tracking-widest uppercase">
+                  THE SANFORDS
+                </div>
+                <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
+                  {rosters.sanfords.map((player, idx) => (
+                    <li key={idx} className={`flex items-center gap-1 px-1.5 py-0.5 rounded border border-transparent ${isAdmin ? 'bg-slate-900/40' : 'bg-transparent'}`}>
+                      <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
+                      <input 
+                        type="text"
+                        value={player} 
+                        disabled={!isAdmin}
+                        onChange={(e) => {
+                          const copy = [...rosters.sanfords];
+                          copy[idx] = e.target.value;
+                          setRosters({ ...rosters, sanfords: copy });
+                        }} 
+                        className={`bg-transparent border-none p-0 w-full outline-none focus:text-white ${!isAdmin ? 'text-slate-200 font-normal cursor-default pointer-events-none' : ''}`}
+                      />
+                    </li>
+                  ))}
+                </ol>
               </div>
-              <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
-                {rosters.sanfords.map((player, idx) => (
-                  <li key={idx} className={`flex items-center gap-1 px-1.5 py-0.5 rounded border border-transparent ${isAdmin ? 'bg-slate-900/40' : 'bg-transparent'}`}>
-                    <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
-                    <input 
-                      type="text"
-                      value={player} 
-                      disabled={!isAdmin}
-                      onChange={(e) => {
-                        const copy = [...rosters.sanfords];
-                        copy[idx] = e.target.value;
-                        setRosters({ ...rosters, sanfords: copy });
-                      }} 
-                      className={`bg-transparent border-none p-0 w-full outline-none focus:text-white ${!isAdmin ? 'text-slate-200 font-normal cursor-default pointer-events-none' : ''}`}
-                    />
-                  </li>
-                ))}
-              </ol>
-            </div>
+            )}
 
             {/* BARCLAYS */}
-            <div className="space-y-3">
-              <div className="bg-[#0f1626] text-blue-400 font-black text-[10px] p-2 rounded border border-blue-900/40 text-center tracking-widest uppercase">
-                THE BARCLAYS
+            {isTeamActive("barclays") && (
+              <div className="space-y-3 transition-all duration-200">
+                <div className="bg-[#0f1626] text-blue-400 font-black text-[10px] p-2 rounded border border-blue-900/40 text-center tracking-widest uppercase">
+                  THE BARCLAYS
+                </div>
+                <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
+                  {rosters.barclays.map((player, idx) => (
+                    <li key={idx} className={`flex items-center gap-1 px-1.5 py-0.5 rounded border border-transparent ${isAdmin ? 'bg-slate-900/40' : 'bg-transparent'}`}>
+                      <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
+                      <input 
+                        type="text"
+                        value={player} 
+                        disabled={!isAdmin}
+                        onChange={(e) => {
+                          const copy = [...rosters.barclays];
+                          copy[idx] = e.target.value;
+                          setRosters({ ...rosters, barclays: copy });
+                        }} 
+                        className={`bg-transparent border-none p-0 w-full outline-none focus:text-white ${!isAdmin ? 'text-slate-200 font-normal cursor-default pointer-events-none' : ''}`}
+                      />
+                    </li>
+                  ))}
+                </ol>
               </div>
-              <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
-                {rosters.barclays.map((player, idx) => (
-                  <li key={idx} className={`flex items-center gap-1 px-1.5 py-0.5 rounded border border-transparent ${isAdmin ? 'bg-slate-900/40' : 'bg-transparent'}`}>
-                    <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
-                    <input 
-                      type="text"
-                      value={player} 
-                      disabled={!isAdmin}
-                      onChange={(e) => {
-                        const copy = [...rosters.barclays];
-                        copy[idx] = e.target.value;
-                        setRosters({ ...rosters, barclays: copy });
-                      }} 
-                      className={`bg-transparent border-none p-0 w-full outline-none focus:text-white ${!isAdmin ? 'text-slate-200 font-normal cursor-default pointer-events-none' : ''}`}
-                    />
-                  </li>
-                ))}
-              </ol>
-            </div>
+            )}
 
           </div>
         </aside>

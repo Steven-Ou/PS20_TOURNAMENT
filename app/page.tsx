@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // ==========================================
-// 1. BRAND NEW DETAILED TEAM SVG LOGOS
+// 1. DETAIL-ORIENTED TEAM SVG LOGOS
 // ==========================================
 
 const UnionLogo = () => (
@@ -50,36 +50,90 @@ const BarclaysLogo = () => (
   </svg>
 );
 
+const EmptyPlaceholderLogo = () => (
+  <div className="w-12 h-12 rounded-full border border-dashed border-slate-700 flex items-center justify-center text-slate-600 font-bold text-xs">
+    —
+  </div>
+);
+
 const TeamLogoRenderer = ({ teamKey }: { teamKey: string }) => {
   switch (teamKey) {
     case "unions": return <UnionLogo />;
     case "bownes": return <BowneLogo />;
     case "sanfords": return <SanfordLogo />;
     case "barclays": return <BarclaysLogo />;
-    default: return null;
+    default: return <EmptyPlaceholderLogo />;
   }
 };
 
+interface MatchData {
+  id: number;
+  teamA: string;
+  teamB: string;
+  scoreA: number;
+  scoreB: number;
+  foulsA: number;
+  foulsB: number;
+}
+
 export default function Home() {
   const [isAdmin, setIsAdmin] = useState<boolean>(true);
+  const [isHydrated, setIsHydrated] = useState<boolean>(false);
 
+  // Structural Dashboard Content States
   const [tournamentTitle, setTournamentTitle] = useState("PS20 MIKE LEGEND TOURNAMENT");
   const [subHeader, setSubHeader] = useState("BASKETBALL SCHEDULE");
   const [resultsDay, setResultsDay] = useState("TODAY'S RESULTS - THURSDAY MAY 28TH");
-
   const [topScores, setTopScores] = useState({ unions: 0, bownes: 0, sanfords: 0, barclays: 0 });
-  
-  const [match1, setMatch1] = useState({ teamA: "sanfords", teamB: "unions", scoreA: 0, scoreB: 0, foulsA: 0, foulsB: 0 });
-  const [match2, setMatch2] = useState({ teamA: "bownes", teamB: "barclays", scoreA: 0, scoreB: 0, foulsA: 0, foulsB: 0 });
-
   const [timelineText, setTimelineText] = useState("WEEK 2 SCHEDULE: TBA (To Be Announced)");
+
+  const [matches, setMatches] = useState<MatchData[]>([
+    { id: 1, teamA: "sanfords", teamB: "unions", scoreA: 0, scoreB: 0, foulsA: 0, foulsB: 0 },
+    { id: 2, teamA: "bownes", teamB: "barclays", scoreA: 0, scoreB: 0, foulsA: 0, foulsB: 0 }
+  ]);
 
   const [rosters, setRosters] = useState({
     unions: ["KMY", "小鱼", "Dudu", "Hong Tao", "慢慢来", "腰王", "MING", "好好睡觉"],
     bownes: ["yuxuan", "LiNg", "Gao Xiang", "Eric", "Owen", "Benc", "Lee", "炜", "Ye 哥", "芥琵"],
-    sanfords: ["Steven", "William_Yan", "绿豆赚", "09^", "ishtiar", "Ryan", "Beau", "Alex","Leo"],
+    sanfords: ["Steven", "William_Yan", "绿豆赚", "09^", "ishtiar", "Ryan", "Beau", "Alex", "Leo"],
     barclays: ["kys r", "YJH —", "胡内", "篮板王", "稳", "Syw", "Sean", "Taotao", "高手", "James c"],
   });
+
+  // 1. HYDRATE CORE CONTENT STATES FROM BROWSER STORAGE ON INGEST
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedTitle = localStorage.getItem("ps20_title");
+      const savedSub = localStorage.getItem("ps20_subHeader");
+      const savedDay = localStorage.getItem("ps20_resultsDay");
+      const savedTopScores = localStorage.getItem("ps20_topScores");
+      const savedMatches = localStorage.getItem("ps20_matches");
+      const savedTimeline = localStorage.getItem("ps20_timeline");
+      const savedRosters = localStorage.getItem("ps20_rosters");
+
+      if (savedTitle) setTournamentTitle(savedTitle);
+      if (savedSub) setSubHeader(savedSub);
+      if (savedDay) setResultsDay(savedDay);
+      if (savedTopScores) setTopScores(JSON.parse(savedTopScores));
+      if (savedMatches) setMatches(JSON.parse(savedMatches));
+      if (savedTimeline) setTimelineText(savedTimeline);
+      if (savedRosters) setRosters(JSON.parse(savedRosters));
+      
+      setIsHydrated(true);
+    }
+  }, []);
+
+  // 2. RUN BACKGROUND AUTOMATED LOCAL STORAGE SYNC PASSES
+  useEffect(() => {
+    if (isHydrated) {
+      localStorage.setItem("ps20_title", tournamentTitle);
+      localStorage.setItem("ps20_subHeader", subHeader);
+      localStorage.setItem("ps20_resultsDay", resultsDay);
+      localStorage.setItem("ps20_topScores", JSON.stringify(topScores));
+      localStorage.setItem("ps20_matches", JSON.stringify(matches));
+      localStorage.setItem("ps20_timeline", timelineText);
+      localStorage.setItem("ps20_rosters", JSON.stringify(rosters));
+    }
+  }, [tournamentTitle, subHeader, resultsDay, topScores, matches, timelineText, rosters, isHydrated]);
 
   const getTeamColorClass = (teamKey: string) => {
     switch (teamKey) {
@@ -87,24 +141,53 @@ export default function Home() {
       case "bownes": return "text-amber-500";
       case "sanfords": return "text-orange-500";
       case "barclays": return "text-blue-400";
-      default: return "text-white";
+      default: return "text-slate-500";
     }
   };
+
+  const updateMatchField = (id: number, field: keyof MatchData, value: any) => {
+    setMatches(prev => prev.map(m => m.id === id ? { ...m, [field]: value } : m));
+  };
+
+  const removeMatchBox = (id: number) => {
+    setMatches(prev => prev.filter(m => m.id !== id));
+  };
+
+  const addMatchBox = () => {
+    const newId = matches.length > 0 ? Math.max(...matches.map(m => m.id)) + 1 : 1;
+    setMatches(prev => [...prev, { id: newId, teamA: "sanfords", teamB: "unions", scoreA: 0, scoreB: 0, foulsA: 0, foulsB: 0 }]);
+  };
+
+  if (!isHydrated) {
+    return <div className="min-h-screen bg-[#070b13] text-slate-500 flex items-center justify-center font-mono text-xs">LOADING PS20 TOURNAMENT ENGINE...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-[#070b13] text-white p-6 font-sans antialiased">
       
       {/* ADMINISTRATIVE STATUS CONSOLE OVERLAY */}
-      <div className="max-w-7xl mx-auto mb-6 flex justify-end items-center gap-3 bg-[#111827] p-3 rounded-xl border border-slate-800">
-        <span className="text-xs font-semibold tracking-wider text-slate-400">AUTHORIZATION LEVEL:</span>
-        <select 
-          value={isAdmin ? "admin" : "user"} 
-          onChange={(e) => setIsAdmin(e.target.value === "admin")}
-          className="bg-[#1f2937] text-xs text-orange-400 font-bold px-3 py-1.5 rounded border border-slate-700 outline-none cursor-pointer"
-        >
-          <option value="admin">HIGHER ADMINISTRATIVE LEVEL (ADMIN)</option>
-          <option value="user">SPECTATOR LEVEL (USER - READ ONLY)</option>
-        </select>
+      <div className="max-w-7xl mx-auto mb-6 flex flex-wrap justify-between items-center gap-3 bg-[#111827] p-3 rounded-xl border border-slate-800">
+        <div className="flex items-center gap-2">
+          {isAdmin && (
+            <button
+              onClick={addMatchBox}
+              className="bg-orange-600 hover:bg-orange-700 text-white font-black text-xs px-3 py-1.5 rounded transition-all flex items-center gap-1 shadow"
+            >
+              ➕ ADD NEW MATCH BOX
+            </button>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-semibold tracking-wider text-slate-400">AUTHORIZATION LEVEL:</span>
+          <select 
+            value={isAdmin ? "admin" : "user"} 
+            onChange={(e) => setIsAdmin(e.target.value === "admin")}
+            className="bg-[#1f2937] text-xs text-orange-400 font-bold px-3 py-1.5 rounded border border-slate-700 outline-none cursor-pointer"
+          >
+            <option value="admin">HIGHER ADMINISTRATIVE LEVEL (ADMIN)</option>
+            <option value="user">SPECTATOR LEVEL (USER - READ ONLY)</option>
+          </select>
+        </div>
       </div>
 
       {/* GLOBAL HEADER */}
@@ -204,145 +287,125 @@ export default function Home() {
             </div>
           </div>
 
-          {/* EXPANDED MATCHUPS PANELS (Wider scoring grids to fix layout bugs) */}
+          {/* DYNAMIC SPACING EXPANDED MATCHUPS PANELS */}
           <div className="flex flex-col gap-4">
-            
-            {/* MATCH BOX 1 */}
-            <div className="bg-gradient-to-r from-[#1c120c] to-[#0a0f1d] border border-slate-800 rounded-xl p-5 flex items-center justify-between shadow-md min-h-[90px]">
-              <div className="flex items-center gap-4 w-4/12">
-                <TeamLogoRenderer teamKey={match1.teamA} />
-                <select 
-                  value={match1.teamA} 
-                  disabled={!isAdmin}
-                  onChange={(e) => setMatch1({ ...match1, teamA: e.target.value })}
-                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase ${getTeamColorClass(match1.teamA)} disabled:cursor-not-allowed`}
-                >
-                  <option value="sanfords" className="bg-[#070b13] text-orange-500">THE SANFORDS</option>
-                  <option value="unions" className="bg-[#070b13] text-emerald-400">THE UNIONS</option>
-                  <option value="bownes" className="bg-[#070b13] text-amber-500">THE BOWNES</option>
-                  <option value="barclays" className="bg-[#070b13] text-blue-400">THE BARCLAYS</option>
-                </select>
-              </div>
+            {matches.map((match) => (
+              <div 
+                key={match.id} 
+                className="relative bg-gradient-to-r from-[#111827] to-[#0a0f1d] border border-slate-800 rounded-xl p-5 pt-8 flex items-center justify-between shadow-md min-h-[105px]"
+              >
+                {/* WIPE ROW MODULE (Visible during Admin state sessions) */}
+                {isAdmin && (
+                  <button
+                    onClick={() => removeMatchBox(match.id)}
+                    className="absolute top-2 right-2 text-slate-500 hover:text-red-400 font-bold text-[10px] bg-slate-900/80 px-1.5 py-0.5 rounded border border-slate-800 transition-all"
+                  >
+                    ❌ DELETE BOX
+                  </button>
+                )}
 
-              {/* COMMITTED ADDITIONAL WIDTH TO SCORES FOR PROPER SPACING */}
-              <div className="flex items-center justify-center gap-6 w-4/12 px-2">
-                <div className="flex flex-col items-center justify-center">
-                  <input 
-                    type="number" 
-                    value={match1.scoreA === 0 ? "" : match1.scoreA}
-                    placeholder="0"
+                {/* TEAM A DROPDOWN BLOCK */}
+                <div className="flex items-center gap-4 w-4/12">
+                  <TeamLogoRenderer teamKey={match.teamA} />
+                  <select 
+                    value={match.teamA} 
                     disabled={!isAdmin}
-                    onChange={(e) => setMatch1({ ...match1, scoreA: parseInt(e.target.value) || 0 })}
-                    className={`bg-transparent text-4xl font-black text-center w-16 border-none outline-none ${getTeamColorClass(match1.teamA)} disabled:cursor-not-allowed h-10`}
-                  />
-                  <div className="flex items-center text-[11px] text-red-500 font-bold mt-1">
-                    <span>F:&nbsp;</span>
-                    <input type="number" placeholder="0" value={match1.foulsA === 0 ? "" : match1.foulsA} disabled={!isAdmin} className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white" onChange={(e) => setMatch1({...match1, foulsA: parseInt(e.target.value) || 0})}/>
+                    onChange={(e) => updateMatchField(match.id, "teamA", e.target.value)}
+                    className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase ${getTeamColorClass(match.teamA)} disabled:cursor-not-allowed`}
+                  >
+                    <option value="sanfords" className="bg-[#070b13] text-orange-500">THE SANFORDS</option>
+                    <option value="unions" className="bg-[#070b13] text-emerald-400">THE UNIONS</option>
+                    <option value="bownes" className="bg-[#070b13] text-amber-500">THE BOWNES</option>
+                    <option value="barclays" className="bg-[#070b13] text-blue-400">THE BARCLAYS</option>
+                    <option value="none" className="bg-[#070b13] text-slate-500">N/A (HIDE TEAM)</option>
+                  </select>
+                </div>
+
+                {/* SCORING AND FOULS ADJUSTABLE INTERACTIVE PANEL */}
+                <div className="flex items-center justify-center gap-6 w-4/12 px-2">
+                  <div className="flex flex-col items-center justify-center min-w-[50px]">
+                    {match.teamA !== "none" ? (
+                      <>
+                        <input 
+                          type="number" 
+                          value={match.scoreA === 0 ? "" : match.scoreA}
+                          placeholder="0"
+                          disabled={!isAdmin}
+                          onChange={(e) => updateMatchField(match.id, "scoreA", parseInt(e.target.value) || 0)}
+                          className={`bg-transparent text-4xl font-black text-center w-16 border-none outline-none ${getTeamColorClass(match.teamA)} disabled:cursor-not-allowed h-10`}
+                        />
+                        <div className="flex items-center text-[11px] text-red-500 font-bold mt-1">
+                          <span>F:&nbsp;</span>
+                          <input 
+                            type="number" 
+                            placeholder="0" 
+                            value={match.foulsA === 0 ? "" : match.foulsA} 
+                            disabled={!isAdmin} 
+                            className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white" 
+                            onChange={(e) => updateMatchField(match.id, "foulsA", parseInt(e.target.value) || 0)}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <span className="text-slate-700 text-xs font-bold">—</span>
+                    )}
+                  </div>
+
+                  <span className="text-xs font-black tracking-widest bg-black/60 px-2.5 py-1.5 rounded-md border border-slate-800 shadow-sm self-center">VS</span>
+
+                  <div className="flex flex-col items-center justify-center min-w-[50px]">
+                    {match.teamB !== "none" ? (
+                      <>
+                        <input 
+                          type="number" 
+                          value={match.scoreB === 0 ? "" : match.scoreB}
+                          placeholder="0"
+                          disabled={!isAdmin}
+                          onChange={(e) => updateMatchField(match.id, "scoreB", parseInt(e.target.value) || 0)}
+                          className={`bg-transparent text-4xl font-black text-center w-16 border-none outline-none ${getTeamColorClass(match.teamB)} disabled:cursor-not-allowed h-10`}
+                        />
+                        <div className="flex items-center text-[11px] text-red-500 font-bold mt-1">
+                          <span>F:&nbsp;</span>
+                          <input 
+                            type="number" 
+                            placeholder="0" 
+                            value={match.foulsB === 0 ? "" : match.foulsB} 
+                            disabled={!isAdmin} 
+                            className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white" 
+                            onChange={(e) => updateMatchField(match.id, "foulsB", parseInt(e.target.value) || 0)}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <span className="text-slate-700 text-xs font-bold">—</span>
+                    )}
                   </div>
                 </div>
 
-                <span className="text-xs font-black tracking-widest bg-black/60 px-2.5 py-1.5 rounded-md border border-slate-800 shadow-sm self-center">VS</span>
-
-                <div className="flex flex-col items-center justify-center">
-                  <input 
-                    type="number" 
-                    value={match1.scoreB === 0 ? "" : match1.scoreB}
-                    placeholder="0"
+                {/* TEAM B DROPDOWN BLOCK */}
+                <div className="flex items-center justify-end gap-4 w-4/12">
+                  <select 
+                    value={match.teamB} 
                     disabled={!isAdmin}
-                    onChange={(e) => setMatch1({ ...match1, scoreB: parseInt(e.target.value) || 0 })}
-                    className={`bg-transparent text-4xl font-black text-center w-16 border-none outline-none ${getTeamColorClass(match1.teamB)} disabled:cursor-not-allowed h-10`}
-                  />
-                  <div className="flex items-center text-[11px] text-red-500 font-bold mt-1">
-                    <span>F:&nbsp;</span>
-                    <input type="number" placeholder="0" value={match1.foulsB === 0 ? "" : match1.foulsB} disabled={!isAdmin} className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white" onChange={(e) => setMatch1({...match1, foulsB: parseInt(e.target.value) || 0})}/>
-                  </div>
+                    onChange={(e) => updateMatchField(match.id, "teamB", e.target.value)}
+                    className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase text-right ${getTeamColorClass(match.teamB)} disabled:cursor-not-allowed`}
+                  >
+                    <option value="unions" className="bg-[#070b13] text-emerald-400">THE UNIONS</option>
+                    <option value="sanfords" className="bg-[#070b13] text-orange-500">THE SANFORDS</option>
+                    <option value="bownes" className="bg-[#070b13] text-amber-500">THE BOWNES</option>
+                    <option value="barclays" className="bg-[#070b13] text-blue-400">THE BARCLAYS</option>
+                    <option value="none" className="bg-[#070b13] text-slate-500">N/A (HIDE TEAM)</option>
+                  </select>
+                  <TeamLogoRenderer teamKey={match.teamB} />
                 </div>
               </div>
+            ))}
 
-              <div className="flex items-center justify-end gap-4 w-4/12">
-                <select 
-                  value={match1.teamB} 
-                  disabled={!isAdmin}
-                  onChange={(e) => setMatch1({ ...match1, teamB: e.target.value })}
-                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase text-right ${getTeamColorClass(match1.teamB)} disabled:cursor-not-allowed`}
-                >
-                  <option value="unions" className="bg-[#070b13] text-emerald-400">THE UNIONS</option>
-                  <option value="sanfords" className="bg-[#070b13] text-orange-500">THE SANFORDS</option>
-                  <option value="bownes" className="bg-[#070b13] text-amber-500">THE BOWNES</option>
-                  <option value="barclays" className="bg-[#070b13] text-blue-400">THE BARCLAYS</option>
-                </select>
-                <TeamLogoRenderer teamKey={match1.teamB} />
+            {matches.length === 0 && (
+              <div className="text-center py-8 bg-slate-900/20 border border-dashed border-slate-800 rounded-xl text-slate-500 text-xs font-bold">
+                NO ACTIVE MATCHES ON DISPLAY. CLICK "ADD NEW MATCH BOX" TO START.
               </div>
-            </div>
-
-            {/* MATCH BOX 2 */}
-            <div className="bg-gradient-to-r from-[#171311] to-[#0a0f1d] border border-slate-800 rounded-xl p-5 flex items-center justify-between shadow-md min-h-[90px]">
-              <div className="flex items-center gap-4 w-4/12">
-                <TeamLogoRenderer teamKey={match2.teamA} />
-                <select 
-                  value={match2.teamA} 
-                  disabled={!isAdmin}
-                  onChange={(e) => setMatch2({ ...match2, teamA: e.target.value })}
-                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase ${getTeamColorClass(match2.teamA)} disabled:cursor-not-allowed`}
-                >
-                  <option value="bownes" className="bg-[#070b13] text-amber-500">THE BOWNES</option>
-                  <option value="barclays" className="bg-[#070b13] text-blue-400">THE BARCLAYS</option>
-                  <option value="sanfords" className="bg-[#070b13] text-orange-500">THE SANFORDS</option>
-                  <option value="unions" className="bg-[#070b13] text-emerald-400">THE UNIONS</option>
-                </select>
-              </div>
-
-              {/* COMMITTED ADDITIONAL WIDTH TO SCORES FOR PROPER SPACING */}
-              <div className="flex items-center justify-center gap-6 w-4/12 px-2">
-                <div className="flex flex-col items-center justify-center">
-                  <input 
-                    type="number" 
-                    value={match2.scoreA === 0 ? "" : match2.scoreA}
-                    placeholder="0"
-                    disabled={!isAdmin}
-                    onChange={(e) => setMatch2({ ...match2, scoreA: parseInt(e.target.value) || 0 })}
-                    className={`bg-transparent text-4xl font-black text-center w-16 border-none outline-none ${getTeamColorClass(match2.teamA)} disabled:cursor-not-allowed h-10`}
-                  />
-                  <div className="flex items-center text-[11px] text-red-500 font-bold mt-1">
-                    <span>F:&nbsp;</span>
-                    <input type="number" placeholder="0" value={match2.foulsA === 0 ? "" : match2.foulsA} disabled={!isAdmin} className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white" onChange={(e) => setMatch2({...match2, foulsA: parseInt(e.target.value) || 0})}/>
-                  </div>
-                </div>
-
-                <span className="text-xs font-black tracking-widest bg-black/60 px-2.5 py-1.5 rounded-md border border-slate-800 shadow-sm self-center">VS</span>
-
-                <div className="flex flex-col items-center justify-center">
-                  <input 
-                    type="number" 
-                    value={match2.scoreB === 0 ? "" : match2.scoreB}
-                    placeholder="0"
-                    disabled={!isAdmin}
-                    onChange={(e) => setMatch2({ ...match2, scoreB: parseInt(e.target.value) || 0 })}
-                    className={`bg-transparent text-4xl font-black text-center w-16 border-none outline-none ${getTeamColorClass(match2.teamB)} disabled:cursor-not-allowed h-10`}
-                  />
-                  <div className="flex items-center text-[11px] text-red-500 font-bold mt-1">
-                    <span>F:&nbsp;</span>
-                    <input type="number" placeholder="0" value={match2.foulsB === 0 ? "" : match2.foulsB} disabled={!isAdmin} className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white" onChange={(e) => setMatch2({...match2, foulsB: parseInt(e.target.value) || 0})}/>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-4 w-4/12">
-                <select 
-                  value={match2.teamB} 
-                  disabled={!isAdmin}
-                  onChange={(e) => setMatch2({ ...match2, teamB: e.target.value })}
-                  className={`bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase text-right ${getTeamColorClass(match2.teamB)} disabled:cursor-not-allowed`}
-                >
-                  <option value="barclays" className="bg-[#070b13] text-blue-400">THE BARCLAYS</option>
-                  <option value="bownes" className="bg-[#070b13] text-amber-500">THE BOWNES</option>
-                  <option value="sanfords" className="bg-[#070b13] text-orange-500">THE SANFORDS</option>
-                  <option value="unions" className="bg-[#070b13] text-emerald-400">THE UNIONS</option>
-                </select>
-                <TeamLogoRenderer teamKey={match2.teamB} />
-              </div>
-            </div>
-
+            )}
           </div>
 
           {/* TIMELINE BANNER */}

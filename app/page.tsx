@@ -50,11 +50,37 @@ const BarclaysLogo = () => (
   </svg>
 );
 
-const DynamicCustomLogo = ({ color }: { color: string }) => (
+// ==========================================
+// 2. PREMIUM CHAMPIONSHIP MULTI-LAYERED SVG EMBLEM
+// ==========================================
+const PremiumChampionshipEmblem = ({ accentColor, uniqueId }: { accentColor: string; uniqueId: string }) => (
   <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <polygon points="50,10 90,35 90,75 50,95 10,75 10,35" fill="#1e293b" stroke={color} strokeWidth="4" strokeLinejoin="round" />
-    <circle cx="50" cy="53" r="18" fill="none" stroke={color} strokeWidth="3" />
-    <path d="M32 53H68" stroke={color} strokeWidth="2" />
+    {/* Outer Multi-Layer Shield Border using the custom color accent */}
+    <polygon points="50,5 92,25 92,65 50,95 8,65 8,25" fill="#111827" stroke={`url(#goldGradient-${uniqueId})`} strokeWidth="4" strokeLinejoin="round"/>
+    <polygon points="50,11 86,28 86,62 50,88 14,62 14,28" fill="#030712" stroke={accentColor} strokeWidth="1.5" opacity="0.7" />
+    
+    {/* Centered Intricate Crown Geometry mimicking 4ac5860be96dca70b5b8365898c4e6d8.jpg */}
+    <path d="M32,62 L36,42 L45,50 L50,36 L55,50 L64,42 L68,62 Z" fill={`url(#goldGradient-${uniqueId})`} />
+    <circle cx="50" cy="32" r="2.5" fill="#fff" />
+    <circle cx="36" cy="38" r="2" fill="#fff" />
+    <circle cx="64" cy="38" r="2" fill="#fff" />
+    
+    {/* Victory Star Core Accents */}
+    <polygon points="50,70 52,75 58,75 53,79 55,85 50,81 45,85 47,79 42,75 48,75" fill={`url(#goldGradient-${uniqueId})`}/>
+    <polygon points="34,72 35.5,76 39.5,76 36.5,79 37.5,83 34,80 30.5,83 31.5,79 28.5,76 32.5,76" fill={`url(#goldGradient-${uniqueId})`} opacity="0.8"/>
+    <polygon points="66,72 67.5,76 71.5,76 68.5,79 69.5,83 66,80 62.5,83 63.5,79 60.5,76 64.5,76" fill={`url(#goldGradient-${uniqueId})`} opacity="0.8"/>
+    
+    {/* Compressed Alternating Linear Light/Dark Gradient Stack */}
+    <defs>
+      <linearGradient id={`goldGradient-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#78350f" />
+        <stop offset="25%" stopColor="#fef08a" />
+        <stop offset="45%" stopColor="#d97706" />
+        <stop offset="65%" stopColor="#ffffff" />
+        <stop offset="85%" stopColor="#fbbf24" />
+        <stop offset="100%" stopColor="#78350f" />
+      </linearGradient>
+    </defs>
   </svg>
 );
 
@@ -115,7 +141,6 @@ export default function Home() {
     barclays: ["kys r", "YJH —", "胡内", "篮板王", "稳", "Syw", "Sean", "Taotao", "高手", "James c"],
   });
 
-  // HARD BACKUP REGISTRY TO RECOGNIZE HISTORICAL ICON POLICIES Instantly on Typo re-entry
   const legacyBrandRegistry: Record<string, { name: string; hexColor: string; colorClass: string }> = {
     unions: { name: "THE UNIONS", hexColor: "#34d399", colorClass: "text-emerald-400" },
     bownes: { name: "THE BOWNES", hexColor: "#f59e0b", colorClass: "text-amber-500" },
@@ -126,7 +151,7 @@ export default function Home() {
   const [newTeamName, setNewTeamName] = useState("");
   const [newTeamColor, setNewTeamColor] = useState("#a855f7");
 
-  // Fixed scoping helper function
+  // Inside your component scope, route the custom rendering paths through the high-end vector logic
   const handleLogoRender = (teamKey: string, color: string) => {
     switch (teamKey) {
       case "unions": return <UnionLogo />;
@@ -135,7 +160,7 @@ export default function Home() {
       case "barclays": return <BarclaysLogo />;
       default: {
         const customTeam = teamsConfig.find(t => t.key === teamKey);
-        if (customTeam) return <DynamicCustomLogo color={color} />;
+        if (customTeam) return <PremiumChampionshipEmblem accentColor={color} uniqueId={teamKey} />;
         return <EmptyPlaceholderLogo />;
       }
     }
@@ -185,7 +210,6 @@ export default function Home() {
     e.preventDefault();
     if (!newTeamName.trim()) return;
 
-    // Normalize name entries to check if we are re-adding an original team
     let cleanKey = newTeamName.toLowerCase().replace(/\s+/g, "");
     if (cleanKey.startsWith("the")) {
       cleanKey = cleanKey.replace(/^the/, "");
@@ -193,7 +217,6 @@ export default function Home() {
 
     if (teamsConfig.some(t => t.key === cleanKey)) return alert("Team already exists!");
 
-    // Check backup asset configuration register to instantly restore original icon profiles
     if (legacyBrandRegistry[cleanKey]) {
       const historicalBackup = legacyBrandRegistry[cleanKey];
       const restoredTeamObj: TeamConfig = {
@@ -213,7 +236,6 @@ export default function Home() {
       return;
     }
 
-    // Otherwise, generate standard custom metadata profile safely
     const generatedKey = newTeamName.toLowerCase().replace(/\s+/g, "_");
     const newTeamObj: TeamConfig = {
       key: generatedKey,
@@ -236,6 +258,10 @@ export default function Home() {
       const scoreCopy = { ...topScores };
       delete scoreCopy[teamKey];
       setTopScores(scoreCopy);
+
+      const rosterCopy = { ...rosters };
+      delete rosterCopy[teamKey];
+      setRosters(rosterCopy);
 
       setMatches(prev => prev.map(m => ({
         ...m,

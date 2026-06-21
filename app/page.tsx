@@ -7,22 +7,80 @@ import React, { useState, useEffect } from "react";
 // ==========================================
 
 const UnionLogo = () => (
-  <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="50" cy="50" r="45" fill="#14532d" stroke="#4ade80" strokeWidth="3"/>
-    <path d="M25 50C35 35 65 35 75 50C65 65 35 65 25 50Z" fill="#a7f3d0"/>
-    <path d="M72 50L85 40V60L72 50Z" fill="#4ade80"/>
-    <circle cx="40" cy="46" r="3" fill="#14532d"/>
-    <path d="M30 70Q50 65 70 70" stroke="#22c55e" strokeWidth="2" strokeLinecap="round"/>
+  <svg
+    className="w-12 h-12"
+    viewBox="0 0 100 100"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle
+      cx="50"
+      cy="50"
+      r="45"
+      fill="#14532d"
+      stroke="#4ade80"
+      strokeWidth="3"
+    />
+    <path d="M25 50C35 35 65 35 75 50C65 65 35 65 25 50Z" fill="#a7f3d0" />
+    <path d="M72 50L85 40V60L72 50Z" fill="#4ade80" />
+    <circle cx="40" cy="46" r="3" fill="#14532d" />
+    <path
+      d="M30 70Q50 65 70 70"
+      stroke="#22c55e"
+      strokeWidth="2"
+      strokeLinecap="round"
+    />
   </svg>
 );
 
 const BowneLogo = () => (
-  <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M35 20L50 45L65 20" stroke="#ef4444" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M42 20L50 42L58 20" stroke="#3b82f6" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round"/>
-    <circle cx="50" cy="60" r="24" fill="url(#goldMedal)" stroke="#fbbf24" strokeWidth="3"/>
-    <circle cx="50" cy="60" r="18" fill="none" stroke="#fff" strokeWidth="1.5" strokeDasharray="4 3"/>
-    <text x="50" y="69" fontSize="24" fontWeight="black" fill="#78350f" textAnchor="middle">1</text>
+  <svg
+    className="w-12 h-12"
+    viewBox="0 0 100 100"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M35 20L50 45L65 20"
+      stroke="#ef4444"
+      strokeWidth="10"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M42 20L50 42L58 20"
+      stroke="#3b82f6"
+      strokeWidth="8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <circle
+      cx="50"
+      cy="60"
+      r="24"
+      fill="url(#goldMedal)"
+      stroke="#fbbf24"
+      strokeWidth="3"
+    />
+    <circle
+      cx="50"
+      cy="60"
+      r="18"
+      fill="none"
+      stroke="#fff"
+      strokeWidth="1.5"
+      strokeDasharray="4 3"
+    />
+    <text
+      x="50"
+      y="69"
+      fontSize="24"
+      fontWeight="black"
+      fill="#78350f"
+      textAnchor="middle"
+    >
+      1
+    </text>
     <defs>
       <linearGradient id="goldMedal" x1="0%" y1="0%" x2="100%" y2="100%">
         <stop offset="0%" stopColor="#fef08a" />
@@ -33,46 +91,128 @@ const BowneLogo = () => (
 );
 
 const SanfordLogo = () => (
-  <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="50" cy="50" r="42" fill="#ea580c" stroke="#fff" strokeWidth="2"/>
-    <path d="M8 50H92" stroke="#000" strokeWidth="3"/>
-    <path d="M50 8V92" stroke="#000" strokeWidth="3"/>
-    <path d="M20 20C35 32 35 68 20 80" stroke="#000" strokeWidth="3" strokeLinecap="round"/>
-    <path d="M80 20C65 32 65 68 80 80" stroke="#000" strokeWidth="3" strokeLinecap="round"/>
+  <svg
+    className="w-12 h-12"
+    viewBox="0 0 100 100"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle
+      cx="50"
+      cy="50"
+      r="42"
+      fill="#ea580c"
+      stroke="#fff"
+      strokeWidth="2"
+    />
+    <path d="M8 50H92" stroke="#000" strokeWidth="3" />
+    <path d="M50 8V92" stroke="#000" strokeWidth="3" />
+    <path
+      d="M20 20C35 32 35 68 20 80"
+      stroke="#000"
+      strokeWidth="3"
+      strokeLinecap="round"
+    />
+    <path
+      d="M80 20C65 32 65 68 80 80"
+      stroke="#000"
+      strokeWidth="3"
+      strokeLinecap="round"
+    />
   </svg>
 );
 
 const BarclaysLogo = () => (
-  <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M20 20C45 20 50 10 50 10C50 10 55 20 80 20C80 55 68 78 50 90C32 78 20 55 20 20Z" fill="#1d4ed8" stroke="#60a5fa" strokeWidth="4" strokeLinejoin="round"/>
-    <path d="M30 28C45 28 50 22 50 22C50 22 55 28 70 28C70 50 60 68 50 78C40 68 30 50 30 28Z" fill="#2563eb"/>
-    <polygon points="50,38 53,45 61,45 55,50 57,58 50,53 43,58 45,50 39,45 47,45" fill="#93c5fd"/>
+  <svg
+    className="w-12 h-12"
+    viewBox="0 0 100 100"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M20 20C45 20 50 10 50 10C50 10 55 20 80 20C80 55 68 78 50 90C32 78 20 55 20 20Z"
+      fill="#1d4ed8"
+      stroke="#60a5fa"
+      strokeWidth="4"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M30 28C45 28 50 22 50 22C50 22 55 28 70 28C70 50 60 68 50 78C40 68 30 50 30 28Z"
+      fill="#2563eb"
+    />
+    <polygon
+      points="50,38 53,45 61,45 55,50 57,58 50,53 43,58 45,50 39,45 47,45"
+      fill="#93c5fd"
+    />
   </svg>
 );
 
 // ==========================================
 // 2. PREMIUM CHAMPIONSHIP MULTI-LAYERED SVG EMBLEM
 // ==========================================
-const PremiumChampionshipEmblem = ({ accentColor, uniqueId }: { accentColor: string; uniqueId: string }) => (
-  <svg className="w-12 h-12" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+const PremiumChampionshipEmblem = ({
+  accentColor,
+  uniqueId,
+}: {
+  accentColor: string;
+  uniqueId: string;
+}) => (
+  <svg
+    className="w-12 h-12"
+    viewBox="0 0 100 100"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     {/* Outer Multi-Layer Shield Border using the custom color accent */}
-    <polygon points="50,5 92,25 92,65 50,95 8,65 8,25" fill="#111827" stroke={`url(#goldGradient-${uniqueId})`} strokeWidth="4" strokeLinejoin="round"/>
-    <polygon points="50,11 86,28 86,62 50,88 14,62 14,28" fill="#030712" stroke={accentColor} strokeWidth="1.5" opacity="0.7" />
-    
+    <polygon
+      points="50,5 92,25 92,65 50,95 8,65 8,25"
+      fill="#111827"
+      stroke={`url(#goldGradient-${uniqueId})`}
+      strokeWidth="4"
+      strokeLinejoin="round"
+    />
+    <polygon
+      points="50,11 86,28 86,62 50,88 14,62 14,28"
+      fill="#030712"
+      stroke={accentColor}
+      strokeWidth="1.5"
+      opacity="0.7"
+    />
+
     {/* Centered Intricate Crown Geometry mimicking 4ac5860be96dca70b5b8365898c4e6d8.jpg */}
-    <path d="M32,62 L36,42 L45,50 L50,36 L55,50 L64,42 L68,62 Z" fill={`url(#goldGradient-${uniqueId})`} />
+    <path
+      d="M32,62 L36,42 L45,50 L50,36 L55,50 L64,42 L68,62 Z"
+      fill={`url(#goldGradient-${uniqueId})`}
+    />
     <circle cx="50" cy="32" r="2.5" fill="#fff" />
     <circle cx="36" cy="38" r="2" fill="#fff" />
     <circle cx="64" cy="38" r="2" fill="#fff" />
-    
+
     {/* Victory Star Core Accents */}
-    <polygon points="50,70 52,75 58,75 53,79 55,85 50,81 45,85 47,79 42,75 48,75" fill={`url(#goldGradient-${uniqueId})`}/>
-    <polygon points="34,72 35.5,76 39.5,76 36.5,79 37.5,83 34,80 30.5,83 31.5,79 28.5,76 32.5,76" fill={`url(#goldGradient-${uniqueId})`} opacity="0.8"/>
-    <polygon points="66,72 67.5,76 71.5,76 68.5,79 69.5,83 66,80 62.5,83 63.5,79 60.5,76 64.5,76" fill={`url(#goldGradient-${uniqueId})`} opacity="0.8"/>
-    
+    <polygon
+      points="50,70 52,75 58,75 53,79 55,85 50,81 45,85 47,79 42,75 48,75"
+      fill={`url(#goldGradient-${uniqueId})`}
+    />
+    <polygon
+      points="34,72 35.5,76 39.5,76 36.5,79 37.5,83 34,80 30.5,83 31.5,79 28.5,76 32.5,76"
+      fill={`url(#goldGradient-${uniqueId})`}
+      opacity="0.8"
+    />
+    <polygon
+      points="66,72 67.5,76 71.5,76 68.5,79 69.5,83 66,80 62.5,83 63.5,79 60.5,76 64.5,76"
+      fill={`url(#goldGradient-${uniqueId})`}
+      opacity="0.8"
+    />
+
     {/* Compressed Alternating Linear Light/Dark Gradient Stack */}
     <defs>
-      <linearGradient id={`goldGradient-${uniqueId}`} x1="0%" y1="0%" x2="100%" y2="100%">
+      <linearGradient
+        id={`goldGradient-${uniqueId}`}
+        x1="0%"
+        y1="0%"
+        x2="100%"
+        y2="100%"
+      >
         <stop offset="0%" stopColor="#78350f" />
         <stop offset="25%" stopColor="#fef08a" />
         <stop offset="45%" stopColor="#d97706" />
@@ -112,40 +252,149 @@ export default function Home() {
   const [isAdmin, setIsAdmin] = useState<boolean>(true);
   const [isHydrated, setIsHydrated] = useState<boolean>(false);
 
-  const [tournamentTitle, setTournamentTitle] = useState("PS20 MIKE LEGEND TOURNAMENT");
+  const [tournamentTitle, setTournamentTitle] = useState(
+    "PS20 MIKE LEGEND TOURNAMENT",
+  );
   const [subHeader, setSubHeader] = useState("BASKETBALL SCHEDULE");
-  const [resultsDay, setResultsDay] = useState("TODAY'S RESULTS - THURSDAY MAY 28TH");
-  const [timelineText, setTimelineText] = useState("WEEK 2 SCHEDULE: TBA (To Be Announced)");
-  const [hideEliminatedRosters, setHideEliminatedRosters] = useState<boolean>(true);
+  const [resultsDay, setResultsDay] = useState(
+    "TODAY'S RESULTS - THURSDAY MAY 28TH",
+  );
+  const [timelineText, setTimelineText] = useState(
+    "WEEK 2 SCHEDULE: TBA (To Be Announced)",
+  );
+  const [hideEliminatedRosters, setHideEliminatedRosters] =
+    useState<boolean>(true);
 
   const [teamsConfig, setTeamsConfig] = useState<TeamConfig[]>([
-    { key: "unions", name: "THE UNIONS", colorClass: "text-emerald-400", hexColor: "#34d399" },
-    { key: "bownes", name: "THE BOWNES", colorClass: "text-amber-500", hexColor: "#f59e0b" },
-    { key: "sanfords", name: "THE SANFORDS", colorClass: "text-orange-500", hexColor: "#f97316" },
-    { key: "barclays", name: "THE BARCLAYS", colorClass: "text-blue-400", hexColor: "#60a5fa" }
+    {
+      key: "unions",
+      name: "THE UNIONS",
+      colorClass: "text-emerald-400",
+      hexColor: "#34d399",
+    },
+    {
+      key: "bownes",
+      name: "THE BOWNES",
+      colorClass: "text-amber-500",
+      hexColor: "#f59e0b",
+    },
+    {
+      key: "sanfords",
+      name: "THE SANFORDS",
+      colorClass: "text-orange-500",
+      hexColor: "#f97316",
+    },
+    {
+      key: "barclays",
+      name: "THE BARCLAYS",
+      colorClass: "text-blue-400",
+      hexColor: "#60a5fa",
+    },
   ]);
 
   const [topScores, setTopScores] = useState<Record<string, number>>({
-    unions: 0, bownes: 0, sanfords: 0, barclays: 0
+    unions: 0,
+    bownes: 0,
+    sanfords: 0,
+    barclays: 0,
   });
 
   const [matches, setMatches] = useState<MatchData[]>([
-    { id: 1, teamA: "sanfords", teamB: "unions", scoreA: 0, scoreB: 0, foulsA: 0, foulsB: 0 },
-    { id: 2, teamA: "bownes", teamB: "barclays", scoreA: 0, scoreB: 0, foulsA: 0, foulsB: 0 }
+    {
+      id: 1,
+      teamA: "sanfords",
+      teamB: "unions",
+      scoreA: 0,
+      scoreB: 0,
+      foulsA: 0,
+      foulsB: 0,
+    },
+    {
+      id: 2,
+      teamA: "bownes",
+      teamB: "barclays",
+      scoreA: 0,
+      scoreB: 0,
+      foulsA: 0,
+      foulsB: 0,
+    },
   ]);
 
   const [rosters, setRosters] = useState<Record<string, string[]>>({
-    unions: ["KMY", "小鱼", "Dudu", "Hong Tao", "慢慢来", "腰王", "MING", "好好睡觉","",""],
-    bownes: ["yuxuan", "LiNg", "Gao Xiang", "Eric", "Owen", "Benc", "Lee", "炜", "Ye 哥", "芥琵"],
-    sanfords: ["Steven", "William_Yan", "绿豆赚", "09^", "ishtiar", "Ryan", "Beau", "Alex", "Leo",""],
-    barclays: ["kys r", "YJH —", "胡内", "篮板王", "稳", "Syw", "Sean", "Taotao", "高手", "James c"],
+    unions: [
+      "KMY",
+      "小鱼",
+      "Dudu",
+      "Hong Tao",
+      "慢慢来",
+      "腰王",
+      "MING",
+      "好好睡觉",
+      "",
+      "",
+    ],
+    bownes: [
+      "yuxuan",
+      "LiNg",
+      "Gao Xiang",
+      "Eric",
+      "Owen",
+      "Benc",
+      "Lee",
+      "炜",
+      "Ye 哥",
+      "芥琵",
+    ],
+    sanfords: [
+      "Steven",
+      "William_Yan",
+      "绿豆赚",
+      "09^",
+      "ishtiar",
+      "Ryan",
+      "Beau",
+      "Alex",
+      "Leo",
+      "",
+    ],
+    barclays: [
+      "kys r",
+      "YJH —",
+      "胡内",
+      "篮板王",
+      "稳",
+      "Syw",
+      "Sean",
+      "Taotao",
+      "高手",
+      "James c",
+    ],
   });
 
-  const legacyBrandRegistry: Record<string, { name: string; hexColor: string; colorClass: string }> = {
-    unions: { name: "THE UNIONS", hexColor: "#34d399", colorClass: "text-emerald-400" },
-    bownes: { name: "THE BOWNES", hexColor: "#f59e0b", colorClass: "text-amber-500" },
-    sanfords: { name: "THE SANFORDS", hexColor: "#f97316", colorClass: "text-orange-500" },
-    barclays: { name: "THE BARCLAYS", hexColor: "#60a5fa", colorClass: "text-blue-400" }
+  const legacyBrandRegistry: Record<
+    string,
+    { name: string; hexColor: string; colorClass: string }
+  > = {
+    unions: {
+      name: "THE UNIONS",
+      hexColor: "#34d399",
+      colorClass: "text-emerald-400",
+    },
+    bownes: {
+      name: "THE BOWNES",
+      hexColor: "#f59e0b",
+      colorClass: "text-amber-500",
+    },
+    sanfords: {
+      name: "THE SANFORDS",
+      hexColor: "#f97316",
+      colorClass: "text-orange-500",
+    },
+    barclays: {
+      name: "THE BARCLAYS",
+      hexColor: "#60a5fa",
+      colorClass: "text-blue-400",
+    },
   };
 
   const [newTeamName, setNewTeamName] = useState("");
@@ -154,13 +403,20 @@ export default function Home() {
   // Inside your component scope, route the custom rendering paths through the high-end vector logic
   const handleLogoRender = (teamKey: string, color: string) => {
     switch (teamKey) {
-      case "unions": return <UnionLogo />;
-      case "bownes": return <BowneLogo />;
-      case "sanfords": return <SanfordLogo />;
-      case "barclays": return <BarclaysLogo />;
+      case "unions":
+        return <UnionLogo />;
+      case "bownes":
+        return <BowneLogo />;
+      case "sanfords":
+        return <SanfordLogo />;
+      case "barclays":
+        return <BarclaysLogo />;
       default: {
-        const customTeam = teamsConfig.find(t => t.key === teamKey);
-        if (customTeam) return <PremiumChampionshipEmblem accentColor={color} uniqueId={teamKey} />;
+        const customTeam = teamsConfig.find((t) => t.key === teamKey);
+        if (customTeam)
+          return (
+            <PremiumChampionshipEmblem accentColor={color} uniqueId={teamKey} />
+          );
         return <EmptyPlaceholderLogo />;
       }
     }
@@ -184,10 +440,11 @@ export default function Home() {
       if (savedTopScores) setTopScores(JSON.parse(savedTopScores));
       if (savedMatches) setMatches(JSON.parse(savedMatches));
       if (savedTimeline) setTimelineText(savedTimeline);
-      if (savedHideToggle) setHideEliminatedRosters(JSON.parse(savedHideToggle));
+      if (savedHideToggle)
+        setHideEliminatedRosters(JSON.parse(savedHideToggle));
       if (savedTeamsConfig) setTeamsConfig(JSON.parse(savedTeamsConfig));
       if (savedRosters) setRosters(JSON.parse(savedRosters));
-      
+
       setIsHydrated(true);
     }
   }, []);
@@ -200,11 +457,25 @@ export default function Home() {
       localStorage.setItem("ps20_topScores", JSON.stringify(topScores));
       localStorage.setItem("ps20_matches", JSON.stringify(matches));
       localStorage.setItem("ps20_timelineText", timelineText);
-      localStorage.setItem("ps20_hideToggle", JSON.stringify(hideEliminatedRosters));
+      localStorage.setItem(
+        "ps20_hideToggle",
+        JSON.stringify(hideEliminatedRosters),
+      );
       localStorage.setItem("ps20_teamsConfig", JSON.stringify(teamsConfig));
       localStorage.setItem("ps20_rosters", JSON.stringify(rosters));
     }
-  }, [tournamentTitle, subHeader, resultsDay, topScores, matches, timelineText, hideEliminatedRosters, teamsConfig, rosters, isHydrated]);
+  }, [
+    tournamentTitle,
+    subHeader,
+    resultsDay,
+    topScores,
+    matches,
+    timelineText,
+    hideEliminatedRosters,
+    teamsConfig,
+    rosters,
+    isHydrated,
+  ]);
 
   const createNewTeamAction = (e: React.FormEvent) => {
     e.preventDefault();
@@ -215,7 +486,8 @@ export default function Home() {
       cleanKey = cleanKey.replace(/^the/, "");
     }
 
-    if (teamsConfig.some(t => t.key === cleanKey)) return alert("Team already exists!");
+    if (teamsConfig.some((t) => t.key === cleanKey))
+      return alert("Team already exists!");
 
     if (legacyBrandRegistry[cleanKey]) {
       const historicalBackup = legacyBrandRegistry[cleanKey];
@@ -224,7 +496,7 @@ export default function Home() {
         name: historicalBackup.name,
         colorClass: historicalBackup.colorClass,
         hexColor: historicalBackup.hexColor,
-        isCustom: false
+        isCustom: false,
       };
 
       setTeamsConfig([...teamsConfig, restoredTeamObj]);
@@ -242,7 +514,7 @@ export default function Home() {
       name: newTeamName.toUpperCase(),
       colorClass: "",
       hexColor: newTeamColor,
-      isCustom: true
+      isCustom: true,
     };
 
     setTeamsConfig([...teamsConfig, newTeamObj]);
@@ -252,9 +524,13 @@ export default function Home() {
   };
 
   const removeTeamFromSystem = (teamKey: string) => {
-    if (confirm(`Are you sure you want to completely remove ${getTeamName(teamKey)}?`)) {
-      setTeamsConfig(prev => prev.filter(t => t.key !== teamKey));
-      
+    if (
+      confirm(
+        `Are you sure you want to completely remove ${getTeamName(teamKey)}?`,
+      )
+    ) {
+      setTeamsConfig((prev) => prev.filter((t) => t.key !== teamKey));
+
       const scoreCopy = { ...topScores };
       delete scoreCopy[teamKey];
       setTopScores(scoreCopy);
@@ -263,40 +539,55 @@ export default function Home() {
       delete rosterCopy[teamKey];
       setRosters(rosterCopy);
 
-      setMatches(prev => prev.map(m => ({
-        ...m,
-        teamA: m.teamA === teamKey ? "none" : m.teamA,
-        teamB: m.teamB === teamKey ? "none" : m.teamB
-      })));
+      setMatches((prev) =>
+        prev.map((m) => ({
+          ...m,
+          teamA: m.teamA === teamKey ? "none" : m.teamA,
+          teamB: m.teamB === teamKey ? "none" : m.teamB,
+        })),
+      );
     }
   };
 
   const getTeamName = (teamKey: string) => {
-    const found = teamsConfig.find(t => t.key === teamKey);
+    const found = teamsConfig.find((t) => t.key === teamKey);
     return found ? found.name : "N/A";
   };
 
   const updateMatchField = (id: number, field: keyof MatchData, value: any) => {
-    setMatches(prev => prev.map(m => m.id === id ? { ...m, [field]: value } : m));
+    setMatches((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, [field]: value } : m)),
+    );
   };
 
   const removeMatchBox = (id: number) => {
-    setMatches(prev => prev.filter(m => m.id !== id));
+    setMatches((prev) => prev.filter((m) => m.id !== id));
   };
 
   const addMatchBox = () => {
-    const newId = matches.length > 0 ? Math.max(...matches.map(m => m.id)) + 1 : 1;
-    setMatches(prev => [...prev, { id: newId, teamA: "none", teamB: "none", scoreA: 0, scoreB: 0, foulsA: 0, foulsB: 0 }]);
+    const newId =
+      matches.length > 0 ? Math.max(...matches.map((m) => m.id)) + 1 : 1;
+    setMatches((prev) => [
+      ...prev,
+      {
+        id: newId,
+        teamA: "none",
+        teamB: "none",
+        scoreA: 0,
+        scoreB: 0,
+        foulsA: 0,
+        foulsB: 0,
+      },
+    ]);
   };
 
   const isTeamActive = (teamKey: string) => {
-    if (!hideEliminatedRosters) return true; 
-    return matches.some(m => m.teamA === teamKey || m.teamB === teamKey);
+    if (!hideEliminatedRosters) return true;
+    return matches.some((m) => m.teamA === teamKey || m.teamB === teamKey);
   };
 
   return (
     <div className="min-h-screen bg-[#070b13] text-white p-6 font-sans antialiased">
-      
       {/* ADMINISTRATIVE ACCESS CONSOLE OVERLAY */}
       <div className="max-w-7xl mx-auto mb-6 bg-[#111827] p-4 rounded-xl border border-slate-800 flex flex-col gap-4">
         <div className="flex flex-wrap justify-between items-center gap-3">
@@ -311,9 +602,11 @@ export default function Home() {
             )}
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-xs font-semibold tracking-wider text-slate-400">AUTHORIZATION LEVEL:</span>
-            <select 
-              value={isAdmin ? "admin" : "user"} 
+            <span className="text-xs font-semibold tracking-wider text-slate-400">
+              AUTHORIZATION LEVEL:
+            </span>
+            <select
+              value={isAdmin ? "admin" : "user"}
               onChange={(e) => setIsAdmin(e.target.value === "admin")}
               className="bg-[#1f2937] text-xs text-orange-400 font-bold px-3 py-1.5 rounded border border-slate-700 outline-none cursor-pointer"
             >
@@ -325,28 +618,41 @@ export default function Home() {
 
         {/* ADMIN ADD TEAM FORM */}
         {isAdmin && (
-          <form onSubmit={createNewTeamAction} className="border-t border-slate-800 pt-3 flex flex-wrap items-center gap-4 bg-slate-900/40 p-3 rounded-lg">
+          <form
+            onSubmit={createNewTeamAction}
+            className="border-t border-slate-800 pt-3 flex flex-wrap items-center gap-4 bg-slate-900/40 p-3 rounded-lg"
+          >
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-black text-slate-400 tracking-wider">🚀 LEAGUE TEAM MANAGER:</span>
-              <span className="text-[10px] text-slate-500 font-medium font-sans">TIP: TYPE "UNIONS", "BOWNES", "SANFORDS", OR "BARCLAYS" TO AUTO-RESTORE ORIGINAL ICONS!</span>
+              <span className="text-xs font-black text-slate-400 tracking-wider">
+                🚀 LEAGUE TEAM MANAGER:
+              </span>
+              <span className="text-[10px] text-slate-500 font-medium font-sans">
+                TIP: TYPE "UNIONS", "BOWNES", "SANFORDS", OR "BARCLAYS" TO
+                AUTO-RESTORE ORIGINAL ICONS!
+              </span>
             </div>
-            <input 
-              type="text" 
-              placeholder="ENTER TEAM NAME..." 
+            <input
+              type="text"
+              placeholder="ENTER TEAM NAME..."
               value={newTeamName}
               onChange={(e) => setNewTeamName(e.target.value)}
               className="bg-[#070b13] border border-slate-700 rounded px-3 py-1 text-xs outline-none text-white w-52 font-bold uppercase"
             />
             <div className="flex items-center gap-2">
-              <span className="text-xs text-slate-500 font-medium">CUSTOM COLOR:</span>
-              <input 
-                type="color" 
-                value={newTeamColor} 
+              <span className="text-xs text-slate-500 font-medium">
+                CUSTOM COLOR:
+              </span>
+              <input
+                type="color"
+                value={newTeamColor}
                 onChange={(e) => setNewTeamColor(e.target.value)}
                 className="bg-transparent border-none outline-none w-8 h-6 cursor-pointer"
               />
             </div>
-            <button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-black px-3 py-1 rounded shadow">
+            <button
+              type="submit"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-black px-3 py-1 rounded shadow"
+            >
               PRODUCE LIVE TEAM PROFILE
             </button>
           </form>
@@ -377,10 +683,8 @@ export default function Home() {
 
       {/* TWO-COLUMN LAYOUT STRUCTURE */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto items-start">
-        
         {/* MATCH STUFF CARDS ROW BOXES */}
         <main className="lg:col-span-2 flex flex-col gap-6">
-          
           {/* HERO PREVIEW DASHBOARD (FLEX-WRAP DYNAMIC REORGANIZATION LAYOUT) */}
           <div className="bg-[#111827] border border-slate-800 rounded-2xl p-5 shadow-2xl">
             <input
@@ -390,10 +694,13 @@ export default function Home() {
               onChange={(e) => setResultsDay(e.target.value)}
               className="bg-transparent text-xs font-bold text-center tracking-widest text-slate-400 uppercase w-full mb-5 border-none outline-none disabled:cursor-not-allowed"
             />
-            
+
             <div className="flex flex-wrap justify-center gap-4">
               {teamsConfig.map((t) => (
-                <div key={t.key} className="relative bg-slate-900/60 p-4 pt-8 rounded-xl border border-slate-800 flex flex-col items-center group w-full sm:w-[calc(50%-8px)] md:w-[calc(25%-12px)] min-w-[140px] transition-all">
+                <div
+                  key={t.key}
+                  className="relative bg-slate-900/60 p-4 pt-8 rounded-xl border border-slate-800 flex flex-col items-center group w-full sm:w-[calc(50%-8px)] md:w-[calc(25%-12px)] min-w-[140px] transition-all"
+                >
                   {isAdmin && (
                     <button
                       type="button"
@@ -403,7 +710,10 @@ export default function Home() {
                       ❌ DELETE
                     </button>
                   )}
-                  <span className="text-[11px] font-black tracking-widest mb-3 uppercase text-center" style={{ color: t.hexColor }}>
+                  <span
+                    className="text-[11px] font-black tracking-widest mb-3 uppercase text-center"
+                    style={{ color: t.hexColor }}
+                  >
                     {t.name}
                   </span>
                   {handleLogoRender(t.key, t.hexColor)}
@@ -412,7 +722,12 @@ export default function Home() {
                     value={topScores[t.key] === 0 ? "" : topScores[t.key]}
                     placeholder="0"
                     disabled={!isAdmin}
-                    onChange={(e) => setTopScores({ ...topScores, [t.key]: parseInt(e.target.value) || 0 })}
+                    onChange={(e) =>
+                      setTopScores({
+                        ...topScores,
+                        [t.key]: parseInt(e.target.value) || 0,
+                      })
+                    }
                     className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-slate-200 disabled:cursor-not-allowed"
                   />
                 </div>
@@ -423,8 +738,8 @@ export default function Home() {
           {/* DYNAMIC SCORING MATRICES */}
           <div className="flex flex-col gap-4">
             {matches.map((match) => (
-              <div 
-                key={match.id} 
+              <div
+                key={match.id}
                 className="relative bg-gradient-to-r from-[#111827] to-[#0a0f1d] border border-slate-800 rounded-xl p-5 pt-8 flex items-center justify-between shadow-md min-h-[105px]"
               >
                 {isAdmin && (
@@ -438,17 +753,39 @@ export default function Home() {
 
                 {/* TEAM A DROPDOWN BLOCK */}
                 <div className="flex items-center gap-4 w-4/12">
-                  {handleLogoRender(match.teamA, teamsConfig.find(t => t.key === match.teamA)?.hexColor || "#555")}
-                  <select 
-                    value={match.teamA} 
+                  {handleLogoRender(
+                    match.teamA,
+                    teamsConfig.find((t) => t.key === match.teamA)?.hexColor ||
+                      "#555",
+                  )}
+                  <select
+                    value={match.teamA}
                     disabled={!isAdmin}
-                    onChange={(e) => updateMatchField(match.id, "teamA", e.target.value)}
+                    onChange={(e) =>
+                      updateMatchField(match.id, "teamA", e.target.value)
+                    }
                     className="bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase disabled:cursor-not-allowed cursor-pointer"
-                    style={{ color: teamsConfig.find(t => t.key === match.teamA)?.hexColor || "#94a3b8" }}
+                    style={{
+                      color:
+                        teamsConfig.find((t) => t.key === match.teamA)
+                          ?.hexColor || "#94a3b8",
+                    }}
                   >
-                    <option value="none" className="bg-[#070b13] text-slate-500">N/A (HIDE TEAM)</option>
-                    {teamsConfig.map(t => (
-                      <option key={t.key} value={t.key} className="bg-[#070b13]" style={{ color: t.hexColor }}>{t.name}</option>
+                    <option
+                      value="none"
+                      className="bg-[#070b13] text-slate-500"
+                    >
+                      N/A (HIDE TEAM)
+                    </option>
+                    {teamsConfig.map((t) => (
+                      <option
+                        key={t.key}
+                        value={t.key}
+                        className="bg-[#070b13]"
+                        style={{ color: t.hexColor }}
+                      >
+                        {t.name}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -458,79 +795,139 @@ export default function Home() {
                   <div className="flex flex-col items-center justify-center min-w-[50px]">
                     {match.teamA !== "none" ? (
                       <>
-                        <input 
-                          type="number" 
+                        <input
+                          type="number"
                           value={match.scoreA === 0 ? "" : match.scoreA}
                           placeholder="0"
                           disabled={!isAdmin}
-                          onChange={(e) => updateMatchField(match.id, "scoreA", parseInt(e.target.value) || 0)}
+                          onChange={(e) =>
+                            updateMatchField(
+                              match.id,
+                              "scoreA",
+                              parseInt(e.target.value) || 0,
+                            )
+                          }
                           className="bg-transparent text-4xl font-black text-center w-16 border-none outline-none disabled:cursor-not-allowed h-10"
-                          style={{ color: teamsConfig.find(t => t.key === match.teamA)?.hexColor || "#fff" }}
+                          style={{
+                            color:
+                              teamsConfig.find((t) => t.key === match.teamA)
+                                ?.hexColor || "#fff",
+                          }}
                         />
                         <div className="flex items-center text-[11px] text-red-500 font-bold mt-1">
                           <span>F:&nbsp;</span>
-                          <input 
-                            type="number" 
-                            placeholder="0" 
-                            value={match.foulsA === 0 ? "" : match.foulsA} 
-                            disabled={!isAdmin} 
-                            className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white" 
-                            onChange={(e) => updateMatchField(match.id, "foulsA", parseInt(e.target.value) || 0)}
+                          <input
+                            type="number"
+                            placeholder="0"
+                            value={match.foulsA === 0 ? "" : match.foulsA}
+                            disabled={!isAdmin}
+                            className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white"
+                            onChange={(e) =>
+                              updateMatchField(
+                                match.id,
+                                "foulsA",
+                                parseInt(e.target.value) || 0,
+                              )
+                            }
                           />
                         </div>
                       </>
                     ) : (
-                      <span className="text-slate-700 text-xs font-bold">—</span>
+                      <span className="text-slate-700 text-xs font-bold">
+                        —
+                      </span>
                     )}
                   </div>
 
-                  <span className="text-xs font-black tracking-widest bg-black/60 px-2.5 py-1.5 rounded-md border border-slate-800 shadow-sm self-center">VS</span>
+                  <span className="text-xs font-black tracking-widest bg-black/60 px-2.5 py-1.5 rounded-md border border-slate-800 shadow-sm self-center">
+                    VS
+                  </span>
 
                   <div className="flex flex-col items-center justify-center min-w-[50px]">
                     {match.teamB !== "none" ? (
                       <>
-                        <input 
-                          type="number" 
+                        <input
+                          type="number"
                           value={match.scoreB === 0 ? "" : match.scoreB}
                           placeholder="0"
                           disabled={!isAdmin}
-                          onChange={(e) => updateMatchField(match.id, "scoreB", parseInt(e.target.value) || 0)}
+                          onChange={(e) =>
+                            updateMatchField(
+                              match.id,
+                              "scoreB",
+                              parseInt(e.target.value) || 0,
+                            )
+                          }
                           className="bg-transparent text-4xl font-black text-center w-16 border-none outline-none disabled:cursor-not-allowed h-10"
-                          style={{ color: teamsConfig.find(t => t.key === match.teamB)?.hexColor || "#fff" }}
+                          style={{
+                            color:
+                              teamsConfig.find((t) => t.key === match.teamB)
+                                ?.hexColor || "#fff",
+                          }}
                         />
                         <div className="flex items-center text-[11px] text-red-500 font-bold mt-1">
                           <span>F:&nbsp;</span>
-                          <input 
-                            type="number" 
-                            placeholder="0" 
-                            value={match.foulsB === 0 ? "" : match.foulsB} 
-                            disabled={!isAdmin} 
-                            className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white" 
-                            onChange={(e) => updateMatchField(match.id, "foulsB", parseInt(e.target.value) || 0)}
+                          <input
+                            type="number"
+                            placeholder="0"
+                            value={match.foulsB === 0 ? "" : match.foulsB}
+                            disabled={!isAdmin}
+                            className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white"
+                            onChange={(e) =>
+                              updateMatchField(
+                                match.id,
+                                "foulsB",
+                                parseInt(e.target.value) || 0,
+                              )
+                            }
                           />
                         </div>
                       </>
                     ) : (
-                      <span className="text-slate-700 text-xs font-bold">—</span>
+                      <span className="text-slate-700 text-xs font-bold">
+                        —
+                      </span>
                     )}
                   </div>
                 </div>
 
                 {/* TEAM B DROPDOWN BLOCK */}
                 <div className="flex items-center justify-end gap-4 w-4/12">
-                  <select 
-                    value={match.teamB} 
+                  <select
+                    value={match.teamB}
                     disabled={!isAdmin}
-                    onChange={(e) => updateMatchField(match.id, "teamB", e.target.value)}
+                    onChange={(e) =>
+                      updateMatchField(match.id, "teamB", e.target.value)
+                    }
                     className="bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase text-right disabled:cursor-not-allowed cursor-pointer"
-                    style={{ color: teamsConfig.find(t => t.key === match.teamB)?.hexColor || "#94a3b8" }}
+                    style={{
+                      color:
+                        teamsConfig.find((t) => t.key === match.teamB)
+                          ?.hexColor || "#94a3b8",
+                    }}
                   >
-                    <option value="none" className="bg-[#070b13] text-slate-500">N/A (HIDE TEAM)</option>
-                    {teamsConfig.map(t => (
-                      <option key={t.key} value={t.key} className="bg-[#070b13]" style={{ color: t.hexColor }}>{t.name}</option>
+                    <option
+                      value="none"
+                      className="bg-[#070b13] text-slate-500"
+                    >
+                      N/A (HIDE TEAM)
+                    </option>
+                    {teamsConfig.map((t) => (
+                      <option
+                        key={t.key}
+                        value={t.key}
+                        className="bg-[#070b13]"
+                        style={{ color: t.hexColor }}
+                      >
+                        {t.name}
+                      </option>
                     ))}
                   </select>
-                  {handleLogoRender(match.teamB, teamsConfig.find(t => t.key === match.teamB)?.hexColor || "#555")}
+                  {handleLogoRender(
+                    match.teamB,
+                    teamsConfig.find((t) => t.key === match.teamB)?.hexColor ||
+                      "#555",
+                  )}
                 </div>
               </div>
             ))}
@@ -541,7 +938,7 @@ export default function Home() {
             <span className="text-orange-500 text-[10px] uppercase font-black tracking-widest mb-2 flex items-center gap-1">
               <span>📢</span> OFFICIAL TOURNAMENT NOTICE BOARD
             </span>
-            <textarea 
+            <textarea
               value={timelineText}
               disabled={!isAdmin}
               onChange={(e) => setTimelineText(e.target.value)}
@@ -558,43 +955,92 @@ export default function Home() {
               TEAMS & ROSTERS
             </h3>
             <label className="flex items-center justify-center gap-2 cursor-pointer select-none mt-1">
-              <input 
-                type="checkbox" 
-                checked={hideEliminatedRosters} 
+              <input
+                type="checkbox"
+                checked={hideEliminatedRosters}
                 onChange={(e) => setHideEliminatedRosters(e.target.checked)}
                 className="rounded bg-slate-900 border-slate-700 text-orange-500 focus:ring-0 w-3.5 h-3.5"
               />
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">HIDE ROSTERS FOR N/A TEAMS</span>
+              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+                HIDE ROSTERS FOR N/A TEAMS
+              </span>
             </label>
           </div>
-          
-          <div className="grid grid-cols-2 gap-x-4 gap-y-6">
+
+          <div className="flex flex-col gap-6">
             {teamsConfig.map((team) => {
               if (!isTeamActive(team.key)) return null;
-              const playerArray = rosters[team.key] || Array(8).fill("");
-              
+              const playerArray = rosters[team.key] || [];
+
               return (
-                <div key={team.key} className="space-y-3 transition-all duration-200">
-                  <div 
-                    className="font-black text-[10px] p-2 rounded text-center tracking-widest uppercase border bg-slate-900/40"
-                    style={{ color: team.hexColor, borderColor: `${team.hexColor}20` }}
+                <div
+                  key={team.key}
+                  className="space-y-3 bg-slate-900/20 p-3 rounded-xl border border-slate-800/40"
+                >
+                  <div
+                    className="font-black text-[10px] p-2 rounded text-center tracking-widest uppercase border bg-slate-900/60 flex justify-between items-center px-3"
+                    style={{
+                      color: team.hexColor,
+                      borderColor: `${team.hexColor}30`,
+                    }}
                   >
-                    {team.name}
+                    <span>{team.name}</span>
+
+                    {/* ADD / REMOVE DYNAMIC ROW CONTROLS (ADMIN ONLY) */}
+                    {isAdmin && (
+                      <div className="flex gap-1.5 text-[11px]">
+                        <button
+                          type="button"
+                          title="Remove Last Spot"
+                          onClick={() => {
+                            if (playerArray.length > 1) {
+                              setRosters({
+                                ...rosters,
+                                [team.key]: playerArray.slice(0, -1),
+                              });
+                            }
+                          }}
+                          className="hover:text-red-400 font-bold px-1"
+                        >
+                          🌾 ➖
+                        </button>
+                        <button
+                          type="button"
+                          title="Add Player Spot"
+                          onClick={() => {
+                            setRosters({
+                              ...rosters,
+                              [team.key]: [...playerArray, ""],
+                            });
+                          }}
+                          className="hover:text-emerald-400 font-bold px-1"
+                        >
+                          ➕
+                        </button>
+                      </div>
+                    )}
                   </div>
+
                   <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
                     {playerArray.map((player, idx) => (
-                      <li key={idx} className={`flex items-center gap-1 px-1.5 py-0.5 rounded border border-transparent ${isAdmin ? 'bg-slate-900/40' : 'bg-transparent'}`}>
-                        <span className="text-slate-500 font-mono text-[10px] w-3.5">{idx + 1}.</span>
-                        <input 
+                      <li
+                        key={idx}
+                        className={`flex items-center gap-1 px-1.5 py-0.5 rounded border border-transparent ${isAdmin ? "bg-slate-900/40" : "bg-transparent"}`}
+                      >
+                        <span className="text-slate-500 font-mono text-[10px] w-3.5">
+                          {idx + 1}.
+                        </span>
+                        <input
                           type="text"
-                          value={player} 
+                          value={player}
                           disabled={!isAdmin}
+                          placeholder="Empty Slot"
                           onChange={(e) => {
                             const teamCopy = [...playerArray];
                             teamCopy[idx] = e.target.value;
                             setRosters({ ...rosters, [team.key]: teamCopy });
-                          }} 
-                          className={`bg-transparent border-none p-0 w-full outline-none focus:text-white ${!isAdmin ? 'text-slate-200 font-normal cursor-default pointer-events-none' : ''}`}
+                          }}
+                          className={`bg-transparent border-none p-0 w-full outline-none focus:text-white placeholder-slate-700 ${!isAdmin ? "text-slate-200 font-normal cursor-default pointer-events-none" : ""}`}
                         />
                       </li>
                     ))}
@@ -604,7 +1050,6 @@ export default function Home() {
             })}
           </div>
         </aside>
-
       </div>
     </div>
   );

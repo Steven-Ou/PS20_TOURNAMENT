@@ -562,16 +562,8 @@ export default function Home() {
     return matches.some((m) => m.teamA === teamKey || m.teamB === teamKey);
   };
 
-  if (!isHydrated) {
-    return (
-      <div className="min-h-screen bg-[#070b13] text-slate-500 flex items-center justify-center font-mono text-xs">
-        LOADING TOURNAMENT DATABASE...
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-[#070b13] text-white p-4 md:p-6 font-sans antialiased">
+    <div className="min-h-screen bg-[#070b13] text-white p-3 md:p-6 font-sans antialiased">
       {/* ADMINISTRATIVE ACCESS CONSOLE OVERLAY */}
       <div className="max-w-7xl mx-auto mb-6 bg-[#111827] p-4 rounded-xl border border-slate-800 flex flex-col gap-4">
         <div className="flex flex-wrap justify-between items-center gap-3">
@@ -620,7 +612,7 @@ export default function Home() {
               placeholder="ENTER TEAM NAME..."
               value={newTeamName}
               onChange={(e) => setNewTeamName(e.target.value)}
-              className="bg-[#070b13] border border-slate-700 rounded px-3 py-1 text-xs outline-none text-white w-full sm:w-52 font-bold uppercase"
+              className="bg-[#070b13] border border-slate-700 rounded px-3 py-2 text-sm md:text-xs outline-none text-white w-full sm:w-52 font-bold uppercase"
             />
             <div className="flex items-center gap-2">
               <span className="text-xs text-slate-500 font-medium">
@@ -635,7 +627,7 @@ export default function Home() {
             </div>
             <button
               type="submit"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-black px-3 py-1 rounded shadow w-full sm:w-auto"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-black px-3 py-2 rounded shadow w-full sm:w-auto"
             >
               PRODUCE LIVE TEAM PROFILE
             </button>
@@ -665,331 +657,282 @@ export default function Home() {
         </div>
       </header>
 
-      {/* THREE-COLUMN LAYOUT STRUCTURE RESPONSIVE CONVERSION */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto items-start">
-        {/* MATCH STUFF CARDS ROW BOXES */}
-        <main className="lg:col-span-2 flex flex-col gap-6 w-full">
-          {/* HERO PREVIEW DASHBOARD / RESULT BANNER (ADAPTED FOR UNIFORM PHONE TAP ACTIONS) */}
-          <div className="bg-[#111827] border border-slate-800 rounded-2xl p-4 md:p-5 shadow-2xl">
-            <input
-              type="text"
-              value={resultsDay}
-              disabled={!isAdmin}
-              onChange={(e) => setResultsDay(e.target.value)}
-              className="bg-transparent text-xs font-bold text-center tracking-widest text-slate-400 uppercase w-full mb-5 border-none outline-none disabled:cursor-not-allowed"
-            />
+      {/* ONE INTEGRATED MAIN PANEL COLUMN */}
+      <div className="max-w-7xl mx-auto flex flex-col gap-6 items-start w-full">
+        {/* HERO PREVIEW DASHBOARD / TODAY'S RESULTS */}
+        <div className="bg-[#111827] border border-slate-800 rounded-2xl p-4 md:p-5 shadow-2xl w-full">
+          <input
+            type="text"
+            value={resultsDay}
+            disabled={!isAdmin}
+            onChange={(e) => setResultsDay(e.target.value)}
+            className="bg-transparent text-xs font-bold text-center tracking-widest text-slate-400 uppercase w-full mb-5 border-none outline-none disabled:cursor-not-allowed"
+          />
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-4">
-              {teamsConfig.map((t) => {
-                const playerArray = rosters[t.key] || [];
-                return (
-                  <div
-                    key={t.key}
-                    className="relative bg-slate-900/60 p-3 pt-8 rounded-xl border border-slate-800 flex flex-col items-center group min-w-[130px] transition-all"
-                  >
-                    {isAdmin && (
-                      <button
-                        type="button"
-                        onClick={() => removeTeamFromSystem(t.key)}
-                        className="absolute top-1.5 right-1.5 text-[9px] text-slate-500 hover:text-red-400 font-extrabold px-1.5 py-0.5 rounded bg-slate-950 border border-slate-800 lg:opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        ❌ DELETE
-                      </button>
-                    )}
-                    <span
-                      className="text-[10px] md:text-[11px] font-black tracking-widest mb-2.5 uppercase text-center truncate w-full px-1"
-                      style={{ color: t.hexColor }}
-                    >
-                      {t.name}
-                    </span>
-                    {handleLogoRender(t.key, t.hexColor)}
-                    <input
-                      type="number"
-                      value={topScores[t.key] === 0 ? "" : topScores[t.key]}
-                      placeholder="0"
-                      disabled={!isAdmin}
-                      onChange={(e) =>
-                        setTopScores({
-                          ...topScores,
-                          [t.key]: parseInt(e.target.value) || 0,
-                        })
-                      }
-                      className="bg-transparent font-black text-2xl md:text-3xl w-full text-center mt-3 border-none outline-none text-slate-200 disabled:cursor-not-allowed"
-                    />
-
-                    {/* DYNAMIC SCALING ROWS EXPANDED IN CARDS HORIZONTALLY */}
-                    {isAdmin && (
-                      <div className="mt-3.5 flex items-center justify-between bg-slate-950/70 border border-slate-800/80 rounded-lg py-1 px-2 w-full shadow-inner">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (playerArray.length > 1) {
-                              setRosters({
-                                ...rosters,
-                                [t.key]: playerArray.slice(0, -1),
-                              });
-                            }
-                          }}
-                          className="text-red-400 hover:text-red-300 font-black text-base px-2 active:scale-125 transition-transform touch-manipulation"
-                        >
-                          —
-                        </button>
-                        <span className="text-[9px] text-slate-500 font-bold font-mono">
-                          #{playerArray.length}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setRosters({
-                              ...rosters,
-                              [t.key]: [...playerArray, ""],
-                            });
-                          }}
-                          className="text-emerald-400 hover:text-emerald-300 font-black text-base px-2 active:scale-125 transition-transform touch-manipulation"
-                        >
-                          +
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* UN-SQUISHED RESPONSIVE MATCH LAYOUT TRACKING PANEL */}
-          <div className="flex flex-col gap-4">
-            {matches.map((match) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+            {teamsConfig.map((t) => (
               <div
-                key={match.id}
-                className="relative bg-gradient-to-r from-[#111827] to-[#0a0f1d] border border-slate-800 rounded-xl p-4 md:p-5 pt-8 md:pt-8 flex flex-col md:flex-row items-center justify-between shadow-md gap-4 md:gap-0"
+                key={t.key}
+                className="relative bg-slate-900/60 p-3 pt-8 rounded-xl border border-slate-800 flex flex-col items-center group transition-all"
               >
                 {isAdmin && (
                   <button
-                    onClick={() => removeMatchBox(match.id)}
-                    className="absolute top-2 right-2 text-slate-500 hover:text-red-400 font-bold text-[10px] bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800 transition-all"
+                    type="button"
+                    onClick={() => removeTeamFromSystem(t.key)}
+                    className="absolute top-1.5 right-1.5 text-[9px] text-slate-500 hover:text-red-400 font-extrabold px-1.5 py-0.5 rounded bg-slate-950 border border-slate-800 transition-opacity"
                   >
-                    ❌ DELETE BOX
+                    ❌
                   </button>
                 )}
-
-                {/* TEAM A MODULE VIEW */}
-                <div className="flex items-center gap-3 w-full md:w-4/12 justify-start bg-slate-950/30 md:bg-transparent p-2 md:p-0 rounded-lg">
-                  {handleLogoRender(
-                    match.teamA,
-                    teamsConfig.find((t) => t.key === match.teamA)?.hexColor ||
-                      "#555",
-                  )}
-                  <select
-                    value={match.teamA}
-                    disabled={!isAdmin}
-                    onChange={(e) =>
-                      updateMatchField(match.id, "teamA", e.target.value)
-                    }
-                    className="bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase disabled:cursor-not-allowed cursor-pointer flex-1 md:flex-none"
-                    style={{
-                      color:
-                        teamsConfig.find((t) => t.key === match.teamA)
-                          ?.hexColor || "#94a3b8",
-                    }}
-                  >
-                    <option
-                      value="none"
-                      className="bg-[#070b13] text-slate-500"
-                    >
-                      N/A (HIDE TEAM)
-                    </option>
-                    {teamsConfig.map((t) => (
-                      <option
-                        key={t.key}
-                        value={t.key}
-                        className="bg-[#070b13]"
-                        style={{ color: t.hexColor }}
-                      >
-                        {t.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* SCORING AND FOULS CENTER MODULE (LARGE TARGET TOUCH AREA ON MOBILE) */}
-                <div className="flex items-center justify-center gap-8 md:gap-6 w-full md:w-4/12 px-2 py-1 bg-slate-900/40 md:bg-transparent rounded-xl border border-slate-800/40 md:border-none">
-                  <div className="flex flex-col items-center justify-center min-w-[60px]">
-                    {match.teamA !== "none" ? (
-                      <>
-                        <input
-                          type="number"
-                          value={match.scoreA === 0 ? "" : match.scoreA}
-                          placeholder="0"
-                          disabled={!isAdmin}
-                          onChange={(e) =>
-                            updateMatchField(
-                              match.id,
-                              "scoreA",
-                              parseInt(e.target.value) || 0,
-                            )
-                          }
-                          className="bg-transparent text-4xl font-black text-center w-16 border-none outline-none disabled:cursor-not-allowed h-10 touch-manipulation focus:bg-slate-900/80 rounded"
-                          style={{
-                            color:
-                              teamsConfig.find((t) => t.key === match.teamA)
-                                ?.hexColor || "#fff",
-                          }}
-                        />
-                        <div className="flex items-center text-xs text-red-500 font-bold mt-1 bg-red-950/20 px-2 py-0.5 rounded border border-red-900/10">
-                          <span>F:&nbsp;</span>
-                          <input
-                            type="number"
-                            placeholder="0"
-                            value={match.foulsA === 0 ? "" : match.foulsA}
-                            disabled={!isAdmin}
-                            className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white text-xs touch-manipulation"
-                            onChange={(e) =>
-                              updateMatchField(
-                                match.id,
-                                "foulsA",
-                                parseInt(e.target.value) || 0,
-                              )
-                            }
-                          />
-                        </div>
-                      </>
-                    ) : (
-                      <span className="text-slate-700 text-xs font-bold">
-                        —
-                      </span>
-                    )}
-                  </div>
-
-                  <span className="text-xs font-black tracking-widest bg-black/60 px-3 py-2 rounded-md border border-slate-800 shadow-sm self-center">
-                    VS
-                  </span>
-
-                  <div className="flex flex-col items-center justify-center min-w-[60px]">
-                    {match.teamB !== "none" ? (
-                      <>
-                        <input
-                          type="number"
-                          value={match.scoreB === 0 ? "" : match.scoreB}
-                          placeholder="0"
-                          disabled={!isAdmin}
-                          onChange={(e) =>
-                            updateMatchField(
-                              match.id,
-                              "scoreB",
-                              parseInt(e.target.value) || 0,
-                            )
-                          }
-                          className="bg-transparent text-4xl font-black text-center w-16 border-none outline-none disabled:cursor-not-allowed h-10 touch-manipulation focus:bg-slate-900/80 rounded"
-                          style={{
-                            color:
-                              teamsConfig.find((t) => t.key === match.teamB)
-                                ?.hexColor || "#fff",
-                          }}
-                        />
-                        <div className="flex items-center text-xs text-red-500 font-bold mt-1 bg-red-950/20 px-2 py-0.5 rounded border border-red-900/10">
-                          <span>F:&nbsp;</span>
-                          <input
-                            type="number"
-                            placeholder="0"
-                            value={match.foulsB === 0 ? "" : match.foulsB}
-                            disabled={!isAdmin}
-                            className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white text-xs touch-manipulation"
-                            onChange={(e) =>
-                              updateMatchField(
-                                match.id,
-                                "foulsB",
-                                parseInt(e.target.value) || 0,
-                              )
-                            }
-                          />
-                        </div>
-                      </>
-                    ) : (
-                      <span className="text-slate-700 text-xs font-bold">
-                        —
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* TEAM B MODULE VIEW */}
-                <div className="flex items-center gap-3 w-full md:w-4/12 justify-end bg-slate-950/30 md:bg-transparent p-2 md:p-0 rounded-lg flex-row-reverse md:flex-row">
-                  <select
-                    value={match.teamB}
-                    disabled={!isAdmin}
-                    onChange={(e) =>
-                      updateMatchField(match.id, "teamB", e.target.value)
-                    }
-                    className="bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase text-right md:text-right disabled:cursor-not-allowed cursor-pointer flex-1 md:flex-none mr-2 md:mr-0"
-                    style={{
-                      color:
-                        teamsConfig.find((t) => t.key === match.teamB)
-                          ?.hexColor || "#94a3b8",
-                    }}
-                  >
-                    <option
-                      value="none"
-                      className="bg-[#070b13] text-slate-500"
-                    >
-                      N/A (HIDE TEAM)
-                    </option>
-                    {teamsConfig.map((t) => (
-                      <option
-                        key={t.key}
-                        value={t.key}
-                        className="bg-[#070b13]"
-                        style={{ color: t.hexColor }}
-                      >
-                        {t.name}
-                      </option>
-                    ))}
-                  </select>
-                  {handleLogoRender(
-                    match.teamB,
-                    teamsConfig.find((t) => t.key === match.teamB)?.hexColor ||
-                      "#555",
-                  )}
-                </div>
+                <span
+                  className="text-[10px] md:text-[11px] font-black tracking-widest mb-2.5 uppercase text-center truncate w-full px-1"
+                  style={{ color: t.hexColor }}
+                >
+                  {t.name}
+                </span>
+                {handleLogoRender(t.key, t.hexColor)}
+                <input
+                  type="number"
+                  value={topScores[t.key] === 0 ? "" : topScores[t.key]}
+                  placeholder="0"
+                  disabled={!isAdmin}
+                  onChange={(e) =>
+                    setTopScores({
+                      ...topScores,
+                      [t.key]: parseInt(e.target.value) || 0,
+                    })
+                  }
+                  className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-slate-200 disabled:cursor-not-allowed py-1 rounded focus:bg-slate-950/40"
+                />
               </div>
             ))}
           </div>
+        </div>
 
-          {/* LARGE FORMAT BROADCAST BULLETIN NOTES SECTION */}
-          <div className="bg-[#0c1222] border border-slate-800 rounded-xl p-4 md:p-5 text-left shadow-inner flex flex-col">
-            <span className="text-orange-500 text-[10px] uppercase font-black tracking-widest mb-2 flex items-center gap-1">
-              <span>📢</span> OFFICIAL TOURNAMENT NOTICE BOARD
-            </span>
-            <textarea
-              value={timelineText}
-              disabled={!isAdmin}
-              onChange={(e) => setTimelineText(e.target.value)}
-              placeholder="ENTER BROADCAST NOTICE NOTES DETAILS HERE..."
-              className="bg-slate-950/40 p-4 rounded-lg font-black text-xl md:text-[40px] text-slate-200 w-full min-h-[140px] border border-slate-800 outline-none uppercase tracking-wide leading-tight resize-y disabled:cursor-not-allowed disabled:bg-transparent disabled:border-none disabled:p-0"
-            />
-          </div>
-        </main>
+        {/* DYNAMIC SCORING MATRICES */}
+        <div className="flex flex-col gap-4 w-full">
+          {matches.map((match) => (
+            <div
+              key={match.id}
+              className="relative bg-gradient-to-r from-[#111827] to-[#0a0f1d] border border-slate-800 rounded-xl p-4 md:p-5 pt-8 flex flex-col md:flex-row items-center justify-between shadow-md gap-4 md:gap-0"
+            >
+              {isAdmin && (
+                <button
+                  onClick={() => removeMatchBox(match.id)}
+                  className="absolute top-2 right-2 text-slate-500 hover:text-red-400 font-bold text-[10px] bg-slate-900/80 px-2 py-0.5 rounded border border-slate-800 transition-all"
+                >
+                  ❌ DELETE BOX
+                </button>
+              )}
 
-        {/* ROSTERS COLUMN PANELS (RESPONSIVE STACK GRID LAYOUT FROM 1 TO 2 COLS) */}
-        <aside className="bg-[#0f172a] border border-slate-800 rounded-2xl p-4 md:p-5 shadow-2xl lg:col-span-1 w-full">
-          <div className="border-b border-slate-800 pb-3 mb-5 flex flex-col gap-2">
-            <h3 className="text-center font-black tracking-widest text-xs text-slate-400 uppercase">
-              TEAMS & ROSTERS
+              {/* TEAM A DROPDOWN BLOCK */}
+              <div className="flex items-center gap-3 w-full md:w-4/12 justify-start bg-slate-950/30 md:bg-transparent p-2 md:p-0 rounded-lg">
+                {handleLogoRender(
+                  match.teamA,
+                  teamsConfig.find((t) => t.key === match.teamA)?.hexColor ||
+                    "#555",
+                )}
+                <select
+                  value={match.teamA}
+                  disabled={!isAdmin}
+                  onChange={(e) =>
+                    updateMatchField(match.id, "teamA", e.target.value)
+                  }
+                  className="bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase disabled:cursor-not-allowed cursor-pointer flex-1 md:flex-none p-1 rounded focus:bg-slate-950"
+                  style={{
+                    color:
+                      teamsConfig.find((t) => t.key === match.teamA)
+                        ?.hexColor || "#94a3b8",
+                  }}
+                >
+                  <option value="none" className="bg-[#070b13] text-slate-500">
+                    N/A (HIDE TEAM)
+                  </option>
+                  {teamsConfig.map((t) => (
+                    <option
+                      key={t.key}
+                      value={t.key}
+                      className="bg-[#070b13]"
+                      style={{ color: t.hexColor }}
+                    >
+                      {t.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* SCORING AND FOULS CENTER MODULE */}
+              <div className="flex items-center justify-center gap-8 md:gap-6 w-full md:w-4/12 px-2 py-1 bg-slate-900/40 md:bg-transparent rounded-xl border border-slate-800/40 md:border-none">
+                <div className="flex flex-col items-center justify-center min-w-[60px]">
+                  {match.teamA !== "none" ? (
+                    <>
+                      <input
+                        type="number"
+                        value={match.scoreA === 0 ? "" : match.scoreA}
+                        placeholder="0"
+                        disabled={!isAdmin}
+                        onChange={(e) =>
+                          updateMatchField(
+                            match.id,
+                            "scoreA",
+                            parseInt(e.target.value) || 0,
+                          )
+                        }
+                        className="bg-transparent text-4xl font-black text-center w-16 border-none outline-none disabled:cursor-not-allowed h-10 p-1 rounded focus:bg-slate-950"
+                        style={{
+                          color:
+                            teamsConfig.find((t) => t.key === match.teamA)
+                              ?.hexColor || "#fff",
+                        }}
+                      />
+                      <div className="flex items-center text-xs text-red-500 font-bold mt-1 bg-red-950/20 px-2 py-0.5 rounded border border-red-900/10">
+                        <span>F:&nbsp;</span>
+                        <input
+                          type="number"
+                          placeholder="0"
+                          value={match.foulsA === 0 ? "" : match.foulsA}
+                          disabled={!isAdmin}
+                          className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white text-xs"
+                          onChange={(e) =>
+                            updateMatchField(
+                              match.id,
+                              "foulsA",
+                              parseInt(e.target.value) || 0,
+                            )
+                          }
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <span className="text-slate-700 text-xs font-bold">—</span>
+                  )}
+                </div>
+
+                <span className="text-xs font-black tracking-widest bg-black/60 px-3 py-2 rounded-md border border-slate-800 shadow-sm self-center">
+                  VS
+                </span>
+
+                <div className="flex flex-col items-center justify-center min-w-[60px]">
+                  {match.teamB !== "none" ? (
+                    <>
+                      <input
+                        type="number"
+                        value={match.scoreB === 0 ? "" : match.scoreB}
+                        placeholder="0"
+                        disabled={!isAdmin}
+                        onChange={(e) =>
+                          updateMatchField(
+                            match.id,
+                            "scoreB",
+                            parseInt(e.target.value) || 0,
+                          )
+                        }
+                        className="bg-transparent text-4xl font-black text-center w-16 border-none outline-none disabled:cursor-not-allowed h-10 p-1 rounded focus:bg-slate-950"
+                        style={{
+                          color:
+                            teamsConfig.find((t) => t.key === match.teamB)
+                              ?.hexColor || "#fff",
+                        }}
+                      />
+                      <div className="flex items-center text-xs text-red-500 font-bold mt-1 bg-red-950/20 px-2 py-0.5 rounded border border-red-900/10">
+                        <span>F:&nbsp;</span>
+                        <input
+                          type="number"
+                          placeholder="0"
+                          value={match.foulsB === 0 ? "" : match.foulsB}
+                          disabled={!isAdmin}
+                          className="bg-transparent w-8 text-center outline-none border-none p-0 font-bold focus:text-white text-xs"
+                          onChange={(e) =>
+                            updateMatchField(
+                              match.id,
+                              "foulsB",
+                              parseInt(e.target.value) || 0,
+                            )
+                          }
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <span className="text-slate-700 text-xs font-bold">—</span>
+                  )}
+                </div>
+              </div>
+
+              {/* TEAM B DROPDOWN BLOCK */}
+              <div className="flex items-center gap-3 w-full md:w-4/12 justify-end bg-slate-950/30 md:bg-transparent p-2 md:p-0 rounded-lg flex-row-reverse md:flex-row">
+                <select
+                  value={match.teamB}
+                  disabled={!isAdmin}
+                  onChange={(e) =>
+                    updateMatchField(match.id, "teamB", e.target.value)
+                  }
+                  className="bg-transparent font-extrabold tracking-wider text-sm outline-none border-none uppercase text-right md:text-right disabled:cursor-not-allowed cursor-pointer flex-1 md:flex-none mr-2 md:mr-0 p-1 rounded focus:bg-slate-950"
+                  style={{
+                    color:
+                      teamsConfig.find((t) => t.key === match.teamB)
+                        ?.hexColor || "#94a3b8",
+                  }}
+                >
+                  <option value="none" className="bg-[#070b13] text-slate-500">
+                    N/A (HIDE TEAM)
+                  </option>
+                  {teamsConfig.map((t) => (
+                    <option
+                      key={t.key}
+                      value={t.key}
+                      className="bg-[#070b13]"
+                      style={{ color: t.hexColor }}
+                    >
+                      {t.name}
+                    </option>
+                  ))}
+                </select>
+                {handleLogoRender(
+                  match.teamB,
+                  teamsConfig.find((t) => t.key === match.teamB)?.hexColor ||
+                    "#555",
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* LARGE FORMAT BROADCAST BULLETIN NOTES SECTION */}
+        <div className="bg-[#0c1222] border border-slate-800 rounded-xl p-4 md:p-5 text-left shadow-inner flex flex-col w-full">
+          <span className="text-orange-500 text-[10px] uppercase font-black tracking-widest mb-2 flex items-center gap-1">
+            <span>📢</span> OFFICIAL TOURNAMENT NOTICE BOARD
+          </span>
+          <textarea
+            value={timelineText}
+            disabled={!isAdmin}
+            onChange={(e) => setTimelineText(e.target.value)}
+            placeholder="ENTER BROADCAST NOTICE NOTES DETAILS HERE..."
+            className="bg-slate-950/40 p-4 rounded-lg font-black text-xl md:text-[40px] text-slate-200 w-full min-h-[140px] border border-slate-800 outline-none uppercase tracking-wide leading-tight resize-y disabled:cursor-not-allowed disabled:bg-transparent disabled:border-none disabled:p-0"
+          />
+        </div>
+
+        {/* ========================================================= */}
+        {/* FIXED & WIDE ROSTERS LAYOUT PANEL PLACED HORIZONTALLY AT BOTTOM */}
+        {/* ========================================================= */}
+        <div className="bg-[#0f172a] border border-slate-800 rounded-2xl p-4 md:p-5 shadow-2xl w-full mt-2">
+          <div className="border-b border-slate-800 pb-3 mb-5 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <h3 className="font-black tracking-widest text-sm text-slate-300 uppercase flex items-center gap-2">
+              <span>🏀</span> TEAMS & ROSTERS MANAGER
             </h3>
-            <label className="flex items-center justify-center gap-2 cursor-pointer select-none mt-1">
+            <label className="flex items-center gap-2 cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={hideEliminatedRosters}
                 onChange={(e) => setHideEliminatedRosters(e.target.checked)}
                 className="rounded bg-slate-900 border-slate-700 text-orange-500 focus:ring-0 w-3.5 h-3.5"
               />
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
+              <span className="text-[10px] text-slate-500 font-black uppercase tracking-wider">
                 HIDE ROSTERS FOR N/A TEAMS
               </span>
             </label>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-x-4 gap-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {teamsConfig.map((team) => {
               if (!isTeamActive(team.key)) return null;
               const playerArray = rosters[team.key] || [];
@@ -997,46 +940,83 @@ export default function Home() {
               return (
                 <div
                   key={team.key}
-                  className="space-y-3 transition-all duration-200 bg-slate-900/20 p-3 rounded-xl border border-slate-800/40 lg:bg-transparent lg:p-0 lg:border-none"
+                  className="space-y-3 bg-slate-900/30 p-3 rounded-xl border border-slate-800/80 flex flex-col justify-between"
                 >
-                  <div
-                    className="font-black text-[10px] p-2 rounded text-center tracking-widest uppercase border bg-slate-900/40"
-                    style={{
-                      color: team.hexColor,
-                      borderColor: `${team.hexColor}20`,
-                    }}
-                  >
-                    {team.name}
+                  <div>
+                    <div
+                      className="font-black text-[11px] p-2 rounded text-center tracking-widest uppercase border bg-slate-950 flex justify-between items-center px-3"
+                      style={{
+                        color: team.hexColor,
+                        borderColor: `${team.hexColor}20`,
+                      }}
+                    >
+                      <span>{team.name}</span>
+
+                      {/* ACCESSIBLE LINEUP SLOTS SCALER CONTROLS RESTORED */}
+                      {isAdmin && (
+                        <div className="flex items-center gap-2 text-xs bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">
+                          <button
+                            type="button"
+                            title="Remove Last Spot"
+                            onClick={() => {
+                              if (playerArray.length > 1) {
+                                setRosters({
+                                  ...rosters,
+                                  [team.key]: playerArray.slice(0, -1),
+                                });
+                              }
+                            }}
+                            className="text-red-400 hover:text-red-300 font-black px-1"
+                          >
+                            —
+                          </button>
+                          <button
+                            type="button"
+                            title="Add Player Spot"
+                            onClick={() => {
+                              setRosters({
+                                ...rosters,
+                                [team.key]: [...playerArray, ""],
+                              });
+                            }}
+                            className="text-emerald-400 hover:text-emerald-300 font-black px-1"
+                          >
+                            +
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    <ol className="space-y-1.5 text-xs text-slate-300 pl-1 mt-3">
+                      {playerArray.map((player, idx) => (
+                        <li
+                          key={idx}
+                          className={`flex items-center gap-1 px-2 py-1 rounded border border-transparent ${isAdmin ? "bg-slate-900/60" : "bg-transparent"}`}
+                        >
+                          <span className="text-slate-500 font-mono text-[10px] w-4">
+                            {idx + 1}.
+                          </span>
+                          <input
+                            type="text"
+                            value={player}
+                            disabled={!isAdmin}
+                            placeholder="Empty Slot"
+                            onChange={(e) => {
+                              const teamCopy = [...playerArray];
+                              teamCopy[idx] = e.target.value;
+                              setRosters({ ...rosters, [team.key]: teamCopy });
+                            }}
+                            className={`bg-transparent border-none p-0 w-full outline-none focus:text-white text-sm md:text-xs py-0.5 px-1 rounded focus:bg-slate-950 ${!isAdmin ? "text-slate-200 font-normal cursor-default pointer-events-none" : ""}`}
+                          />
+                        </li>
+                      ))}
+                    </ol>
                   </div>
-                  <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
-                    {playerArray.map((player, idx) => (
-                      <li
-                        key={idx}
-                        className={`flex items-center gap-1 px-2 py-1 rounded border border-transparent ${isAdmin ? "bg-slate-900/40" : "bg-transparent"}`}
-                      >
-                        <span className="text-slate-500 font-mono text-[10px] w-4">
-                          {idx + 1}.
-                        </span>
-                        <input
-                          type="text"
-                          value={player}
-                          disabled={!isAdmin}
-                          placeholder="Empty Slot"
-                          onChange={(e) => {
-                            const teamCopy = [...playerArray];
-                            teamCopy[idx] = e.target.value;
-                            setRosters({ ...rosters, [team.key]: teamCopy });
-                          }}
-                          className={`bg-transparent border-none p-0 w-full outline-none focus:text-white text-xs touch-manipulation focus:bg-slate-950/40 rounded px-1 ${!isAdmin ? "text-slate-200 font-normal cursor-default pointer-events-none" : ""}`}
-                        />
-                      </li>
-                    ))}
-                  </ol>
                 </div>
               );
             })}
           </div>
-        </aside>
+        </div>
       </div>
     </div>
   );

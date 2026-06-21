@@ -147,80 +147,22 @@ const BarclaysLogo = () => (
   </svg>
 );
 
-// ==========================================
-// 2. PREMIUM CHAMPIONSHIP MULTI-LAYERED SVG EMBLEM
-// ==========================================
-const PremiumChampionshipEmblem = ({
-  accentColor,
-  uniqueId,
-}: {
-  accentColor: string;
-  uniqueId: string;
-}) => (
+const DynamicCustomLogo = ({ color }: { color: string }) => (
   <svg
     className="w-12 h-12"
     viewBox="0 0 100 100"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
-    {/* Outer Multi-Layer Shield Border using the custom color accent */}
     <polygon
-      points="50,5 92,25 92,65 50,95 8,65 8,25"
-      fill="#111827"
-      stroke={`url(#goldGradient-${uniqueId})`}
+      points="50,10 90,35 90,75 50,95 10,75 10,35"
+      fill="#1e293b"
+      stroke={color}
       strokeWidth="4"
       strokeLinejoin="round"
     />
-    <polygon
-      points="50,11 86,28 86,62 50,88 14,62 14,28"
-      fill="#030712"
-      stroke={accentColor}
-      strokeWidth="1.5"
-      opacity="0.7"
-    />
-
-    {/* Centered Intricate Crown Geometry mimicking 4ac5860be96dca70b5b8365898c4e6d8.jpg */}
-    <path
-      d="M32,62 L36,42 L45,50 L50,36 L55,50 L64,42 L68,62 Z"
-      fill={`url(#goldGradient-${uniqueId})`}
-    />
-    <circle cx="50" cy="32" r="2.5" fill="#fff" />
-    <circle cx="36" cy="38" r="2" fill="#fff" />
-    <circle cx="64" cy="38" r="2" fill="#fff" />
-
-    {/* Victory Star Core Accents */}
-    <polygon
-      points="50,70 52,75 58,75 53,79 55,85 50,81 45,85 47,79 42,75 48,75"
-      fill={`url(#goldGradient-${uniqueId})`}
-    />
-    <polygon
-      points="34,72 35.5,76 39.5,76 36.5,79 37.5,83 34,80 30.5,83 31.5,79 28.5,76 32.5,76"
-      fill={`url(#goldGradient-${uniqueId})`}
-      opacity="0.8"
-    />
-    <polygon
-      points="66,72 67.5,76 71.5,76 68.5,79 69.5,83 66,80 62.5,83 63.5,79 60.5,76 64.5,76"
-      fill={`url(#goldGradient-${uniqueId})`}
-      opacity="0.8"
-    />
-
-    {/* Compressed Alternating Linear Light/Dark Gradient Stack */}
-    <defs>
-      <linearGradient
-        id={`goldGradient-${uniqueId}`}
-        x1="0%"
-        y1="0%"
-        x2="100%"
-        y2="100%"
-      >
-        <stop offset="0%" stopColor="#78350f" />
-        <stop offset="25%" stopColor="#fef08a" />
-        <stop offset="45%" stopColor="#d97706" />
-        <stop offset="65%" stopColor="#ffffff" />
-        <stop offset="85%" stopColor="#fbbf24" />
-        <stop offset="100%" stopColor="#78350f" />
-      </linearGradient>
-    </defs>
+    <circle cx="50" cy="53" r="18" fill="none" stroke={color} strokeWidth="3" />
+    <path d="M32 53H68" stroke={color} strokeWidth="2" />
   </svg>
 );
 
@@ -330,8 +272,6 @@ export default function Home() {
       "腰王",
       "MING",
       "好好睡觉",
-      "",
-      "",
     ],
     bownes: [
       "yuxuan",
@@ -355,7 +295,6 @@ export default function Home() {
       "Beau",
       "Alex",
       "Leo",
-      "",
     ],
     barclays: [
       "kys r",
@@ -400,7 +339,6 @@ export default function Home() {
   const [newTeamName, setNewTeamName] = useState("");
   const [newTeamColor, setNewTeamColor] = useState("#a855f7");
 
-  // Inside your component scope, route the custom rendering paths through the high-end vector logic
   const handleLogoRender = (teamKey: string, color: string) => {
     switch (teamKey) {
       case "unions":
@@ -586,6 +524,14 @@ export default function Home() {
     return matches.some((m) => m.teamA === teamKey || m.teamB === teamKey);
   };
 
+  if (!isHydrated) {
+    return (
+      <div className="min-h-screen bg-[#070b13] text-slate-500 flex items-center justify-center font-mono text-xs">
+        LOADING TOURNAMENT DATABASE...
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#070b13] text-white p-6 font-sans antialiased">
       {/* ADMINISTRATIVE ACCESS CONSOLE OVERLAY */}
@@ -685,7 +631,7 @@ export default function Home() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto items-start">
         {/* MATCH STUFF CARDS ROW BOXES */}
         <main className="lg:col-span-2 flex flex-col gap-6">
-          {/* HERO PREVIEW DASHBOARD (FLEX-WRAP DYNAMIC REORGANIZATION LAYOUT) */}
+          {/* HERO PREVIEW DASHBOARD / RESULT BANNER */}
           <div className="bg-[#111827] border border-slate-800 rounded-2xl p-5 shadow-2xl">
             <input
               type="text"
@@ -696,42 +642,84 @@ export default function Home() {
             />
 
             <div className="flex flex-wrap justify-center gap-4">
-              {teamsConfig.map((t) => (
-                <div
-                  key={t.key}
-                  className="relative bg-slate-900/60 p-4 pt-8 rounded-xl border border-slate-800 flex flex-col items-center group w-full sm:w-[calc(50%-8px)] md:w-[calc(25%-12px)] min-w-[140px] transition-all"
-                >
-                  {isAdmin && (
-                    <button
-                      type="button"
-                      onClick={() => removeTeamFromSystem(t.key)}
-                      className="absolute top-1.5 right-1.5 text-[9px] text-slate-500 hover:text-red-400 font-extrabold px-1 py-0.5 rounded bg-slate-950/80 border border-slate-800 opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      ❌ DELETE
-                    </button>
-                  )}
-                  <span
-                    className="text-[11px] font-black tracking-widest mb-3 uppercase text-center"
-                    style={{ color: t.hexColor }}
+              {teamsConfig.map((t) => {
+                const playerArray = rosters[t.key] || [];
+                return (
+                  <div
+                    key={t.key}
+                    className="relative bg-slate-900/60 p-4 pt-8 rounded-xl border border-slate-800 flex flex-col items-center group w-full sm:w-[calc(50%-8px)] md:w-[calc(25%-12px)] min-w-[150px] transition-all"
                   >
-                    {t.name}
-                  </span>
-                  {handleLogoRender(t.key, t.hexColor)}
-                  <input
-                    type="number"
-                    value={topScores[t.key] === 0 ? "" : topScores[t.key]}
-                    placeholder="0"
-                    disabled={!isAdmin}
-                    onChange={(e) =>
-                      setTopScores({
-                        ...topScores,
-                        [t.key]: parseInt(e.target.value) || 0,
-                      })
-                    }
-                    className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-slate-200 disabled:cursor-not-allowed"
-                  />
-                </div>
-              ))}
+                    {isAdmin && (
+                      <button
+                        type="button"
+                        onClick={() => removeTeamFromSystem(t.key)}
+                        className="absolute top-1.5 right-1.5 text-[9px] text-slate-500 hover:text-red-400 font-extrabold px-1 py-0.5 rounded bg-slate-950/80 border border-slate-800 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        ❌ DELETE
+                      </button>
+                    )}
+                    <span
+                      className="text-[11px] font-black tracking-widest mb-3 uppercase text-center"
+                      style={{ color: t.hexColor }}
+                    >
+                      {t.name}
+                    </span>
+                    {handleLogoRender(t.key, t.hexColor)}
+                    <input
+                      type="number"
+                      value={topScores[t.key] === 0 ? "" : topScores[t.key]}
+                      placeholder="0"
+                      disabled={!isAdmin}
+                      onChange={(e) =>
+                        setTopScores({
+                          ...topScores,
+                          [t.key]: parseInt(e.target.value) || 0,
+                        })
+                      }
+                      className="bg-transparent font-black text-3xl w-full text-center mt-3 border-none outline-none text-slate-200 disabled:cursor-not-allowed"
+                    />
+
+                    {/* ========================================================= */}
+                    {/* NEW HORIZONTAL ROSTER ADD/MINUS CONTROLS AT BOTTOM OF THE BANNER CARD */}
+                    {/* ========================================================= */}
+                    {isAdmin && (
+                      <div className="mt-4 flex items-center justify-center gap-4 bg-slate-950/60 border border-slate-800/80 rounded-lg py-1 px-3 w-full shadow-inner">
+                        <button
+                          type="button"
+                          title="Remove Last Spot"
+                          onClick={() => {
+                            if (playerArray.length > 1) {
+                              setRosters({
+                                ...rosters,
+                                [t.key]: playerArray.slice(0, -1),
+                              });
+                            }
+                          }}
+                          className="text-red-400 hover:text-red-300 font-black text-sm select-none px-2 py-0.5"
+                        >
+                          ➖
+                        </button>
+                        <span className="text-[9px] text-slate-500 font-black tracking-widest uppercase font-mono">
+                          SIZE: {playerArray.length}
+                        </span>
+                        <button
+                          type="button"
+                          title="Add Player Spot"
+                          onClick={() => {
+                            setRosters({
+                              ...rosters,
+                              [t.key]: [...playerArray, ""],
+                            });
+                          }}
+                          className="text-emerald-400 hover:text-emerald-300 font-black text-sm select-none px-2 py-0.5"
+                        >
+                          ➕
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -958,7 +946,7 @@ export default function Home() {
               <input
                 type="checkbox"
                 checked={hideEliminatedRosters}
-                onChange={(e) => setHideEliminatedRosters(e.target.checked)}
+                onChange={(e) => setHideEliminatedRosters(e.checked)}
                 className="rounded bg-slate-900 border-slate-700 text-orange-500 focus:ring-0 w-3.5 h-3.5"
               />
               <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">
@@ -967,7 +955,7 @@ export default function Home() {
             </label>
           </div>
 
-          <div className="flex flex-col gap-6">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-6">
             {teamsConfig.map((team) => {
               if (!isTeamActive(team.key)) return null;
               const playerArray = rosters[team.key] || [];
@@ -975,52 +963,17 @@ export default function Home() {
               return (
                 <div
                   key={team.key}
-                  className="space-y-3 bg-slate-900/20 p-3 rounded-xl border border-slate-800/40"
+                  className="space-y-3 transition-all duration-200"
                 >
                   <div
-                    className="font-black text-[10px] p-2 rounded text-center tracking-widest uppercase border bg-slate-900/60 flex justify-between items-center px-3"
+                    className="font-black text-[10px] p-2 rounded text-center tracking-widest uppercase border bg-slate-900/40"
                     style={{
                       color: team.hexColor,
-                      borderColor: `${team.hexColor}30`,
+                      borderColor: `${team.hexColor}20`,
                     }}
                   >
-                    <span>{team.name}</span>
-
-                    {/* ADD / REMOVE DYNAMIC ROW CONTROLS (ADMIN ONLY) */}
-                    {isAdmin && (
-                      <div className="flex gap-1.5 text-[11px]">
-                        <button
-                          type="button"
-                          title="Remove Last Spot"
-                          onClick={() => {
-                            if (playerArray.length > 1) {
-                              setRosters({
-                                ...rosters,
-                                [team.key]: playerArray.slice(0, -1),
-                              });
-                            }
-                          }}
-                          className="hover:text-red-400 font-bold px-1"
-                        >
-                          🌾 ➖
-                        </button>
-                        <button
-                          type="button"
-                          title="Add Player Spot"
-                          onClick={() => {
-                            setRosters({
-                              ...rosters,
-                              [team.key]: [...playerArray, ""],
-                            });
-                          }}
-                          className="hover:text-emerald-400 font-bold px-1"
-                        >
-                          ➕
-                        </button>
-                      </div>
-                    )}
+                    {team.name}
                   </div>
-
                   <ol className="space-y-1.5 text-xs text-slate-300 pl-1">
                     {playerArray.map((player, idx) => (
                       <li
@@ -1040,7 +993,7 @@ export default function Home() {
                             teamCopy[idx] = e.target.value;
                             setRosters({ ...rosters, [team.key]: teamCopy });
                           }}
-                          className={`bg-transparent border-none p-0 w-full outline-none focus:text-white placeholder-slate-700 ${!isAdmin ? "text-slate-200 font-normal cursor-default pointer-events-none" : ""}`}
+                          className={`bg-transparent border-none p-0 w-full outline-none focus:text-white ${!isAdmin ? "text-slate-200 font-normal cursor-default pointer-events-none" : ""}`}
                         />
                       </li>
                     ))}

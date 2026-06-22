@@ -635,13 +635,28 @@ export default function Home() {
               AUTHORIZATION LEVEL:
             </span>
             <select
-              value={isAdmin ? "admin" : "user"}
-              onChange={(e) => setIsAdmin(e.target.value === "admin")}
-              className={`text-xs font-bold px-3 py-1.5 rounded border outline-none cursor-pointer shadow-inner ${
-                isDarkThemeText
-                  ? "bg-slate-800 text-orange-400 border-slate-600"
-                  : "bg-white text-orange-600 border-slate-300"
-              }`}
+              value={isAdmin ? "admin" : "spectator"}
+              onChange={(e) => {
+                const selectedValue = e.target.value;
+
+                if (selectedValue === "admin") {
+                  // This will pop open a standard text prompt box in the browser window
+                  const passwordAttempt = prompt(
+                    "Enter Administrative Access Password:",
+                  );
+
+                  // Change "ps20ball" to whatever tournament password you want!
+                  if (passwordAttempt === "ps20ball") {
+                    setIsAdmin(true);
+                  } else {
+                    alert("Invalid Password! Access Denied.");
+                    setIsAdmin(false);
+                  }
+                } else {
+                  setIsAdmin(false);
+                }
+              }}
+              className="bg-transparent border-0 font-black text-xs tracking-widest text-orange-600 focus:ring-0 cursor-pointer uppercase appearance-none text-right pr-6"
             >
               <option value="admin">HIGHER ADMINISTRATIVE LEVEL (ADMIN)</option>
               <option value="user">SPECTATOR LEVEL (USER - READ ONLY)</option>

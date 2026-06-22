@@ -635,17 +635,16 @@ export default function Home() {
               AUTHORIZATION LEVEL:
             </span>
             <select
-              value={isAdmin ? "admin" : "spectator"}
+              value={isAdmin ? "rigger" : "user"} // 👈 Changed to match your option keys
               onChange={(e) => {
                 const selectedValue = e.target.value;
 
-                if (selectedValue === "admin") {
-                  // This will pop open a standard text prompt box in the browser window
+                // ✅ Change this line to check for "rigger" instead of "admin"
+                if (selectedValue === "rigger") {
                   const passwordAttempt = prompt(
                     "Enter Administrative Access Password:",
                   );
 
-                  // Change "ps20ball" to whatever tournament password you want!
                   if (passwordAttempt === "ps20ball") {
                     setIsAdmin(true);
                   } else {
@@ -658,8 +657,10 @@ export default function Home() {
               }}
               className="bg-transparent border-0 font-black text-xs tracking-widest text-orange-600 focus:ring-0 cursor-pointer uppercase appearance-none text-right pr-6"
             >
-              <option value="admin">HIGHER ADMINISTRATIVE LEVEL (ADMIN)</option>
               <option value="user">SPECTATOR LEVEL (USER - READ ONLY)</option>
+              <option value="rigger">
+                HIGHER ADMINISTRATIVE LEVEL (ADMIN)
+              </option>
             </select>
           </div>
         </div>

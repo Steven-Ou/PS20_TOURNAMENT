@@ -352,6 +352,28 @@ export default function Home() {
         setTopScores(data.top_scores);
         setMatches(data.matches);
         setRosters(data.rosters);
+
+        // 🔮 THE MAGIC DYNAMIC ADDITION:
+        // Reads all roster keys from Supabase and auto-builds them for the screen
+        const originalKeys = ["unions", "bownes", "sanfords", "barclays"];
+        const databaseRosterKeys = Object.keys(data.rosters || {});
+
+        const builtTeams = [...teamsConfig];
+        databaseRosterKeys.forEach((key) => {
+          if (
+            !originalKeys.includes(key) &&
+            !builtTeams.some((t) => t.key === key)
+          ) {
+            builtTeams.push({
+              key: key,
+              name: key.toUpperCase().replace("_", " "),
+              colorClass: "",
+              hexColor: "#a855f7", // Default purple for dynamically discovered custom teams
+              isCustom: true,
+            });
+          }
+        });
+        setTeamsConfig(builtTeams);
       }
       setIsHydrated(true);
     };

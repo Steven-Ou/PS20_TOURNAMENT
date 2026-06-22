@@ -230,7 +230,7 @@ interface MatchData {
 }
 
 export default function Home() {
-  const [isAdmin, setIsAdmin] = useState<boolean>(true);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [isHydrated, setIsHydrated] = useState<boolean>(false);
 
   const [tournamentTitle, setTournamentTitle] = useState(

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase"; // Core global sync cloud client
 
 // ==========================================
 // 1. CORE VECTOR LOGO COMPONENT ASSETS
@@ -233,19 +234,13 @@ export default function Home() {
   const [isHydrated, setIsHydrated] = useState<boolean>(false);
 
   const [tournamentTitle, setTournamentTitle] = useState(
-    "PS20 MIKE LEGEND TOURNAMENT",
+    "LOADING TOURNAMENT ENGINE...",
   );
-  const [subHeader, setSubHeader] = useState("BASKETBALL SCHEDULE");
-  const [resultsDay, setResultsDay] = useState(
-    "TODAY'S RESULTS - THURSDAY MAY 28TH",
-  );
-  const [timelineText, setTimelineText] = useState(
-    "WEEK 2 SCHEDULE: TBA (To Be Announced)",
-  );
+  const [subHeader, setSubHeader] = useState("");
+  const [resultsDay, setResultsDay] = useState("");
+  const [timelineText, setTimelineText] = useState("");
   const [hideEliminatedRosters, setHideEliminatedRosters] =
     useState<boolean>(true);
-
-  // DYNAMIC APP CONFIGURABLE THEME BACKGROUND STATES
   const [backgroundColor, setBackgroundColor] = useState("#fcfbf7");
   const [isDarkThemeText, setIsDarkThemeText] = useState(false);
 
@@ -276,81 +271,9 @@ export default function Home() {
     },
   ]);
 
-  const [topScores, setTopScores] = useState<Record<string, number>>({
-    unions: 0,
-    bownes: 0,
-    sanfords: 0,
-    barclays: 0,
-  });
-
-  const [matches, setMatches] = useState<MatchData[]>([
-    {
-      id: 1,
-      teamA: "sanfords",
-      teamB: "unions",
-      scoreA: 0,
-      scoreB: 0,
-      foulsA: 0,
-      foulsB: 0,
-    },
-    {
-      id: 2,
-      teamA: "bownes",
-      teamB: "barclays",
-      scoreA: 0,
-      scoreB: 0,
-      foulsA: 0,
-      foulsB: 0,
-    },
-  ]);
-
-  const [rosters, setRosters] = useState<Record<string, string[]>>({
-    unions: [
-      "KMY",
-      "小鱼",
-      "Dudu",
-      "Hong Tao",
-      "慢慢来",
-      "腰王",
-      "MING",
-      "好好睡觉",
-    ],
-    bownes: [
-      "yuxuan",
-      "LiNg",
-      "Gao Xiang",
-      "Eric",
-      "Owen",
-      "Benc",
-      "Lee",
-      "炜",
-      "Ye 哥",
-      "芥琵",
-    ],
-    sanfords: [
-      "Steven",
-      "William_Yan",
-      "绿豆赚",
-      "09^",
-      "ishtiar",
-      "Ryan",
-      "Beau",
-      "Alex",
-      "Leo",
-    ],
-    barclays: [
-      "kys r",
-      "YJH —",
-      "胡内",
-      "篮板王",
-      "稳",
-      "Syw",
-      "Sean",
-      "Taotao",
-      "高手",
-      "James c",
-    ],
-  });
+  const [topScores, setTopScores] = useState<Record<string, number>>({});
+  const [matches, setMatches] = useState<MatchData[]>([]);
+  const [rosters, setRosters] = useState<Record<string, string[]>>({});
 
   const legacyBrandRegistry: Record<
     string,
@@ -402,76 +325,105 @@ export default function Home() {
     }
   };
 
-  // LIGHT VS DARK ACCENT HARMONIZATION DETECTOR
   const handleThemePresetChange = (color: string, isDarkText: boolean) => {
     setBackgroundColor(color);
     setIsDarkThemeText(isDarkText);
   };
 
+  // =========================================================
+  // SUPABASE REAL-TIME STREAM CONNECTIONS
+  // =========================================================
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedTitle = localStorage.getItem("ps20_title");
-      const savedSub = localStorage.getItem("ps20_subHeader");
-      const savedDay = localStorage.getItem("ps20_resultsDay");
-      const savedTopScores = localStorage.getItem("ps20_topScores");
-      const savedMatches = localStorage.getItem("ps20_matches");
-      const savedTimeline = localStorage.getItem("ps20_timelineText");
-      const savedHideToggle = localStorage.getItem("ps20_hideToggle");
-      const savedTeamsConfig = localStorage.getItem("ps20_teamsConfig");
-      const savedRosters = localStorage.getItem("ps20_rosters");
-      const savedBgColor = localStorage.getItem("ps20_bgColor");
-      const savedBgTextToggle = localStorage.getItem("ps20_bgTextToggle");
+    const fetchInitialData = async () => {
+      const { data, error } = await supabase
+        .from("tournament_state")
+        .select("*")
+        .eq("id", "ps20_main")
+        .single();
 
-      if (savedTitle) setTournamentTitle(savedTitle);
-      if (savedSub) setSubHeader(savedSub);
-      if (savedDay) setResultsDay(savedDay);
-      if (savedTopScores) setTopScores(JSON.parse(savedTopScores));
-      if (savedMatches) setMatches(JSON.parse(savedMatches));
-      if (savedTimeline) setTimelineText(savedTimeline);
-      if (savedHideToggle)
-        setHideEliminatedRosters(JSON.parse(savedHideToggle));
-      if (savedTeamsConfig) setTeamsConfig(JSON.parse(savedTeamsConfig));
-      if (savedRosters) setRosters(JSON.parse(savedRosters));
-      if (savedBgColor) setBackgroundColor(savedBgColor);
-      if (savedBgTextToggle) setIsDarkThemeText(JSON.parse(savedBgTextToggle));
-
+      if (data && !error) {
+        setTournamentTitle(data.title);
+        setSubHeader(data.sub_header);
+        setResultsDay(data.results_day);
+        setTimelineText(data.timeline_text);
+        setHideEliminatedRosters(data.hide_eliminated_rosters);
+        setBackgroundColor(data.background_color);
+        setIsDarkThemeText(data.is_dark_theme_text);
+        setTopScores(data.top_scores);
+        setMatches(data.matches);
+        setRosters(data.rosters);
+      }
       setIsHydrated(true);
-    }
+    };
+
+    fetchInitialData();
+
+    const channel = supabase
+      .channel("live_tournament_feed")
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "tournament_state",
+          filter: "id=eq.ps20_main",
+        },
+        (payload) => {
+          const freshState = payload.new;
+          setTournamentTitle(freshState.title);
+          setSubHeader(freshState.sub_header);
+          setResultsDay(freshState.results_day);
+          setTimelineText(freshState.timeline_text);
+          setHideEliminatedRosters(freshState.hide_eliminated_rosters);
+          setBackgroundColor(freshState.background_color);
+          setIsDarkThemeText(freshState.is_dark_theme_text);
+          setTopScores(freshState.top_scores);
+          setMatches(freshState.matches);
+          setRosters(freshState.rosters);
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   useEffect(() => {
-    if (isHydrated) {
-      localStorage.setItem("ps20_title", tournamentTitle);
-      localStorage.setItem("ps20_subHeader", subHeader);
-      localStorage.setItem("ps20_resultsDay", resultsDay);
-      localStorage.setItem("ps20_topScores", JSON.stringify(topScores));
-      localStorage.setItem("ps20_matches", JSON.stringify(matches));
-      localStorage.setItem("ps20_timelineText", timelineText);
-      localStorage.setItem(
-        "ps20_hideToggle",
-        JSON.stringify(hideEliminatedRosters),
-      );
-      localStorage.setItem("ps20_teamsConfig", JSON.stringify(teamsConfig));
-      localStorage.setItem("ps20_rosters", JSON.stringify(rosters));
-      localStorage.setItem("ps20_bgColor", backgroundColor);
-      localStorage.setItem(
-        "ps20_bgTextToggle",
-        JSON.stringify(isDarkThemeText),
-      );
-    }
+    if (!isHydrated || !isAdmin) return;
+
+    const delayDebounceTimer = setTimeout(async () => {
+      await supabase
+        .from("tournament_state")
+        .update({
+          title: tournamentTitle,
+          sub_header: subHeader,
+          results_day: resultsDay,
+          timeline_text: timelineText,
+          hide_eliminated_rosters: hideEliminatedRosters,
+          background_color: backgroundColor,
+          is_dark_theme_text: isDarkThemeText,
+          top_scores: topScores,
+          matches: matches,
+          rosters: rosters,
+        })
+        .eq("id", "ps20_main");
+    }, 400);
+
+    return () => clearTimeout(delayDebounceTimer);
   }, [
     tournamentTitle,
     subHeader,
     resultsDay,
-    topScores,
-    matches,
     timelineText,
     hideEliminatedRosters,
-    teamsConfig,
-    rosters,
     backgroundColor,
     isDarkThemeText,
+    topScores,
+    matches,
+    rosters,
     isHydrated,
+    isAdmin,
   ]);
 
   const createNewTeamAction = (e: React.FormEvent) => {
@@ -611,7 +563,6 @@ export default function Home() {
               </button>
             )}
 
-            {/* DYNAMIC CANVAS THEME PICKER STYLES CONTROLS */}
             <div className="flex items-center gap-2 border-l border-slate-300 pl-3">
               <span
                 className={`text-[11px] font-bold ${isDarkThemeText ? "text-slate-400" : "text-slate-600"}`}
@@ -767,11 +718,11 @@ export default function Home() {
             }`}
           />
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
+          <div className="flex flex-wrap justify-center gap-4">
             {teamsConfig.map((t) => (
               <div
                 key={t.key}
-                className={`relative p-3 pt-8 rounded-xl border flex flex-col items-center group shadow-sm transition-all ${
+                className={`relative p-3 pt-8 rounded-xl border flex flex-col items-center group shadow-sm transition-all w-full sm:w-[calc(50%-8px)] md:w-[calc(25%-12px)] min-w-[140px] ${
                   isDarkThemeText
                     ? "bg-slate-800 border-slate-700 hover:border-slate-500"
                     : "bg-white border-slate-200 hover:border-slate-400"
@@ -986,7 +937,7 @@ export default function Home() {
                   onChange={(e) =>
                     updateMatchField(match.id, "teamB", e.target.value)
                   }
-                  className="bg-transparent font-black tracking-wider text-sm outline-none border-none uppercase text-right disabled:cursor-default cursor-pointer flex-1 md:flex-none mr-2 md:mr-0 p-1 rounded focus:bg-slate-100/10"
+                  className="bg-transparent font-black tracking-wider text-sm outline-none border-none uppercase text-right md:text-right disabled:cursor-default cursor-pointer flex-1 md:flex-none mr-2 md:mr-0 p-1 rounded focus:bg-slate-100/10"
                   style={{
                     color:
                       teamsConfig.find((t) => t.key === match.teamB)
@@ -1041,9 +992,7 @@ export default function Home() {
           />
         </div>
 
-        {/* ========================================================= */}
         {/* FIXED & WIDE ROSTERS LAYOUT PANEL PLACED HORIZONTALLY AT BOTTOM */}
-        {/* ========================================================= */}
         <div
           className={`border rounded-2xl p-4 md:p-5 shadow-sm w-full mt-2 ${
             isDarkThemeText
@@ -1104,7 +1053,6 @@ export default function Home() {
                     >
                       <span>{team.name}</span>
 
-                      {/* ACCESSIBLE LINEUP SLOTS SCALER CONTROLS RESTORED */}
                       {isAdmin && (
                         <div className="flex items-center gap-2 text-xs bg-white px-1.5 py-0.5 rounded border border-slate-300 shadow-sm">
                           <button

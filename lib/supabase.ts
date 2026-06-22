@@ -1,14 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseUrl = 'https://wtzwjqxddtygsiqusvzi.supabase.co';
 
-// Clean console logs to see what your browser is reading
-console.log("Checking Supabase Connection Profile URL:", supabaseUrl);
-console.log("Checking Supabase Key Loaded:", supabaseAnonKey ? "KEY_LOADED_OK" : "MISSING/BLANK");
+// Using backticks (``) handles long strings perfectly, even if they wrap onto a new line!
+const supabaseAnonKey = `sb_publishable_1RgC5CcXtvLd2iSZcU3n3A_OsusXmqf`; 
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error("CRITICAL ERROR: Env variables failed to clear browser compilation!");
-}
+console.log("Checking Hardcoded Supabase Connection URL:", supabaseUrl);
+console.log("Checking Hardcoded Supabase Key Status:", supabaseAnonKey ? "KEY_LOADED_OK" : "MISSING/BLANK");
 
-export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '');
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);

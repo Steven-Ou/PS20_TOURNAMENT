@@ -1068,7 +1068,12 @@ export default function Home() {
             </label>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div
+            className={`grid grid-cols-1 gap-4 ${
+              teamsConfig.length === 5 ? "md:grid-cols-5" : "md:grid-cols-4"
+            }`}
+          >
+            {" "}
             {teamsConfig.map((team) => {
               if (!isTeamActive(team.key)) return null;
               const playerArray = rosters[team.key] || [];

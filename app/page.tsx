@@ -330,9 +330,9 @@ export default function Home() {
     setIsDarkThemeText(isDarkText);
   };
 
-  // =========================================================
-  // SUPABASE REAL-TIME STREAM CONNECTIONS
-  // =========================================================
+  // ==========================================
+  // REAL-TIME SYNC ENGINE: LISTENS TO EMITTED WEBHOOKS
+  // ==========================================
   useEffect(() => {
     const fetchInitialData = async () => {
       const { data, error } = await supabase
@@ -369,6 +369,10 @@ export default function Home() {
           filter: "id=eq.ps20_main",
         },
         (payload) => {
+          // 🛑 THE CRITICAL CHANGE: If you are the logged-in admin,
+          // ignore incoming stream packets so your deletions don't bounce back!
+          if (isAdmin) return;
+
           const freshState = payload.new;
           setTournamentTitle(freshState.title);
           setSubHeader(freshState.sub_header);
@@ -387,7 +391,7 @@ export default function Home() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [isAdmin]); // <-- Make sure to add isAdmin to the dependency array here
 
   useEffect(() => {
     if (!isHydrated || !isAdmin) return;

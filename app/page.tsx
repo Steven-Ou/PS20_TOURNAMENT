@@ -827,7 +827,8 @@ export default function Home() {
               )}
 
               {/* TEAM A DROPDOWN BLOCK */}
-              <div className="flex items-center gap-3 w-full md:w-4/12 justify-start p-2 md:p-0 rounded-lg">
+              <div className="flex flex-col items-center justify-center w-20 flex-shrink-0">
+                {" "}
                 {handleLogoRender(
                   match.teamA,
                   teamsConfig.find((t) => t.key === match.teamA)?.hexColor ||
@@ -918,7 +919,8 @@ export default function Home() {
                   )}
                 </div>
 
-                <span className="text-xs font-black tracking-widest bg-slate-200 text-slate-700 px-3 py-2 rounded-md border border-slate-300 shadow-sm self-center flex-shrink-0">
+                <span className="w-10 text-center text-xs font-black bg-slate-200 text-slate-700 px-2 py-2 rounded-md border border-slate-300 shadow-sm flex-shrink-0">
+                  {" "}
                   VS
                 </span>
 
@@ -972,7 +974,7 @@ export default function Home() {
               </div>
 
               {/* TEAM B DROPDOWN BLOCK */}
-              <div className="flex flex-col items-center justify-center min-w-[80px] flex-shrink-0">
+              <div className="flex flex-col items-center justify-center w-20 flex-shrink-0">
                 {" "}
                 <select
                   value={match.teamB}

@@ -864,13 +864,13 @@ export default function Home() {
 
               {/* SCORING AND FOULS CENTER MODULE */}
               <div
-                className={`flex items-center justify-center gap-8 md:gap-6 w-full md:w-4/12 px-2 py-1 rounded-xl border md:border-none ${
+                className={`flex items-center justify-center gap-2 md:gap-6 w-full md:w-4/12 px-2 py-1 rounded-xl border md:border-none ${
                   isDarkThemeText
                     ? "bg-slate-800 border-slate-700 md:bg-transparent"
                     : "bg-slate-50 border-slate-200 md:bg-transparent"
                 }`}
               >
-                <div className="flex flex-col items-center justify-center min-w-[60px]">
+                <div className="flex flex-col items-center justify-center min-w-[80px] flex-shrink-0">
                   {match.teamA !== "none" ? (
                     <>
                       <input
@@ -918,7 +918,7 @@ export default function Home() {
                   )}
                 </div>
 
-                <span className="text-xs font-black tracking-widest bg-slate-200 text-slate-700 px-3 py-2 rounded-md border border-slate-300 shadow-sm self-center">
+                <span className="text-xs font-black tracking-widest bg-slate-200 text-slate-700 px-3 py-2 rounded-md border border-slate-300 shadow-sm self-center flex-shrink-0">
                   VS
                 </span>
 
@@ -972,7 +972,8 @@ export default function Home() {
               </div>
 
               {/* TEAM B DROPDOWN BLOCK */}
-              <div className="flex items-center gap-3 w-full md:w-4/12 justify-end p-2 md:p-0 rounded-lg flex-row-reverse md:flex-row">
+              <div className="flex flex-col items-center justify-center min-w-[80px] flex-shrink-0">
+                {" "}
                 <select
                   value={match.teamB}
                   disabled={!isAdmin}

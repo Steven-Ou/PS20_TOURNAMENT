@@ -827,8 +827,7 @@ export default function Home() {
               )}
 
               {/* TEAM A DROPDOWN BLOCK */}
-              <div className="flex flex-col items-center justify-center w-16 md:w-20 flex-shrink-0">
-                {" "}
+              <div className="flex items-center gap-3 w-full md:w-4/12 justify-center p-2 md:p-0 rounded-lg">
                 {handleLogoRender(
                   match.teamA,
                   teamsConfig.find((t) => t.key === match.teamA)?.hexColor ||
@@ -840,7 +839,7 @@ export default function Home() {
                   onChange={(e) =>
                     updateMatchField(match.id, "teamA", e.target.value)
                   }
-                  className="bg-transparent font-black tracking-wider text-sm outline-none border-none uppercase disabled:cursor-default cursor-pointer flex-1 md:flex-none p-1 rounded focus:bg-slate-100/10"
+                  className="bg-transparent font-black tracking-wider text-sm outline-none border-none uppercase text-center disabled:cursor-default cursor-pointer flex-1 md:flex-none p-1 rounded focus:bg-slate-100/10"
                   style={{
                     color:
                       teamsConfig.find((t) => t.key === match.teamA)
@@ -865,13 +864,14 @@ export default function Home() {
 
               {/* SCORING AND FOULS CENTER MODULE */}
               <div
-                className={`flex items-center justify-center gap-2 md:gap-6 w-full md:w-4/12 px-2 py-1 rounded-xl border md:border-none ${
+                className={`flex items-center justify-center gap-2 md:gap-4 w-full md:w-4/12 px-2 py-1 rounded-xl border md:border-none ${
                   isDarkThemeText
                     ? "bg-slate-800 border-slate-700 md:bg-transparent"
                     : "bg-slate-50 border-slate-200 md:bg-transparent"
                 }`}
               >
-                <div className="flex flex-col items-center justify-center min-w-[80px] flex-shrink-0">
+                {/* Team A Score */}
+                <div className="flex flex-col items-center justify-center w-24 flex-shrink-0">
                   {match.teamA !== "none" ? (
                     <>
                       <input
@@ -886,7 +886,7 @@ export default function Home() {
                             parseInt(e.target.value) || 0,
                           )
                         }
-                        className={`bg-transparent text-4xl font-black text-center w-16 border-none outline-none disabled:cursor-default h-10 p-1 rounded focus:bg-slate-500/20 ${
+                        className={`bg-transparent text-4xl font-black text-center w-20 border-none outline-none disabled:cursor-default h-10 p-1 rounded focus:bg-slate-500/20 ${
                           isDarkThemeText ? "text-white" : "text-slate-900"
                         }`}
                         style={{
@@ -919,12 +919,13 @@ export default function Home() {
                   )}
                 </div>
 
-                <span className="w-8 md:w-10 text-center text-xs font-black tracking-widest bg-slate-200 text-slate-700 px-1 py-2 rounded-md border border-slate-300 shadow-sm flex-shrink-0 self-center">
-                  {" "}
+                {/* VS Divider */}
+                <span className="w-10 text-center text-xs font-black tracking-widest bg-slate-200 text-slate-700 px-1 py-2 rounded-md border border-slate-300 shadow-sm self-center flex-shrink-0">
                   VS
                 </span>
 
-                <div className="flex flex-col items-center justify-center min-w-[60px]">
+                {/* Team B Score */}
+                <div className="flex flex-col items-center justify-center w-24 flex-shrink-0">
                   {match.teamB !== "none" ? (
                     <>
                       <input
@@ -939,7 +940,7 @@ export default function Home() {
                             parseInt(e.target.value) || 0,
                           )
                         }
-                        className={`bg-transparent text-4xl font-black text-center w-16 border-none outline-none disabled:cursor-default h-10 p-1 rounded focus:bg-slate-500/20 ${
+                        className={`bg-transparent text-4xl font-black text-center w-20 border-none outline-none disabled:cursor-default h-10 p-1 rounded focus:bg-slate-500/20 ${
                           isDarkThemeText ? "text-white" : "text-slate-900"
                         }`}
                         style={{
@@ -974,15 +975,14 @@ export default function Home() {
               </div>
 
               {/* TEAM B DROPDOWN BLOCK */}
-              <div className="flex flex-col items-center justify-center w-16 md:w-20 flex-shrink-0">
-                {" "}
+              <div className="flex items-center gap-3 w-full md:w-4/12 justify-center p-2 md:p-0 rounded-lg flex-row-reverse md:flex-row">
                 <select
                   value={match.teamB}
                   disabled={!isAdmin}
                   onChange={(e) =>
                     updateMatchField(match.id, "teamB", e.target.value)
                   }
-                  className="bg-transparent font-black tracking-wider text-sm outline-none border-none uppercase text-right md:text-right disabled:cursor-default cursor-pointer flex-1 md:flex-none mr-2 md:mr-0 p-1 rounded focus:bg-slate-100/10"
+                  className="bg-transparent font-black tracking-wider text-sm outline-none border-none uppercase text-center disabled:cursor-default cursor-pointer flex-1 md:flex-none p-1 rounded focus:bg-slate-100/10"
                   style={{
                     color:
                       teamsConfig.find((t) => t.key === match.teamB)

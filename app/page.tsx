@@ -820,7 +820,7 @@ export default function Home() {
               {isAdmin && (
                 <button
                   onClick={() => removeMatchBox(match.id)}
-                  className="absolute top-2 right-2 text-slate-400 hover:text-red-600 font-bold text-[10px] bg-slate-100 px-2 py-0.5 rounded border border-slate-200 transition-all"
+                  className="absolute top-2 right-2 text-slate-400 hover:text-red-600 font-bold text-[10px] bg-slate-100 px-2 py-0.5 rounded border border-slate-200 transition-all z-10"
                 >
                   ❌ DELETE BOX
                 </button>
@@ -871,7 +871,7 @@ export default function Home() {
                 }`}
               >
                 {/* Team A Score */}
-                <div className="flex flex-col items-center justify-center w-24 flex-shrink-0">
+                <div className="flex flex-col items-center justify-center w-28 flex-shrink-0">
                   {match.teamA !== "none" ? (
                     <>
                       <input
@@ -886,9 +886,9 @@ export default function Home() {
                             parseInt(e.target.value) || 0,
                           )
                         }
-                        className={`bg-transparent text-4xl font-black text-center w-20 border-none outline-none disabled:cursor-default h-10 p-1 rounded focus:bg-slate-500/20 ${
-                          isDarkThemeText ? "text-white" : "text-slate-900"
-                        }`}
+                        className={`bg-transparent font-black text-center w-full border-none outline-none disabled:cursor-default h-10 p-1 rounded focus:bg-slate-500/20 ${
+                          match.scoreA > 99 ? "text-3xl" : "text-4xl"
+                        } ${isDarkThemeText ? "text-white" : "text-slate-900"}`}
                         style={{
                           color: isDarkThemeText
                             ? "#fff"
@@ -925,7 +925,7 @@ export default function Home() {
                 </span>
 
                 {/* Team B Score */}
-                <div className="flex flex-col items-center justify-center w-24 flex-shrink-0">
+                <div className="flex flex-col items-center justify-center w-28 flex-shrink-0">
                   {match.teamB !== "none" ? (
                     <>
                       <input
@@ -940,9 +940,9 @@ export default function Home() {
                             parseInt(e.target.value) || 0,
                           )
                         }
-                        className={`bg-transparent text-4xl font-black text-center w-20 border-none outline-none disabled:cursor-default h-10 p-1 rounded focus:bg-slate-500/20 ${
-                          isDarkThemeText ? "text-white" : "text-slate-900"
-                        }`}
+                        className={`bg-transparent font-black text-center w-full border-none outline-none disabled:cursor-default h-10 p-1 rounded focus:bg-slate-500/20 ${
+                          match.scoreB > 99 ? "text-3xl" : "text-4xl"
+                        } ${isDarkThemeText ? "text-white" : "text-slate-900"}`}
                         style={{
                           color: isDarkThemeText
                             ? "#fff"
@@ -1012,7 +1012,7 @@ export default function Home() {
             </div>
           ))}
         </div>
-
+        
         {/* LARGE FORMAT BROADCAST BULLETIN NOTES SECTION */}
         <div
           className={`border rounded-xl p-4 md:p-5 text-left shadow-inner flex flex-col w-full ${

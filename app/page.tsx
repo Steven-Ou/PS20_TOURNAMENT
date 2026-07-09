@@ -827,7 +827,7 @@ export default function Home() {
               )}
 
               {/* TEAM A DROPDOWN BLOCK */}
-              <div className="flex flex-col items-center justify-center w-20 flex-shrink-0">
+              <div className="flex flex-col items-center justify-center w-16 md:w-20 flex-shrink-0">
                 {" "}
                 {handleLogoRender(
                   match.teamA,
@@ -919,7 +919,7 @@ export default function Home() {
                   )}
                 </div>
 
-                <span className="w-10 text-center text-xs font-black bg-slate-200 text-slate-700 px-2 py-2 rounded-md border border-slate-300 shadow-sm flex-shrink-0">
+                <span className="w-8 md:w-10 text-center text-xs font-black tracking-widest bg-slate-200 text-slate-700 px-1 py-2 rounded-md border border-slate-300 shadow-sm flex-shrink-0 self-center">
                   {" "}
                   VS
                 </span>
@@ -974,7 +974,7 @@ export default function Home() {
               </div>
 
               {/* TEAM B DROPDOWN BLOCK */}
-              <div className="flex flex-col items-center justify-center w-20 flex-shrink-0">
+              <div className="flex flex-col items-center justify-center w-16 md:w-20 flex-shrink-0">
                 {" "}
                 <select
                   value={match.teamB}

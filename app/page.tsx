@@ -334,6 +334,41 @@ export default function Home() {
   // REAL-TIME SYNC ENGINE: LISTENS TO EMITTED WEBHOOKS
   // ==========================================
   useEffect(() => {
+    // Helper function to sync the screen's teams with the database's teams
+    const syncTeamsWithDatabase = (
+      dbRosters: Record<string, string[]>,
+      currentTeams: TeamConfig[],
+    ) => {
+      const dbKeys = Object.keys(dbRosters || {});
+
+      // 1. Filter out teams that no longer exist in the database
+      const activeTeams = currentTeams.filter((t) => dbKeys.includes(t.key));
+
+      // 2. Add any missing teams (either restored base teams or new custom ones)
+      dbKeys.forEach((key) => {
+        if (!activeTeams.some((t) => t.key === key)) {
+          if (legacyBrandRegistry[key]) {
+            activeTeams.push({
+              key: key,
+              name: legacyBrandRegistry[key].name,
+              colorClass: legacyBrandRegistry[key].colorClass,
+              hexColor: legacyBrandRegistry[key].hexColor,
+              isCustom: false,
+            });
+          } else {
+            activeTeams.push({
+              key: key,
+              name: key.toUpperCase().replace("_", " "),
+              colorClass: "",
+              hexColor: "#a855f7", // Default purple
+              isCustom: true,
+            });
+          }
+        }
+      });
+      return activeTeams;
+    };
+
     const fetchInitialData = async () => {
       const { data, error } = await supabase
         .from("tournament_state")
@@ -353,27 +388,8 @@ export default function Home() {
         setMatches(data.matches);
         setRosters(data.rosters);
 
-        // 🔮 THE MAGIC DYNAMIC ADDITION:
-        // Reads all roster keys from Supabase and auto-builds them for the screen
-        const originalKeys = ["unions", "bownes", "sanfords", "barclays"];
-        const databaseRosterKeys = Object.keys(data.rosters || {});
-
-        const builtTeams = [...teamsConfig];
-        databaseRosterKeys.forEach((key) => {
-          if (
-            !originalKeys.includes(key) &&
-            !builtTeams.some((t) => t.key === key)
-          ) {
-            builtTeams.push({
-              key: key,
-              name: key.toUpperCase().replace("_", " "),
-              colorClass: "",
-              hexColor: "#a855f7", // Default purple for dynamically discovered custom teams
-              isCustom: true,
-            });
-          }
-        });
-        setTeamsConfig(builtTeams);
+        // 🔮 THE MAGIC DYNAMIC SYNC (NOW WITH DELETION SUPPORT)
+        setTeamsConfig((prev) => syncTeamsWithDatabase(data.rosters, prev));
       }
       setIsHydrated(true);
     };
@@ -391,8 +407,7 @@ export default function Home() {
           filter: "id=eq.ps20_main",
         },
         (payload) => {
-          // 🛑 THE CRITICAL CHANGE: If you are the logged-in admin,
-          // ignore incoming stream packets so your deletions don't bounce back!
+          // 🛑 THE CRITICAL CHANGE: Ignore if admin so deletions don't bounce back
           if (isAdmin) return;
 
           const freshState = payload.new;
@@ -406,6 +421,11 @@ export default function Home() {
           setTopScores(freshState.top_scores);
           setMatches(freshState.matches);
           setRosters(freshState.rosters);
+
+          // Sync teams for spectators in real-time if a team gets deleted!
+          setTeamsConfig((prev) =>
+            syncTeamsWithDatabase(freshState.rosters, prev),
+          );
         },
       )
       .subscribe();
@@ -413,7 +433,7 @@ export default function Home() {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [isAdmin]); // <-- Make sure to add isAdmin to the dependency array here
+  }, [isAdmin]);
 
   useEffect(() => {
     if (!isHydrated || !isAdmin) return;

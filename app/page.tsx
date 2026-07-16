@@ -1012,7 +1012,7 @@ export default function Home() {
             </div>
           ))}
         </div>
-        
+
         {/* LARGE FORMAT BROADCAST BULLETIN NOTES SECTION */}
         <div
           className={`border rounded-xl p-4 md:p-5 text-left shadow-inner flex flex-col w-full ${
@@ -1073,7 +1073,7 @@ export default function Home() {
           </div>
 
           <div
-            className={`grid grid-cols-1 gap-4 ${
+            className={`flex flex-wrap justify-center gap-4 ${
               teamsConfig.length === 5 ? "md:grid-cols-5" : "md:grid-cols-4"
             }`}
           >
@@ -1085,7 +1085,7 @@ export default function Home() {
               return (
                 <div
                   key={team.key}
-                  className={`space-y-3 p-3 rounded-xl border flex flex-col justify-between shadow-sm ${
+                  className={`w-full flex-1 min-w-[240px] max-w-[300px] space-y-3 p-3 rounded-xl border flex flex-col justify-between shadow-sm ${
                     isDarkThemeText
                       ? "bg-slate-800 border-slate-700"
                       : "bg-white border-slate-200"
